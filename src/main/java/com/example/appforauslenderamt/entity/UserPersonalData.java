@@ -25,7 +25,8 @@ public class UserPersonalData {
     String placeOfBirth;
     @JsonProperty("nationalities")
     Set<String> nationalities;
-//    Sex sex;
+    @JsonProperty("sex")
+    Sex sex;
 //    PlaceOfResidenceInGermany placeOfResidenceInGermany;
 
 }

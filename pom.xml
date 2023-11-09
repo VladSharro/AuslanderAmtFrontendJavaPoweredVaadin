@@ -68,16 +68,6 @@
             <version>4.5.1</version>
         </dependency>
         <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
-            <version>3.0.11.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xhtmlrenderer</groupId>
-            <artifactId>flying-saucer-pdf</artifactId>
-            <version>9.1.20</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox-tools</artifactId>
             <version>${pdfbox-tools.version}</version>
@@ -158,6 +148,11 @@
             <groupId>org.python</groupId>
             <artifactId>jython-slim</artifactId>
             <version>2.7.3b1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version> <!-- Use the latest version available -->
         </dependency>
     </dependencies>
 

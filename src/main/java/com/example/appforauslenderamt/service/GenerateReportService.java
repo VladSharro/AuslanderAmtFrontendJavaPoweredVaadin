@@ -1,6 +1,7 @@
 package com.example.appforauslenderamt.service;
 
 import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
+import com.example.appforauslenderamt.entity.Sex;
 import com.example.appforauslenderamt.exceptions.DataDoNotMatchWithPassportException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
@@ -29,11 +30,9 @@ import java.util.Locale;
 @Service
 public class GenerateReportService {
 
-    private String familyNamePassportValue;
-    private String firstNamePassportValue;
-
-    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto) throws IOException, DocumentException,
+    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile passportImage) throws IOException, DocumentException,
             InterruptedException {
+        checkUserDataWithPassport(userDataRequestDto, passportImage);
         String html = parseThymeleafTemplate(userDataRequestDto);
         String outputFolder = "src/main/resources/user_form.pdf";
         OutputStream outputStream = new FileOutputStream(outputFolder);
@@ -44,13 +43,10 @@ public class GenerateReportService {
         renderer.createPDF(outputStream);
 
         outputStream.close();
-        mergePdf();
+        mergePdf(passportImage);
     }
 
     private String parseThymeleafTemplate(UserDataRequestDto userDataRequestDto) {
-        checkWithPassport(userDataRequestDto.getPersonalData().getFamilyName(),
-                userDataRequestDto.getPersonalData().getFirstName());
-
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -71,6 +67,9 @@ public class GenerateReportService {
         context.setVariable("passport_number", userDataRequestDto.getPassportNumber());
         context.setVariable("valid_from_till", String.format("%s / %s", userDataRequestDto.getValidFrom(),
                 userDataRequestDto.getValidTill()));
+        context.setVariable("sex_male", userDataRequestDto.getPersonalData().getSex().equals(Sex.MALE));
+        context.setVariable("sex_female", userDataRequestDto.getPersonalData().getSex().equals(Sex.FEMALE));
+        context.setVariable("sex_diversity", userDataRequestDto.getPersonalData().getSex().equals(Sex.DIVERSITY));
 
         return templateEngine.process("form_template", context);
     }
@@ -95,8 +94,9 @@ public class GenerateReportService {
         document.close();
     }
 
-    public void getDataFromPassport(MultipartFile file) throws IOException, InterruptedException {
-        byte[] imageBytes = file.getBytes();
+    public void checkUserDataWithPassport(UserDataRequestDto userData, MultipartFile passportImage)
+            throws IOException, InterruptedException {
+        byte[] imageBytes = passportImage.getBytes();
 
         // Encode the image data in Base64
         String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
@@ -114,23 +114,18 @@ public class GenerateReportService {
         // Process line of the output here
         String[] familyNameAndFirstName = line.split(" ");
 
-        familyNamePassportValue = familyNameAndFirstName[0];
-        firstNamePassportValue = familyNameAndFirstName[1];
+        if (!userData.getPersonalData().getFamilyName().toLowerCase(Locale.ROOT)
+                .equals(familyNameAndFirstName[0].toLowerCase(Locale.ROOT)) ||
+                !userData.getPersonalData().getFirstName().toLowerCase(Locale.ROOT)
+                        .equals(familyNameAndFirstName[1].toLowerCase(Locale.ROOT))) {
+            throw new DataDoNotMatchWithPassportException("Family name or first name doesn't match with passport data");
+        }
 
         process.waitFor(); // Wait for the process to finish
 
     }
 
-    private void checkWithPassport(String familyName, String firstName) {
-        if (!familyName.toLowerCase(Locale.ROOT).equals(familyNamePassportValue.toLowerCase(Locale.ROOT)) ||
-                !firstName.toLowerCase(Locale.ROOT).equals(firstNamePassportValue.toLowerCase(Locale.ROOT))) {
-            System.out.println(familyNamePassportValue);
-            System.out.println(firstNamePassportValue);
-            throw new DataDoNotMatchWithPassportException("Family name or first name doesn't match with passport data");
-        }
-    }
-
-    private void mergePdf() {
+    private void mergePdf(MultipartFile passportImage) {
         try {
             Document document = new Document();
             PdfWriter writer = PdfWriter.getInstance(document,
@@ -148,7 +143,7 @@ public class GenerateReportService {
             }
 
             // Add JPG file
-            Image jpgImage = Image.getInstance("src/main/resources/passport.jpg");
+            Image jpgImage = Image.getInstance(passportImage.getBytes());
             document.newPage();
             jpgImage.setAbsolutePosition(0, 0);
             jpgImage.scaleToFit(PageSize.A4);
