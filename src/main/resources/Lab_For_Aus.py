@@ -3,9 +3,11 @@ import pytesseract
 import re
 import tkinter as tk
 from tkinter import filedialog
+from PIL import Image, ImageTk
 
 # Path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 
 # Function to extract the name and surname in English from a passport image using Tesseract OCR
 def extract_name_and_surname(image_path):
@@ -15,17 +17,20 @@ def extract_name_and_surname(image_path):
     # Convert the image to grayscale
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # Use thresholding to improve OCR accuracy
-    _, thresh_img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
     # Perform OCR using Tesseract
-    extracted_text = pytesseract.image_to_string(thresh_img, config='--psm 6')
+    extracted_text = pytesseract.image_to_string(gray_img, config='--psm 6')
 
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
     name = ""
     surname = ""
+
+    i = 0
+
+    while i < len(lines):
+        print(lines[i])
+        i = i + 1
 
     for line in lines:
         pattern = r'<([A-Z]+)<<([A-Z]+)<'
@@ -35,14 +40,32 @@ def extract_name_and_surname(image_path):
             surname = matches.group(2)
             break
 
-    return name, surname
+    return name, surname, gray_img
+
 
 # Function to handle the "Open" button click event
 def open_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
     if file_path:
-        name, surname = extract_name_and_surname(file_path)
+        name, surname, image = extract_name_and_surname(file_path)
+
+        # Display the image
+        display_image(image)
+
+        # Update the result label
         result_label.config(text=f'Name: {name}\nSurname: {surname}')
+
+
+# Function to display the image in the Tkinter window
+def display_image(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = Image.fromarray(img)
+    img = ImageTk.PhotoImage(img)
+
+    # Update the panel with the new image
+    panel.img = img
+    panel.config(image=img)
+
 
 # Create the main application window
 app = tk.Tk()
@@ -55,5 +78,9 @@ open_button.pack()
 # Create a label to display the result
 result_label = tk.Label(app, text="")
 result_label.pack()
+
+# Create a panel to display the image
+panel = tk.Label(app)
+panel.pack()
 
 app.mainloop()
