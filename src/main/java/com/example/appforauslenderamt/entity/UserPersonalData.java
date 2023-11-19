@@ -16,7 +16,8 @@ public class UserPersonalData {
 
     @JsonProperty("family_name")
     String familyName;
-//    Set<String> previousNames;
+    @JsonProperty("previous_names")
+    Set<String> previousNames;
     @JsonProperty("first_name")
     String firstName;
     @JsonProperty("date_of_birth")
@@ -27,6 +28,7 @@ public class UserPersonalData {
     Set<String> nationalities;
     @JsonProperty("sex")
     Sex sex;
-//    PlaceOfResidenceInGermany placeOfResidenceInGermany;
+    @JsonProperty("place_of_residence_in_Germany")
+    PlaceOfResidence placeOfResidenceInGermany;
 
 }
