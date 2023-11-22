@@ -25,35 +25,56 @@ def extract_name_and_surname(image_path):
 
     name = ""
     surname = ""
+    nationality = ""
+    birth = ""
 
     i = 0
 
     while i < len(lines):
+        if re.search(r'\bNationality\b', lines[i]):
+            nationality = lines[i+1]
+
+        if re.search(r'\bDate of birth\b', lines[i]):
+            birth = lines[i+1]
+
         print(lines[i])
         i = i + 1
+
+    print(nationality)
+    print(birth)
 
     for line in lines:
         pattern = r'<([A-Z]+)<<([A-Z]+)<'
         matches = re.search(pattern, line)
         if matches:
+            # Extract the name and surname
             name = matches.group(1)
             surname = matches.group(2)
+
+            # Remove country codes if the first three letters match a pattern
+            country_codes = ["IRN", "RUS", "USA"]  # Add more country codes as needed
+            for code in country_codes:
+                if name[:3] == code:
+                    name = name[3:]
+                if surname[:3] == code:
+                    surname = surname[3:]
+
             break
 
-    return name, surname, gray_img
+    return name, surname, gray_img, nationality, birth
 
 
 # Function to handle the "Open" button click event
 def open_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
     if file_path:
-        name, surname, image = extract_name_and_surname(file_path)
+        name, surname, image , nationality, birth = extract_name_and_surname(file_path)
 
         # Display the image
         display_image(image)
 
         # Update the result label
-        result_label.config(text=f'Name: {name}\nSurname: {surname}')
+        result_label.config(text=f'Name: {name}\nSurname: {surname}\nNationality: {nationality}\nDate of Birth: {birth}')
 
 
 # Function to display the image in the Tkinter window
