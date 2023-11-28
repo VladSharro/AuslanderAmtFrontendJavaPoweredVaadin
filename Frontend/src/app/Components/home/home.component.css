@@ -1,0 +1,95 @@
+
+  /* Your component's CSS file */
+
+.new_app_tile {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0);
+    min-height: 100px;
+    justify-content: right;
+    margin-right: 30px;
+    padding-top: 0;
+
+  }
+  .cont_app_tile {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0);
+    
+    min-height: 100px;
+    justify-content: left;
+    margin-left: 30px;
+
+  }
+  .mat-grid-tile-content{
+    background-color: rgba(255, 255, 255, 0);
+
+  }
+  
+  .new_app_tile mat-card{
+    width: 50%; /* Adjust the percentage based on your preference */
+    padding: 20px;
+    height: 80%;
+    justify-content: center;
+    margin-left: 10%;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
+
+
+  }
+
+  .cont_app_tile mat-card {
+    width: 50%; /* Adjust the percentage based on your preference */
+    padding: 20px;
+    height: 80%;
+    justify-content: center;
+    margin-right:10% ;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
+
+
+  }
+
+  .new_app_tile button, .cont_app_tile button {
+    width: 70%; /* Adjust the percentage based on your preference */
+    height: 10%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    align-self: center;
+    min-height: 20px;
+  }
+  .new_app_tile h2,
+.cont_app_tile h2 {
+  margin-top: 10px; /* Adjust the top margin between each text element based on your preference */
+  font-family: 'Open Sans', sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+}   
+
+.new_app_tile a {
+    margin-top: 10px; /* Adjust the top margin between each text element based on your preference */
+    font-family: 'Open Sans', sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: underline;
+    background-color: rgba(255, 255, 255, 0);
+
+}
+
+.custom_mat-grid-list{
+    background-color: rgba(255, 255, 255, 0);
+}
+
+
+
+
+@media only screen and (max-width: 600px) {
+    .custom_mat-grid-list {
+        margin: 8px; /* Reduce margin for smaller screens */
+      }
+    
+      .custom-card {
+        padding: 8px;
+        font-size: 14px; /* Adjust font size for smaller screens */
+      }
+  }

@@ -1,0 +1,31 @@
+<div class="main_div">
+
+
+<mat-card class="card-container">
+    <form (ngSubmit)="onSubmit()" >
+        <h2>{{applicationLabels.application_type_header}}</h2>
+        <label>{{applicationLabels.application_type_hint}}</label>
+        <br>
+    <div class="radio_btn_div">  
+     <br>
+    <label id="application_type">{{applicationLabels.application_type_question}}</label>
+    <br>
+    <mat-radio-group aria-labelledby="application_type" required="true" [(ngModel)]="applicationType" [ngModelOptions]="{standalone: true}">
+      <mat-radio-button *ngFor="let option of applicationOptions" [value]="option">
+        {{option}}
+      </mat-radio-button>
+    </mat-radio-group>
+  <br>
+    <span id="eu_type">{{applicationLabels.application_eu_type_question}}</span>
+    <br>
+    <mat-radio-group aria-labelledby="eu_type"  required="true" [(ngModel)]="euOption" [ngModelOptions]="{standalone: true}">
+      <mat-radio-button *ngFor="let option of euOptions" [value]="option">
+        {{option}}
+      </mat-radio-button>
+    </mat-radio-group>
+    <br>
+</div> 
+    <button mat-raised-button type="submit" color="primary">{{applicationLabels.form_continue_button}}</button>    
+    </form>
+</mat-card>
+</div>

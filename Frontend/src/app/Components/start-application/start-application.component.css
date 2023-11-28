@@ -1,0 +1,43 @@
+/* Update your-component.component.css */
+.card-container {
+  max-width: 600px; /* Adjust the maximum width as needed */
+  width: 50%; 
+  margin: auto;
+  margin-top: 50px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 80%;
+  background-color: rgba(255, 255, 255, 0.7);
+      }
+
+
+.main_div{
+        width: 100%;
+        height: 80%;
+      }
+
+.radio_btn_div{
+    text-align: left;
+}
+      
+    
+ .main_div h2 {
+  margin-top: 10px; /* Adjust the top margin between each text element based on your preference */
+  font-family: 'Open Sans', sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+ }    
+  
+.card-container form,
+.card-container mat-radio-group,
+.card-container span,
+.card-container button {
+  margin-top: 20px; /* Adjust the spacing between elements */
+  margin-bottom: 20px;
+  font-family: 'Open Sans', sans-serif;
+}
