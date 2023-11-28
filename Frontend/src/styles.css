@@ -1,0 +1,59 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+:root {
+    /* --custom-primary: #345098 ; Replace with your primary color */
+    --custom-primary: #b42e29;
+  
+    .mat-step-header .mat-step-icon-selected,
+    .mat-step-header .mat-step-icon-state-done, 
+    .mat-step-header .mat-step-icon-state-edit {
+        background-color: white ;
+        color: #b42e29 ;
+
+        
+    }
+
+    .mat-step-label.mat-step-label-active{
+      color: white;
+    }
+
+    /* YourComponent.styles.css */
+
+/* Customize the label text color for a filled, focused text field */
+
+
+     
+  
+}
+.mat-primary {
+    background: var(--custom-primary) !important;
+  }
+/* .mat-accent {
+    background: var(--custom-accent) !important;
+  } */
+
+
+
+html, body { height: 100%; width: 100%;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #f4f4f4;
+
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+        background-image: url('assets/BackGround.jpeg'); /* Path to your background image */
+        background-size: cover; /* Cover the entire viewport */
+        background-repeat: no-repeat; /* Do not repeat the background image */
+        background-attachment: fixed; /* Fix the background image, so it doesn't scroll with content */
+       }
+
+       .mat-step-header{
+        background-color:  #f4f4f4;
+       }
+       .mat-step-header .mat-step-icon-selected {
+        background-color: var(--custom-primary);
+      }
+
+      
+
+      

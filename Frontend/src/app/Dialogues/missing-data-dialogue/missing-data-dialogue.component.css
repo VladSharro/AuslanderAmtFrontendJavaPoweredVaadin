@@ -1,0 +1,50 @@
+/* src/app/radio-dialog/radio-dialog.component.css */
+
+/* Style the overall dialog container */
+.dialogue_div{
+  width: 40%;
+  height: 50%;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+    flex-direction: column;
+}
+.mat-dialog-container {
+    background-color: #ffffff; /* Set the background color */
+    border-radius: 12px; /* Add rounded corners to the dialog */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Add a subtle box shadow */
+    width: 50%;
+  }
+  
+  /* Style the title */
+  .mat-dialog-title {
+    color: #333333; /* Set the title text color */
+    font-size: 20px; /* Increase the font size of the title */
+    font-weight: bold; /* Make the title bold */
+  }
+  
+  /* Style the content */
+  .mat-dialog-content {
+    padding: 20px; /* Add some padding to the content */
+    font-size: 16px; /* Set the font size of the content */
+    line-height: 1.5; /* Improve line spacing for readability */
+    width: 50%;
+  }
+  
+  /* Style the list items */
+  .mat-dialog-content ul {
+    list-style-type: none; /* Remove the default list styling */
+    padding: 0; /* Remove default padding */
+  }
+  
+  .mat-dialog-content li {
+    margin-bottom: 12px; /* Add more spacing between list items */
+  }
+  
+  /* Style the checkmark */
+  .mat-dialog-content span {
+    margin-right: 10px; /* Add spacing to the right of the checkmark */
+    color: #4CAF50; /* Set the checkmark color */
+    font-size: 18px; /* Increase the font size of the checkmark */
+  }
+      

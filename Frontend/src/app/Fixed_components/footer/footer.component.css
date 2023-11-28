@@ -1,0 +1,12 @@
+.footer {
+    margin-top: auto;
+    z-index: 999;
+    /* Push the footer to the bottom */
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
