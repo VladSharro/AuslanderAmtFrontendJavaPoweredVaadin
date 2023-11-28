@@ -1,0 +1,41 @@
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .navbar-buttons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+
+  .mat-icon {
+    color: var(--custom-primary);
+  }
+
+  #admin_span{
+    color: var(--custom-primary);
+  }
+
+  .mat-toolbar .navbar-buttons button,
+.mat-toolbar .spacer button {
+  font-family: 'Open Sans', sans-serif; /* Specify Open Sans or another desired font */
+  font-weight: bold;
+}
+
+.logo {
+    height: 50px; /* Adjust the height as needed */
+    margin-right: 16px; /* Adjust the margin as needed */
+  }
+
+  .spacersmall {
+    /* Styles for the first div */
+    margin-bottom: 10px; /* Adjust the value as needed */
+  }
+  

@@ -1,0 +1,27 @@
+app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .spacer {
+    height: 50px; /* Adjust the height based on your preference */
+  }
+  
+  /* Adjust the styles for the router-outlet or other content as needed */
+  router-outlet {
+    margin-top: 0px; /* Adjust the margin to account for the fixed header */
+    margin-bottom: 0px; /* Adjust the margin to account for the fixed footer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 1);
+  } 
