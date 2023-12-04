@@ -74,4 +74,55 @@ label {
         }
          
           
+/* rounded-input.component.css */
+.rounded-input, .custom-select  {
+  position: relative;
+  border-radius: 10px;
+  padding: 8px;
+  border: 1px solid var(--custom-primary);
+  /* border-color: ; */
+  width: 30%;
+  height: 10%;
+}
+.custom-select{
+  background-color:  rgba(255, 255, 255, 0.2);
+  width: 31%;
+}
+
+.rounded-input-container {
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px; /* Optional: Add some spacing between input and other elements */
+  justify-items: left;
+  justify-content: left;
+  text-align: left;
+
+}
+
+.placeholder-label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out, font-size 0.2s ease-out;
+  opacity: 0;
+  color: var(--custom-primary);
+}
+
+.filled .placeholder-label,
+.rounded-input:not(:placeholder-shown) + .placeholder-label {
+  opacity: 1;
+  transform: translateY(-200%) scale(0.9);
+  font-size: 13px;
+}
+
+
+.rounded-input:focus {
+  border: 3px solid var(--custom-primary);
+  /* Change the border color when the input is focused */
+}
+
+.palceholder_selector{
+  color: #777777;
+}
           

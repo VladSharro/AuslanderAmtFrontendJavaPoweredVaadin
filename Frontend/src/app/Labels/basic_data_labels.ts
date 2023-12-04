@@ -12,6 +12,12 @@ export class BasicDataLabels{
     readonly height_label = "Height | cm";
     readonly mobile_label = "mobile (optional)";
     readonly mail_label = "E-mail (optional)";
+    readonly upload_passport_button_label = "Upload Passport File";
+
+
+    readonly next_button_label = "Next";
+    readonly back_button_label = "Back";
+    readonly inValid_mail_label= "Invalid email address"
 
 
 

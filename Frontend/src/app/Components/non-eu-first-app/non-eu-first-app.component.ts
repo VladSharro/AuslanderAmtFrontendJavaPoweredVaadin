@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -9,7 +9,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { BasicDataLabels } from '../../Labels/basic_data_labels';
 import { MatOptionModule } from '@angular/material/core';
-import { ThemePalette } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 
@@ -29,6 +29,7 @@ import { ThemePalette } from '@angular/material/core';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
+    MatDatepickerModule
   ],
   templateUrl: './non-eu-first-app.component.html',
   styleUrl: './non-eu-first-app.component.css'
@@ -37,38 +38,32 @@ import { ThemePalette } from '@angular/material/core';
 
 export class NonEuFirstAppComponent {
 
-  name:string = "";
-  ourFile: File | null = null;
-  customColor= 'red';
+  passportFile: File | null = null;
+  
 
   //
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor() {
 
   
   }
   
-  firstFormGroup: FormGroup = this._formBuilder.group({
-    first_name: [''],
-    last_name: [''],
-    birth_date: [''],
-    sex_type: [''],
-    place_country: [''],
-    nationality: [''],
-    martial_type:[''],
-    since:[''],
-    eyes_color:[''],
-    height:[''],
-  });
+  basicData = {
+    first_name: '',
+    last_name: '',
+    birth_date: '',
+    sex_type: '',
+    place_country: '',
+    nationality: '',
+    martial_type:'',
+    since:'',
+    eyes_color:'',
+    height: 0,
+    mobile:'',
+    email:''
+  };
 
-  secondFormGroup: FormGroup = this._formBuilder.group({
-    passportNr: [''],
-    valid_from: [''],
-    valid_to: [''],
-    issued_by: [''],
-    issued_on: [''],
-  });
-
+  
   basicDataLabels = new BasicDataLabels()
 
   sexOptions = [this.basicDataLabels.sex_options_m , this.basicDataLabels.sex_options_f, this.basicDataLabels.sex_options_d]
@@ -86,11 +81,46 @@ if (fileInput) {
 
   }
 
-  fileChange(event: any) {
+  passportUploaded(event: any) {
     const files: FileList = event.target.files;
     if (files && files.length > 0) {
-      this.ourFile = files[0];
+      this.passportFile = files[0];
+      console.log(this.passportFile.name);
     }
   }
+
+  basicDataNextButtonClicked(){
+    console.log(this.basicData)
+  }
+
+
+  isSinceNeededForMartialStatue(): boolean{
+    if(this.basicData.martial_type === this.martialOptions[3] || this.basicData.martial_type === this.martialOptions[4] || this.basicData.martial_type === this.martialOptions[5]){
+      return true;
+    }
+    return false;
+  }
+
+
+
+
+
+  ///////////////////////////////////////////////// passport section////////////////////////////
+
+  passportData = {
+    passportNr: '',
+    valid_from: '',
+    valid_to: '',
+    issued_by: '',
+    issued_on: '',
+  };
+
+
+  passportNextButtonClicked(){
+    console.log(this.passportData)
+  }
+
+
+
 
 }
