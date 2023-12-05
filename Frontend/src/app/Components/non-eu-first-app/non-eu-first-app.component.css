@@ -46,7 +46,7 @@
   
   .main_div{
           width: 100%;
-          height: 80%;
+          height: 100%;
           justify-content: center;
         }
 
@@ -110,12 +110,12 @@ label {
 }
 
 .filled .placeholder-label,
-.rounded-input:not(:placeholder-shown) + .placeholder-label {
+.rounded-input:not(:placeholder-shown) + .placeholder-label,
+.rounded-input[type="date"]:not(:placeholder-shown) + .placeholder-label {
   opacity: 1;
   transform: translateY(-200%) scale(0.9);
   font-size: 13px;
 }
-
 
 .rounded-input:focus {
   border: 3px solid var(--custom-primary);
