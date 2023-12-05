@@ -39,8 +39,11 @@
 html, body { height: 100%; width: 100%;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #f4f4f4;
 
-        margin: 0; /* Remove default body margin */
         padding: 0; /* Remove default body padding */
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+        
         background-image: url('assets/BackGround.jpeg'); /* Path to your background image */
         background-size: cover; /* Cover the entire viewport */
         background-repeat: no-repeat; /* Do not repeat the background image */

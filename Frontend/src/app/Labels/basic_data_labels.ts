@@ -20,7 +20,7 @@ export class BasicDataLabels{
     readonly inValid_mail_label= "Invalid email address"
 
 
-
+    readonly passport_label = "Passport"
     readonly passoport_number = "passportNo.";
     readonly valid_from = "valid from";
     readonly valid_to = "valid till";
