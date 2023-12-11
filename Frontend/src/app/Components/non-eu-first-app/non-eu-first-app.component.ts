@@ -10,9 +10,10 @@ import { MatRadioModule } from '@angular/material/radio';
 import { BasicDataLabels } from '../../Labels/basic_data_labels';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-
-
-
+import { PlaceOfResidenceSectionLabels } from '../../Labels/place_of_residence_section_labels';
+import { familyLabels } from '../../Labels/Family_section_labels';
+import { Child } from '../../Models/Child';
+import { StayDataLabels } from '../../Labels/stay_data_labels';
 
 
 
@@ -39,14 +40,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 export class NonEuFirstAppComponent {
 
   passportFile: File | null = null;
-  
 
-  //
-
-  constructor() {
-
-  
-  }
+  constructor() {}
   
   basicData = {
     first_name: '',
@@ -69,12 +64,13 @@ export class NonEuFirstAppComponent {
   sexOptions = [this.basicDataLabels.sex_options_m , this.basicDataLabels.sex_options_f, this.basicDataLabels.sex_options_d]
   martialOptions = [this.basicDataLabels.martial_options_single, this.basicDataLabels.martial_options_married, this.basicDataLabels.martial_options_registered, this.basicDataLabels.martial_options_divorced, this.basicDataLabels.martial_options_widowed, this.basicDataLabels.martial_options_seperated]
   eyesOptions = [this.basicDataLabels.blue_eyes_option, this.basicDataLabels.green_eyes_option, this.basicDataLabels.green_eyes_option, this.basicDataLabels.brown_eyes_option]
-  openInput(){ 
+  
+  openPassportInput(){ 
     // your can use ElementRef for this later
-    const fileInput = document.getElementById("fileInput");
+    const passportInput = document.getElementById("passportInput");
 
-if (fileInput) {
-  fileInput.click();
+if (passportInput) {
+  passportInput.click();
 } else {
   console.error("File input element not found");
 }
@@ -86,6 +82,7 @@ if (fileInput) {
     if (files && files.length > 0) {
       this.passportFile = files[0];
       console.log(this.passportFile.name);
+      console.log(1)
     }
   }
 
@@ -93,6 +90,14 @@ if (fileInput) {
     console.log(this.basicData)
   }
 
+  isPartnerDataNeeded(): boolean{
+    if(this.basicData.martial_type === this.martialOptions[1] || this.basicData.martial_type === this.martialOptions[2]){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
   isSinceNeededForMartialStatue(): boolean{
     if(this.basicData.martial_type === this.martialOptions[3] || this.basicData.martial_type === this.martialOptions[4] || this.basicData.martial_type === this.martialOptions[5]){
@@ -100,13 +105,12 @@ if (fileInput) {
     }
     return false;
   }
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////// passport section ////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-  ///////////////////////////////////////////////// passport section////////////////////////////
-
+  fmailyLabels = new familyLabels();
   passportData = {
     passportNr: '',
     valid_from: '',
@@ -121,6 +125,210 @@ if (fileInput) {
   }
 
 
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////// Residence section ////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////
 
 
+  residence_labels = new PlaceOfResidenceSectionLabels();
+
+  registrationFile: File | null = null;
+
+
+  residenceData = {
+    placeOfResidence: '',
+    isPreviousStays: '',
+    previousStayAddress: '',
+    dateFrom: '',
+    dateTo:'',
+    residenceAbroadIfRetained: '',
+    isResidenceAbroadRetained: '',
+    
+  }
+
+
+  yes_no_options = [this.residence_labels.option_yes, this.residence_labels.option_No];
+
+
+  openRegistrationInput(){ 
+    // your can use ElementRef for this later
+    const registrationInput = document.getElementById("registrationFileInput");
+
+    if (registrationInput) {
+       registrationInput.click();
+    } else {
+      console.error("File input element not found");
+      }
+  }
+
+  isAddressAbroadRetained(): boolean{
+    if (this.residenceData.isResidenceAbroadRetained === "Yes"){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
+  isPreviousAddressInGermany(): boolean{
+    if (this.residenceData.isPreviousStays === "Yes"){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
+  registrationUpload(event: any) {
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      this.registrationFile = files[0];
+      console.log(this.registrationFile.name);
+      console.log(2)
+
+    }
+  }
+
+
+
+
+
+  /////////////////////////////////////////////////////////////
+  ///////////////////////Family Section ///////////////////////
+  /////////////////////////////////////////////////////////////
+
+  childData = new Child()
+
+  familyData = {
+    partnerLastName: '',
+    partnerFirstName: '',
+    partnerDateOfBirth: '',
+    partnerPlaceOfBirth: '',
+    partnerNationality: '',
+    partnerSex: '',
+    partnerCurrentResidenceInGermany:'',
+    isChildrenAvailable: '',
+    childern: [new Child()],
+    isFatherApplicable: '',
+    fatherLastName: '',
+    fatherFisrtName: '',
+    fatherNationality: '',
+    fatherPlaceOfBirthForMinors: '',
+    fatherDateOfBirthForMinors: '',
+    fatherCurrentResidenceForMinors: '',
+    isMotherApplicable: '',
+    motherLastName: '',
+    motherFisrtName: '',
+    motherNationality: '',
+    motherPlaceOfBirthForMinors: '',
+    motherDateOfBirthForMinors: '',
+    motherCurrentResidenceForMinors: '',
+
+
+  }
+
+
+  addChild(){
+    this.familyData.childern.push(new Child(this.childData))
+    this.childData = new Child()
+    
+  }
+
+  isMinorWithFather(): boolean{
+    if(this.familyData.isFatherApplicable === "Yes"){
+      if(this.basicData.birth_date === ''){
+      const dateObject = new Date(this.basicData.birth_date);
+      const year = dateObject.getFullYear();
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+
+      if(currentYear -  year < 19){
+        return true
+      } 
+      }
+    }
+    return false;
+
+  }
+
+  isMinorWithMother(): boolean{
+    if(this.familyData.isMotherApplicable === "Yes"){
+      if(this.basicData.birth_date === ''){
+      const dateObject = new Date(this.basicData.birth_date);
+      const year = dateObject.getFullYear();
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+
+      if(currentYear -  year < 19){
+        return true
+      } 
+      }
+    }
+    return false;
+
+  }
+
+  familyNextButtonClicked(){
+    if(this.familyData.isChildrenAvailable === "Yes"){
+      this.familyData.childern.push(new Child(this.childData))
+    this.childData = new Child()
+    }
+    console.log(this.familyData)
+  }
+
+
+
+
+  ///////////////////////////////////////////////////////
+  ///////////////////////STAY DATA///////////////////////
+  ///////////////////////////////////////////////////////
+
+
+  stayData = {
+    lastEntryDate:'',
+    lastEntryVisaType:'',
+    visaIssueBy:'',
+    visaIssueOn:'',
+    visaNumber:'',
+    visaValidFrom:'',
+    visaValidTo:'',
+    lengthOfStay:'',
+    purposeOfStay:'',
+  }
+
+  visaFile: File | null = null;
+  stayLabels = new StayDataLabels();
+  lastEntryTypeOptions = [this.stayLabels.entry_visa_type_option_national, this.stayLabels.entry_visa_type_option_schegen, this.stayLabels.entry_visa_type_option_without, this.stayLabels.entry_visa_type_options_eu];
+  stayPurposeOptions = [this.stayLabels.purpose_of_stay_option_training]
+
+
+  openVisaInput(){ 
+    // your can use ElementRef for this later
+    const visaInput = document.getElementById("visaFileInput");
+
+    if (visaInput) {
+      visaInput.click();
+    } else {
+      console.error("File input element not found");
+      }
+  }
+
+  
+
+
+  visaUpload(event: any) {
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      this.visaFile = files[0];
+      console.log(this.visaFile.name);
+      console.log(2)
+
+    }
+  }
+
+
+
+  staySectionButtonClicked(){
+    
+  }
 }

@@ -2,11 +2,12 @@
 <mat-card class="card-container">
     
     <mat-stepper [linear]="true"  #stepper>
+
         <mat-step   label="{{basicDataLabels.basic_data_label}}">
             <form >
               <div style="display: flex; align-items: center;">
-                <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openInput()">{{basicDataLabels.upload_passport_button_label}} </button>
-              <input id="fileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="passportUploaded($event)" >
+                <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPassportInput()">{{basicDataLabels.upload_passport_button_label}} </button>
+              <input id="passportInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="passportUploaded($event)" >
               <span *ngIf="passportFile" style="margin-left: 10px;">{{ passportFile.name }}</span>
               </div>
 
@@ -83,20 +84,17 @@
 
               </div>
               
-            
-
               <div  style="display: flex; justify-content: right; margin-top: 5px;">
                 <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="basicDataNextButtonClicked()" >{{basicDataLabels.next_button_label}}</button>
               </div>
 
-              
             </form>
           </mat-step>
 
 
 
 
-        <mat-step label="Passport">
+        <mat-step label="{{basicDataLabels.passport_label}}">
           <form>
             
             <div class="rounded-input-container" [class.filled]="passportData.passportNr" >
@@ -126,15 +124,313 @@
             </div>
           </form>
         </mat-step>
-        <mat-step label="Done">
-          
-          <p>You are now done.</p>
-          <div  style="display: flex; justify-content: right; margin-top: 15px;">
-            <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;">Back</button>
-            <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="stepper.reset()">Preview</button>
+
+        <mat-step label={{residence_labels.section_Label}}>
+          <form>
+            <div style="display: flex; align-items: center;">
+              <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openRegistrationInput()">{{residence_labels.city_registration_document_upload_button_label}} </button>
+            <input id="registrationFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="registrationUpload($event)">
+            <span *ngIf="registrationFile" style="margin-left: 10px;">{{ registrationFile.name }}</span>
           </div>
+
+            <div class="rounded-input-container" [class.filled]="residenceData.placeOfResidence" >
+              <input class="rounded-input" type="text" name="residence_place_field" id="residence_place_field" [(ngModel)]="residenceData.placeOfResidence" placeholder="{{residence_labels.current_residence_in_germany_label}}">
+              <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>
+            </div>
+          
+            <div class="rounded-input-container" [class.filled]="residenceData.isPreviousStays" >
+              <select id="is_previous_stay" name="is_previous_stay" [(ngModel)]="residenceData.isPreviousStays" class="custom-select"  [ngClass]="{'palceholder_selector': residenceData.isPreviousStays === ''}">
+                <option value="" disabled selected>{{residence_labels.previous_stays_label}}</option>
+                <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+              </select>
+              <label class="placeholder-label">{{residence_labels.previous_stays_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPreviousAddressInGermany()" [class.filled]="residenceData.dateFrom" >
+              <input class="rounded-input" type="date" name="previous_stay_from" id="previous_stay_from" [(ngModel)]="residenceData.dateFrom" placeholder="{{residence_labels.from_date_label}}">
+              <label class="placeholder-label">{{residence_labels.from_date_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPreviousAddressInGermany()" [class.filled]="residenceData.dateTo" >
+              <input class="rounded-input" type="date" name="previous_stay_to" id="previous_stay_to" [(ngModel)]="residenceData.dateTo" placeholder="{{residence_labels.to_date_label}}">
+              <label class="placeholder-label">{{residence_labels.to_date_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPreviousAddressInGermany()" [class.filled]="residenceData.previousStayAddress" >
+              <input class="rounded-input" type="text" name="previous_stay_address" id="previous_stay_address" [(ngModel)]="residenceData.previousStayAddress" placeholder="{{residence_labels.previous_stays_label}}">
+              <label class="placeholder-label">{{residence_labels.previous_stays_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="residenceData.isResidenceAbroadRetained" >
+              <select id="is_residence_abroad_retained" name="is_residence_abroad_retained" [(ngModel)]="residenceData.isResidenceAbroadRetained" class="custom-select"  [ngClass]="{'palceholder_selector': residenceData.isResidenceAbroadRetained === ''}">
+                <option value="" disabled selected>{{residence_labels.residence_place_abroad_label}}</option>
+                <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+              </select>
+              <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isAddressAbroadRetained()" [class.filled]="residenceData.residenceAbroadIfRetained">
+              <input class="rounded-input" type="text" name="previous_stay_abroad_address" id="previous_stay_abroad_address" [(ngModel)]="residenceData.residenceAbroadIfRetained" placeholder="{{residence_labels.residence_place_abroad_label}}">
+              <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>
+            </div>
+
+            <div  style="display: flex; justify-content: right; margin-top: 15px;">
+              <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{basicDataLabels.back_button_label}}</button>
+              <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="passportNextButtonClicked()"> {{basicDataLabels.next_button_label}}</button>
+            </div>
+          </form>
         </mat-step>
-      </mat-stepper>
+
+        <!-- START OF FAMILY SECTION -->
+        <mat-step label={{fmailyLabels.sectionLabel}}>
+          <form>
+            <h3 style="text-align: left;" *ngIf="isPartnerDataNeeded()">Partner Data</h3>
+
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerLastName" >
+              <input class="rounded-input" type="text" name="partner_last_name_field" id="partner_last_name_field" [(ngModel)]="familyData.partnerLastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+              <label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+            </div>
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerFirstName" >
+              <input class="rounded-input" type="text" name="partner_first_name_field" id="partner_first_name_field" [(ngModel)]="familyData.partnerFirstName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+              <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerDateOfBirth" >
+              <input class="rounded-input" type="date" name="partner_birth_date_field" id="partner_birth_date_field" [(ngModel)]="familyData.partnerDateOfBirth" placeholder="{{familyData.partnerDateOfBirth}}">
+              <label class="placeholder-label">{{familyData.partnerDateOfBirth}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerPlaceOfBirth" >
+              <input class="rounded-input" type="text" name="partner_birth_place_field" id="partner_birth_place_field" [(ngModel)]="familyData.partnerPlaceOfBirth" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+              <label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerNationality" >
+              <input class="rounded-input" type="text" name="partner_nationality_field" id="partner_nationality_field" [(ngModel)]="familyData.partnerNationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+              <label class="placeholder-label">{{fmailyLabels.partnerOrKidNationality}}</label>
+            </div>
+
+          
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerSex" >
+              <select id="partner_sex" name="partner_sex" [(ngModel)]="familyData.partnerSex" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.partnerSex === ''}">
+                <option value="" disabled selected>{{fmailyLabels.partnerOrKidSex}}</option>
+                <option *ngFor="let sex_option of sexOptions" [value]="sex_option">{{ sex_option }}</option>
+              </select>
+              <label class="placeholder-label">{{fmailyLabels.partnerOrKidSex}}</label>
+            </div>
+
+            <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerCurrentResidenceInGermany" >
+              <input class="rounded-input" type="text" name="partner_current_residence" id="partner_current_residence" [(ngModel)]="familyData.partnerCurrentResidenceInGermany" placeholder="{{familyData.partnerCurrentResidenceInGermany}}">
+              <label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+            </div>
+
+
+            <div class="rounded-input-container" [class.filled]="familyData.isChildrenAvailable" >
+              <select id="is_children_available" name="is_children_available" [(ngModel)]="familyData.isChildrenAvailable" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.isChildrenAvailable === ''}">
+                <option value="" disabled selected>{{fmailyLabels.isChildrenAvailableQuestion}}</option>
+                <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+              </select>
+              <label class="placeholder-label">{{fmailyLabels.isChildrenAvailableQuestion}}</label>
+            </div>
+            
+
+<div *ngIf="familyData.isChildrenAvailable === 'Yes'">
+  <div *ngFor="let child of familyData.childern; let i = index" class="rounded-input-container">
+    <h3>{{fmailyLabels.childNo}}{{ i + 1}}</h3>
+    <div class="rounded-input-container">
+      <input class="rounded-input" type="text" name="child_last_name_{{i}}" [(ngModel)]="child.lastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+    </div>
+    <div class="rounded-input-container">
+      <input class="rounded-input" type="text" name="child_first_name_{{i}}" [(ngModel)]="child.firstName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+    </div>
+    <div class="rounded-input-container">
+      <select id="child_sex_{{i}}" name="child_sex{{i}}" [(ngModel)]="child.sex" class="custom-select" [ngClass]="{'palceholder_selector': familyData.partnerSex === ''}">
+        <option value="" disabled selected>{{fmailyLabels.partnerOrKidSex}}</option>
+        <option *ngFor="let sex_option of sexOptions" [value]="sex_option">{{sex_option}}</option>
+      </select>
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidSex}}</label>
+    </div>
+
+    <div class="rounded-input-container">
+      <input class="rounded-input" type="date" name="child_birth_date_{{i}}" [(ngModel)]="child.dateOfBirth" placeholder="{{fmailyLabels.partnerOrKidBirthDate}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidBirthDate}}</label>
+    </div>
+
+    <div class="rounded-input-container">
+      <input class="rounded-input" type="text" name="child_birth_place_{{i}}" [(ngModel)]="child.placeOfBirth" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+    </div>
+
+    <div class="rounded-input-container">
+      <input class="rounded-input" type="text" name="child_nationality_{{i}}" [(ngModel)]="child.nationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidNationality}}</label>
+    </div>
+
+    <div class="rounded-input-container">
+      <input class="rounded-input" type="text" name="child_current_residence_{{i}}" [(ngModel)]="child.currentPlaceOfResidence" placeholder="{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+    </div>
+  </div>
+  <div style="display: flex; align-items: center;">
+    <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="addChild()">{{fmailyLabels.addChildLabel}} </button></div>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="familyData.isFatherApplicable" >
+      <select id="is_father_applicable" name="is_father_applicable" [(ngModel)]="familyData.isFatherApplicable" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.isFatherApplicable === ''}">
+        <option value="" disabled selected>{{fmailyLabels.isFatherApplicable}}</option>
+        <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+      </select>
+      <label class="placeholder-label">{{fmailyLabels.isFatherApplicable}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="familyData.isFatherApplicable" [class.filled]="familyData.fatherLastName" >
+      <input class="rounded-input" type="text" name="father_last_name_field" id="father_last_name_field" [(ngModel)]="familyData.fatherLastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="familyData.isFatherApplicable" [class.filled]="familyData.fatherFisrtName" >
+      <input class="rounded-input" type="text" name="father_first_name_field" id="father_first_name_field" [(ngModel)]="familyData.fatherFisrtName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="familyData.isFatherApplicable" [class.filled]="familyData.fatherNationality" >
+      <input class="rounded-input" type="text" name="father_nationality_field" id="father_nationality_field" [(ngModel)]="familyData.fatherNationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isMinorWithFather()" [class.filled]="familyData.fatherPlaceOfBirthForMinors" >
+      <input class="rounded-input" type="text" name="father_place_birth_field" id="father_place_birth_field" [(ngModel)]="familyData.fatherPlaceOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isMinorWithFather()" [class.filled]="familyData.fatherDateOfBirthForMinors" >
+      <input class="rounded-input" type="date" name="father_date_birth_field" id="father_date_birth_field" [(ngModel)]="familyData.fatherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidBirthDate}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidBirthDate}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isMinorWithFather()" [class.filled]="familyData.fatherCurrentResidenceForMinors" >
+      <input class="rounded-input" type="date" name="father_current_residence_field" id="father_date_birth_field" [(ngModel)]="familyData.fatherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="familyData.isMotherApplicable" >
+      <select id="is_father_applicable" name="is_mother_applicable" [(ngModel)]="familyData.isMotherApplicable" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.isMotherApplicable === ''}">
+        <option value="" disabled selected>{{fmailyLabels.isMotherApplicable}}</option>
+        <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+      </select>
+      <label class="placeholder-label">{{fmailyLabels.isMotherApplicable}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="familyData.isMotherApplicable" [class.filled]="familyData.motherLastName" >
+      <input class="rounded-input" type="text" name="mother_last_name_field" id="mother_last_name_field" [(ngModel)]="familyData.motherLastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="familyData.isMotherApplicable" [class.filled]="familyData.motherFisrtName" >
+      <input class="rounded-input" type="text" name="mother_first_name_field" id="mother_first_name_field" [(ngModel)]="familyData.motherFisrtName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="familyData.isMotherApplicable" [class.filled]="familyData.motherNationality" >
+      <input class="rounded-input" type="text" name="mother_nationality_field" id="mother_nationality_field" [(ngModel)]="familyData.motherNationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isMinorWithMother()" [class.filled]="familyData.motherPlaceOfBirthForMinors" >
+      <input class="rounded-input" type="text" name="mother_place_birth_field" id="mother_place_birth_field" [(ngModel)]="familyData.motherPlaceOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isMinorWithMother()" [class.filled]="familyData.motherDateOfBirthForMinors" >
+      <input class="rounded-input" type="date" name="mother_date_birth_field" id="mother_date_birth_field" [(ngModel)]="familyData.motherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidBirthDate}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidBirthDate}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isMinorWithMother()" [class.filled]="familyData.motherCurrentResidenceForMinors" >
+      <input class="rounded-input" type="date" name="mother_current_residence_field" id="mother_date_birth_field" [(ngModel)]="familyData.motherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+    </div>
+
+    <div  style="display: flex; justify-content: right; margin-top: 15px;">
+      <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{basicDataLabels.back_button_label}}</button>
+      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="familyNextButtonClicked()"> {{basicDataLabels.next_button_label}}</button>
+    </div>  
+          </form>
+
+        </mat-step>
+
+        <mat-step label={{stayLabels.section_label}}>
+          <form>
+            
+            <div style="display: flex; align-items: center;">
+              <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openVisaInput()">{{stayLabels.upload_entry_visa_document}} </button>
+            <input id="visaFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="visaUpload($event)">
+            <span *ngIf="visaFile" style="margin-left: 10px;">{{ visaFile.name }}</span>
+           </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.lastEntryDate" >
+              <input class="rounded-input" type="date" name="entry_date_field" id="entry_date_field" [(ngModel)]="stayData.lastEntryDate" placeholder="{{stayData.lastEntryDate}}">
+              <label class="placeholder-label">{{stayLabels.last_entry_date}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.lastEntryVisaType" >
+              <select id="last_entry_type" name="ilast_entry_type" [(ngModel)]="stayData.lastEntryVisaType" class="custom-select"  [ngClass]="{'palceholder_selector': stayData.lastEntryVisaType === ''}">
+                <option value="" disabled selected>{{stayLabels.entry_visa_type_label}}</option>
+                <option *ngFor="let enrty_visa_option of lastEntryTypeOptions" [value]="enrty_visa_option">{{ enrty_visa_option }}</option>
+              </select>
+              <label class="placeholder-label">{{stayLabels.entry_visa_type_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.visaIssueBy" >
+              <input class="rounded-input" type="text" name="visa_issue_by_field" id="visa_issue_by_field" [(ngModel)]="stayData.visaIssueBy" placeholder="{{stayLabels.visa_issue_by_label}}">
+              <label class="placeholder-label">{{stayLabels.visa_issue_by_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.visaIssueOn" >
+              <input class="rounded-input" type="date" name="visa_issue_on_field" id="visa_issue_on_field" [(ngModel)]="stayData.visaIssueOn" placeholder="{{stayLabels.visa_issue_on_label}}">
+              <label class="placeholder-label">{{stayLabels.visa_issue_on_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.visaNumber" >
+              <input class="rounded-input" type="text" name="visa_number_field" id="visa_number_field" [(ngModel)]="stayData.visaNumber" placeholder="{{stayLabels.visa_number_label}}">
+              <label class="placeholder-label">{{stayLabels.visa_number_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.visaValidFrom" >
+              <input class="rounded-input" type="date" name="visa_valid_from_field" id="visa_valid_from_field" [(ngModel)]="stayData.visaValidFrom" placeholder="{{stayLabels.visa_valid_from_label}}">
+              <label class="placeholder-label">{{stayLabels.visa_valid_from_label}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.visaValidTo" >
+              <input class="rounded-input" type="date" name="visa_valid_to_field" id="visa_valid_to_field" [(ngModel)]="stayData.visaValidTo" placeholder="{{stayLabels.visa_valid_to_label}}">
+              <label class="placeholder-label">{{stayLabels.visa_valid_to_label}}</label>
+            </div>
+            <div class="rounded-input-container" [class.filled]="stayData.lengthOfStay" >
+              <input class="rounded-input" type="number" name="length_of_length_field" id="length_of_stay_field" [(ngModel)]="stayData.lengthOfStay" placeholder="{{stayLabels.visa_length_of_stay}}">
+              <label class="placeholder-label">{{stayLabels.visa_length_of_stay}}</label>
+            </div>
+
+            <div class="rounded-input-container" [class.filled]="stayData.purposeOfStay" >
+              <select id="purpose_of_stay_type" name="purpose_of_stay_type" [(ngModel)]="stayData.purposeOfStay" class="custom-select"  [ngClass]="{'palceholder_selector': stayData.purposeOfStay === ''}">
+                <option value="" disabled selected>{{stayLabels.purpose_of_stay_label}}</option>
+                <option *ngFor="let stayPurposeOption of stayPurposeOptions" [value]="stayPurposeOption">{{ stayPurposeOption }}</option>
+              </select>
+              <label class="placeholder-label">{{stayLabels.entry_visa_type_label}}</label>
+            </div>
+
+
+            <div  style="display: flex; justify-content: right; margin-top: 15px;">
+                <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{basicDataLabels.back_button_label}}</button>
+                <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="staySectionButtonClicked()"> {{basicDataLabels.next_button_label}}</button>
+            </div> 
+
+          </form>
+        </mat-step>
+
+
+
+
+      <mat-step label="Done">
+        
+        <p>You are now done.</p>
+        <div  style="display: flex; justify-content: right; margin-top: 15px;">
+          <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;">Back</button>
+          <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="stepper.reset()">Preview</button>
+        </div>
+      </mat-step>
+    </mat-stepper>
     </mat-card>
 </div>
   
