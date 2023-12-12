@@ -28,6 +28,8 @@ install:
     script:
         - cd ./Frontend
         - npm install --prefer-offline
+        - cd ..
+        - apt-get install python3.11
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
     cache:
