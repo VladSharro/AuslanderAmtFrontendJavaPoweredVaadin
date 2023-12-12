@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Robot ###
+log.html
+report.html
+output.xml
