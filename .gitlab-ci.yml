@@ -34,9 +34,6 @@ image: python:3.11-slim-bullseye
 
 robot-install:
     stage: dependencies
-    before_script:
-        - apt-get update
-        - apt-get -y install wget unzip
     script:
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
@@ -52,6 +49,8 @@ e2e-test:
     stage: test
     needs: ["robot-install"]
     before_script:
+        - apt-get update
+        - apt-get -y install wget unzip
         - wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/win64/chromedriver-win64.zip
         - mkdir -p ~/.local/bin
         - unzip chromedriver-linux64.zip -d ~/.local/bin
