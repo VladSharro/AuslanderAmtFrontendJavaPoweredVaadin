@@ -41,16 +41,15 @@ image: python:3.11-slim-bullseye
 e2e-test:
     stage: test
     before_script:
-        - apt-get update
-        - apt-get -y install wget unzip
-        - apt-get install -y libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1
-        - wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/linux64/chromedriver-linux64.zip
-        - mkdir -p ~/.local/bin
-        - unzip chromedriver-linux64.zip -d ~/.local/bin
-        - mv ~/.local/bin/chromedriver-linux64/chromedriver  ~/.local/bin/chromedriver
-        - chmod +x ~/.local/bin/chromedriver
+        #- apt-get update
+        #- apt-get -y install wget unzip
+        #- wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/linux64/chromedriver-linux64.zip
+        #- mkdir -p ~/.local/bin
+        #- unzip chromedriver-linux64.zip -d ~/.local/bin
+        #- mv ~/.local/bin/chromedriver-linux64/chromedriver  ~/.local/bin/chromedriver
+        #- chmod +x ~/.local/bin/chromedriver
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
-        - export PATH=$PATH:~/.local/bin
+        #- export PATH=$PATH:~/.local/bin
     script:
         - robot Tests/ui/home.robot
