@@ -30,9 +30,6 @@ install:
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
     cache:
-        key:
-            files:
-                - package.json
         paths:
             - node_modules
 
