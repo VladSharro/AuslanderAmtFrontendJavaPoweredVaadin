@@ -1,5 +1,5 @@
 export class BasicDataLabels{
-    readonly basic_data_label = "Basic Data";
+    readonly basic_data_label = "Basic";
     readonly first_name_label = "First name";
     readonly last_name_label = "Last name";
     readonly birth_date_label = "Date of birth";
