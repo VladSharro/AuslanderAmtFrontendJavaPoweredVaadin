@@ -50,5 +50,6 @@ e2e-test:
         - chmod +x ~/.local/bin/chromedriver
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
+        - export PATH=$PATH:~/.local/bin
     script:
         - robot Tests/ui/home.robot
