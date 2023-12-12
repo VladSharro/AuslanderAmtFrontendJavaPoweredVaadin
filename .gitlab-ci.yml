@@ -34,6 +34,9 @@ image: python:3.11-slim-bullseye
 
 robot-install:
     stage: dependencies
+    before_script:
+        - apt-get update
+        - apt-get -y install wget unzip
     script:
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
