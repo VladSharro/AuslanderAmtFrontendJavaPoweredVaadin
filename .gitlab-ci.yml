@@ -26,10 +26,14 @@ image: node:20-bullseye-slim
 install:
     stage: dependencies
     script:
-        - npm install
+        - cd ./Frontend
+        - npm install --prefer-offline
         - pip install robotframework
         - pip install robotframework-seleniumlibrary
     cache:
+        key:
+            files:
+                - package.json
         paths:
             - node_modules
 
