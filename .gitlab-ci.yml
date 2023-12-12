@@ -53,13 +53,13 @@ robot-install:
 
 fe-run-job:       # This job runs in the build stage, which runs first.
   stage: run
-  needs: ["install"]
+  needs: ["node-install"]
   script:
       - ng serve
 
 e2e-test:
     stage: test
-    needs: ["install"]
+    needs: ["robot-install"]
     before_script:
         - wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/win64/chromedriver-win64.zip
         - mkdir -p ~/.local/bin
