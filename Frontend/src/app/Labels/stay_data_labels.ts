@@ -1,5 +1,5 @@
 export class StayDataLabels{
-    readonly section_label = "Stay Data";
+    readonly section_label = "Stay";
     readonly upload_entry_visa_document = "Upload Visa document";
     readonly last_entry_label = "Last entry";
     readonly purpose_of_stay_label = "Purpose of stay in Germany";

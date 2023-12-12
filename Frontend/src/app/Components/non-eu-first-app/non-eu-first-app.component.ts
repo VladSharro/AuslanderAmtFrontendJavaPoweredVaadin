@@ -14,6 +14,10 @@ import { PlaceOfResidenceSectionLabels } from '../../Labels/place_of_residence_s
 import { familyLabels } from '../../Labels/Family_section_labels';
 import { Child } from '../../Models/Child';
 import { StayDataLabels } from '../../Labels/stay_data_labels';
+import { SupportLabels } from '../../Labels/financial_support_labels';
+import { offenciesLabels } from '../../Labels/offencies_data_labels';
+import { FinancialDocument } from '../../Models/FinancialDocument';
+import { PhotoLabels } from '../../Labels/Photo_labels';
 
 
 
@@ -331,4 +335,161 @@ if (passportInput) {
   staySectionButtonClicked(){
     
   }
+
+
+
+  ///////////////////////////////////////////////////////
+  ///////////////////////SUPPORT DATA////////////////////
+  ///////////////////////////////////////////////////////
+
+  supportLabels = new SupportLabels();
+  financialSupportFiles: FinancialDocument[] = [];
+  insuranceFile: File | null = null;
+
+  meansOfSupportData = {
+
+    meansOfSupport: '',
+    isSecondOrTwelfth: '',
+    supportTyeIfYes: '',
+    isInsuranceAvailable: '',
+    insuranceCompany: '',
+    finalValueOfFinancialSupport: 0,
+
+
+  }
+
+  yesNoOptions = [this.supportLabels.yes_option, this.supportLabels.no_option];
+  codeOfSocialLawOptions = [this.supportLabels.social_benifit_option, this.supportLabels.basic_support_option];
+  financialSupportOptions = [this.supportLabels.financial_support_option_blocked_account, this.supportLabels.financial_support_option_contract, this.supportLabels.financial_support_option_scholarship];
+
+  tempFinancialSupportName = '';
+
+
+
+  openInsuranceInput(){ 
+    // your can use ElementRef for this later
+    const insuranceInput = document.getElementById("insuranceFileInput");
+
+    if (insuranceInput) {
+      insuranceInput.click();
+    } else {
+      console.error("File input element not found");
+      }
+  }
+
+
+  openFinancialSupportInput(index: number){
+    const financialInput = document.getElementById("financialSupportInput"+String(index));
+    if (financialInput) {
+      financialInput.click();
+    } else {
+      console.error("financialSupportInput"+String(index));
+      console.error("File input element not found");
+      }
+  }
+
+
+  financialSupportUploaded(event: any, index: number){
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      this.financialSupportFiles[index].file = files[0];
+      console.log(this.financialSupportFiles[index].file?.name);
+      console.log(2)
+
+    }
+  }
+
+  noOfDocsRange: number[] = [];
+
+
+  insuranceUpload(event: any) {
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      this.insuranceFile = files[0];
+      console.log(this.insuranceFile.name);
+      console.log(2)
+
+    }
+  }
+
+
+  // ngOnChanges(): void {
+  //   this.noOfDocsRange = Array.from({ length: this.meansOfSupportData.noOfFinancialSupportDocuments }, (_, index) => index + 1);
+  // }
+
+
+  addNewFinancialSupport(){
+    this.financialSupportFiles.push(new FinancialDocument());
+  }
+
+  nextSupportClicked(){
+
+  }
+
+
+///////////////////////////////////////////////////////
+///////////////////////OFFENCES DATA///////////////////
+///////////////////////////////////////////////////////
+
+offencesLabel = new offenciesLabels();
+
+offencesData = {
+
+  isConvicted: '',
+  convictionPlace: '',
+  convictionReason: '',
+  convictionTypeAndamount: '',
+  isUnderInvestigation: '',
+  investigationPlace: '',
+  investigationAuthority: '',
+  isExpelledOrDeported: '',
+  expelledFrom: '',
+  expelledOn: '',
+  isEntryApplicationRejected: '',
+  entryRejectedFrom: '',
+  entyRejectedOn: '',
+  isResidenceApplicationRejected: '',
+  residenceRejectedFrom: '',
+  residenceRejectedOn: ''
+}
+
+placesOptions = [this.offencesLabel.inDeutschlandOption, this.offencesLabel.abroadOption];
+
+
+
+///////////////////////////////////////////////////////
+///////////////////////PHOTO DATA//////////////////////
+///////////////////////////////////////////////////////
+
+
+photoLabels = new PhotoLabels();
+
+photoFile: File |  null = null;
+
+
+
+openPhotoInput(){ 
+  // your can use ElementRef for this later
+  const photoInput = document.getElementById("photoFileInput");
+
+  if (photoInput) {
+    photoInput.click();
+  } else {
+    console.error("File input element not found");
+    }
+}
+
+
+
+
+photoUpload(event: any) {
+  const files: FileList = event.target.files;
+  if (files && files.length > 0) {
+    this.photoFile = files[0];
+    console.log(this.photoFile.name);
+    console.log(2)
+
+  }
+}
+
 }
