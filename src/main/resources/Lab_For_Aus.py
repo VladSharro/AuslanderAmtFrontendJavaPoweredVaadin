@@ -119,6 +119,30 @@ def extract_info_from_pdf(pdf_path):
 
 
 
+
+def extract_immatrikulation(pdf_path):
+    doc = fitz.open(pdf_path)
+    page = doc[0]  # Assuming the information is on the first page
+
+    # Extract text from the PDF page
+    extracted_text = page.get_text()
+
+    # Split the extracted text into lines
+    lines = extracted_text.split('\n')
+
+    for i, line in enumerate(lines):
+        print(i, "   ", line)
+
+    name = lines[0]
+    surname = lines[1]
+
+    return name, surname, doc
+
+
+
+
+
+
 # Function to handle the "Open" button click event
 def open_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
