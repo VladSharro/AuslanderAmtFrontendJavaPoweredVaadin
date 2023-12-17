@@ -197,6 +197,13 @@ def open_file():
                 result_label.config(text=f'Postleizeit: {postleizeit}\nWohnort: {wohnort}\nStraße: {strasse}\nHausnummer: {hausnummer}')
                 # Close the PDF document when done
                 doc.close()            
+            elif file_type == "Immutriculation":
+                name, surname, doc = extract_immatrikulation(file_path)
+                result_label.config(text=f'Name: {name}\nSurname: {surname}\n')
+                doc.close()
+
+
+
 
 
 # Function to display the image in the Tkinter window
