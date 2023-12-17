@@ -140,6 +140,39 @@ def extract_immatrikulation(pdf_path):
 
 
 
+def extract_health(image_path):
+
+    img = cv2.imread(image_path)
+
+    # Convert the image to grayscale
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Perform OCR using Tesseract
+    extracted_text = pytesseract.image_to_string(gray_img)
+
+    # Split the extracted text into lines
+    lines = extracted_text.split('\n')
+
+
+    kassen = ""
+
+
+    i = 0
+
+    possible_kasse = ["TK", "Techniker"]
+
+    while i < len(lines):
+        current_line = lines[i]
+        print(current_line)
+
+        for kasse in possible_kasse:
+            if kasse in current_line:
+                kassen = kasse
+
+
+        i += 1
+
+    return kassen, gray_img
 
 
 
