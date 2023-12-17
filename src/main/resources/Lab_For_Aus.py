@@ -29,6 +29,7 @@ def extract_name_and_surname(image_path):
     surname = ""
     nationality = ""
     birth = ""
+    sex = ""
 
     i = 0
 
@@ -38,6 +39,13 @@ def extract_name_and_surname(image_path):
 
         if re.search(r'\bDate of birth\b', lines[i]):
             birth = lines[i+1]
+
+        if re.search(r'\bM\b', lines[i]):
+            sex = "Male"
+
+        if re.search(r'\bF\b', lines[i]):
+            sex = "Female"
+
 
         print(lines[i])
         i = i + 1
@@ -63,8 +71,7 @@ def extract_name_and_surname(image_path):
 
             break
 
-    return name, surname, gray_img, nationality, birth
-
+    return name, surname, gray_img, nationality, birth, sex
 
 # Function to handle the "Open" button click event
 def open_file():
