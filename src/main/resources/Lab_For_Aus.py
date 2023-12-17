@@ -209,7 +209,8 @@ def open_file():
         passport_button = tk.Button(popup, text="Passport", command=lambda: handle_button_click("Passport"))
         passport_button.pack()
 
-
+        wohnung_button = tk.Button(popup, text="Wohnungbescheinigung", command=lambda: handle_button_click("Wohnungbescheinigung"))
+        wohnung_button.pack()
 
 
 
