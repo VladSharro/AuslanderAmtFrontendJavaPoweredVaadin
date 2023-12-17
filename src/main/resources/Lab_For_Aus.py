@@ -73,6 +73,52 @@ def extract_name_and_surname(image_path):
 
     return name, surname, gray_img, nationality, birth, sex
 
+
+
+def extract_info_from_pdf(pdf_path):
+    doc = fitz.open(pdf_path)
+    page = doc[1]  # Assuming the information is on the second page
+
+    # Convert the PDF page to an image
+    pix = page.get_pixmap()
+    img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+    extracted_text = pytesseract.image_to_string(img, config='--psm 6')
+
+    # Split the extracted text into lines
+    lines = extracted_text.split('\n')
+
+    i = 0
+
+    while i < len(lines):
+        print(lines[i])
+        i = i + 1
+
+
+    # Function to extract the last word or digit from a string
+    def extract_last_word_or_digit(line):
+        words_digits = re.findall(r'\b(\w+|\d+)\b', line)
+        return words_digits[-1] if words_digits else "Not found"
+
+    # Extract the last word or digit from each line
+    postleizeit = extract_last_word_or_digit(lines[1])
+    wohnort = extract_last_word_or_digit(lines[2])
+    strasse = extract_last_word_or_digit(lines[3])
+    hausnummer = extract_last_word_or_digit(lines[4])
+
+    if wohnort == "Pass":
+        wohnort = "Passau"
+
+    # Convert Pillow image to NumPy array
+    img_np = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
+    # Display the image
+    display_image(img_np)
+
+    return postleizeit, wohnort, strasse, hausnummer, doc
+
+
+
 # Function to handle the "Open" button click event
 def open_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
