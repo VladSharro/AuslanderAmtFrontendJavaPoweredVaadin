@@ -4,6 +4,8 @@ import re
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
+import fitz  # PyMuPDF
+import numpy as np
 
 # Path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
