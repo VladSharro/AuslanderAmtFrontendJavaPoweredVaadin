@@ -201,7 +201,10 @@ def open_file():
                 name, surname, doc = extract_immatrikulation(file_path)
                 result_label.config(text=f'Name: {name}\nSurname: {surname}\n')
                 doc.close()
-
+            elif file_type == "Kranken":
+                kassen, image = extract_health(file_path)
+                display_image(image)
+                result_label.config(text=f'Kassen: {kassen}')
 
 
 
