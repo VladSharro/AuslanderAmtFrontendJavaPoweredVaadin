@@ -215,6 +215,8 @@ def open_file():
         immutriculation_button = tk.Button(popup, text="Immutriculation", command=lambda: handle_button_click("Immutriculation"))
         immutriculation_button.pack()
 
+        kranken_button = tk.Button(popup, text="Kranken", command=lambda: handle_button_click("Kranken"))
+        kranken_button.pack()
 
 
 
