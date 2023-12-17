@@ -192,6 +192,11 @@ def open_file():
                 name, surname, image, nationality, birth, sex = extract_name_and_surname(file_path)
                 display_image(image)
                 result_label.config(text=f'Name: {name}\nSurname: {surname}\nNationality: {nationality}\nDate of Birth: {birth}\nSex: {sex}')
+            elif file_type == "Wohnungbescheinigung":
+                postleizeit, wohnort, strasse, hausnummer, doc = extract_info_from_pdf(file_path)
+                result_label.config(text=f'Postleizeit: {postleizeit}\nWohnort: {wohnort}\nStraße: {strasse}\nHausnummer: {hausnummer}')
+                # Close the PDF document when done
+                doc.close()            
 
 
 # Function to display the image in the Tkinter window
