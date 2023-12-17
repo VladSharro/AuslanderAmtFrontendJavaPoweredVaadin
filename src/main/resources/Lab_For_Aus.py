@@ -205,6 +205,14 @@ def open_file():
                 kassen, image = extract_health(file_path)
                 display_image(image)
                 result_label.config(text=f'Kassen: {kassen}')
+        # Create buttons in the popup window
+        passport_button = tk.Button(popup, text="Passport", command=lambda: handle_button_click("Passport"))
+        passport_button.pack()
+
+
+
+
+
 
 
 
