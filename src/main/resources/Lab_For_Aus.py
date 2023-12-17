@@ -178,15 +178,20 @@ def extract_health(image_path):
 
 # Function to handle the "Open" button click event
 def open_file():
-    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
+    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png *.pdf")])
+
     if file_path:
-        name, surname, image , nationality, birth = extract_name_and_surname(file_path)
+        # Create a popup window for selecting file type
+        popup = tk.Toplevel()
+        popup.title("Select File Type")
 
-        # Display the image
-        display_image(image)
-
-        # Update the result label
-        result_label.config(text=f'Name: {name}\nSurname: {surname}\nNationality: {nationality}\nDate of Birth: {birth}')
+        # Function to handle the button click and call the corresponding function
+        def handle_button_click(file_type):
+            popup.destroy()
+            if file_type == "Passport":
+                name, surname, image, nationality, birth, sex = extract_name_and_surname(file_path)
+                display_image(image)
+                result_label.config(text=f'Name: {name}\nSurname: {surname}\nNationality: {nationality}\nDate of Birth: {birth}\nSex: {sex}')
 
 
 # Function to display the image in the Tkinter window
