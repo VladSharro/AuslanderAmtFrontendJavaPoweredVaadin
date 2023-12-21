@@ -145,7 +145,6 @@ public class GenerateReportService {
                 userDataRequestDto.getPartnerPersonalData().getPlaceOfResidenceInGermany());
 
         for (int i = 0; i < userDataRequestDto.getChildrenPersonalData().size(); i++) {
-            System.out.println(userDataRequestDto.getChildrenPersonalData().get(i).getSex());
             context.setVariable(String.format("child%d_family_name", i + 1),
                     userDataRequestDto.getChildrenPersonalData().get(i).getFamilyName() + " " +
                     String.join(", ", userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames()));
@@ -269,6 +268,69 @@ public class GenerateReportService {
         context.setVariable("employment_for_holders_of_training_allowances",
                 userDataRequestDto.getGainfulEmploymentType().equals(
                         GainfulEmploymentType.FOR_HOLDERS_OF_TRAINING_ALLOWANCES_FOR_EMPLOYMENT_AFTER_COMPLETING_THEIR_TRAINING));
+        context.setVariable("international_law_reasons_admission_from_foreign_country",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.ADMISSION_FROM_FOREIGN_COUNTRY));
+        context.setVariable("international_law_reasons_refugee_status",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.REFUGEE_STATUS_OR_SUBSIDIARY_PROTECTION_TO_ART));
+        context.setVariable("international_law_reasons_instruction_from_supreme_state_authority",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.INSTRUCTION_FROM_SUPREME_STATE_AUTHORITY));
+        context.setVariable("international_law_reasons_deportation_ban",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.DEPORTATION_BAN));
+        context.setVariable("international_law_reasons_decision_taken_under_hardship_clause",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.DECISION_TAKEN_UNDER_HARDSHIP_CLAUSE));
+        context.setVariable("international_law_reasons_temporary_stay",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.TEMPORARY_STAY_FOR_URGENT_HUMANITATIAN_REASONS));
+        context.setVariable("international_law_reasons_temporary_protection",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.TEMPORARY_PROTECTION_AS_CIVIL_WAR_REFUGEE));
+        context.setVariable("international_law_reasons_not_possible_to_leave_for_legal_reasons",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.NOT_POSSIBLE_TO_LEAVE_FOR_LEGAL_OR_ACTUAL_REASONS));
+        context.setVariable("international_law_reasons_entitled_to_be_granted_asylum",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.ENTITLED_TO_BE_GRANTED_ASYLUM));
+        context.setVariable("international_law_reasons_granting_of_well_integrated_youth",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.GRANTING_OF_WELL_INTEGRATED_YOUTH));
+        context.setVariable("international_law_reasons_granting_of_residence_with_sustainable_integration",
+                userDataRequestDto.getReasonsDefinedUnderInternationalLaw().equals(
+                        ReasonsDefinedUnderInternationalLaw.GRANTING_OF_RESIDENCE_WITH_SUSTAINABLE_INTEGRATION));
+        context.setVariable("application_for_exhibition_travel_document_for_refugees",
+                userDataRequestDto.getApplicationForExhibitionType().equals(
+                        ApplicationForExhibitionType.TRAVEL_ID_FOR_REFUGEES));
+        context.setVariable("application_for_exhibition_travel_document_for_foreigners",
+                userDataRequestDto.getApplicationForExhibitionType().equals(
+                        ApplicationForExhibitionType.TRAVEL_ID_FOR_FOREIGNERS));
+        context.setVariable("application_for_exhibition_as_replacement_id_card",
+                userDataRequestDto.getApplicationForExhibitionType().equals(
+                        ApplicationForExhibitionType.ID_CARD_REPLACEMENT));
+        context.setVariable("application_for_exhibition_reason",
+                userDataRequestDto.getApplicationForExhibitionsReason());
+        context.setVariable("family_reasons_to_join_German_partner",
+                userDataRequestDto.getFamilyReasonType().equals(FamilyReasonType.TO_JOIN_GERMAN_PARTNER));
+        context.setVariable("family_reasons_to_join_German_parents",
+                userDataRequestDto.getFamilyReasonType().equals(FamilyReasonType.TO_JOIN_GERMAN_PARENTS));
+        context.setVariable("family_reasons_to_join_other_family_member",
+                userDataRequestDto.getFamilyReasonType().equals(FamilyReasonType.TO_JOIN_OTHER_FAMILY_MEMBERS));
+        context.setVariable("family_reasons_to_join_non_German_partner",
+                userDataRequestDto.getFamilyReasonType().equals(FamilyReasonType.TO_JOIN_NON_GERMAN_PARTNER));
+        context.setVariable("family_reasons_to_join_non_German_parent",
+                userDataRequestDto.getFamilyReasonType().equals(FamilyReasonType.TO_JOIN_NON_GERMAN_PARENTS));
+        context.setVariable("special_residence_rights_right_to_return",
+                userDataRequestDto.getSpecialResidenceRightsType().equals(SpecialResidenceRightsType.RIGHT_TO_RETURN));
+        context.setVariable("special_residence_rights_residence_title_for_former_Germans",
+                userDataRequestDto.getSpecialResidenceRightsType().equals(
+                        SpecialResidenceRightsType.RESIDENCE_TITLE_FOR_FORMER_GERMANS));
+        context.setVariable(
+                "special_residence_rights_residence_permit_for_someone_entitled_to_long_term_residence_in_other_EU_member_states",
+                userDataRequestDto.getSpecialResidenceRightsType().equals(
+                        SpecialResidenceRightsType.RESIDENCE_PERMIT_FOR_SOMEONE_ENTITLED_TO_LONG_TERM_RESIDENCE_IN_OTHER_EU_MEMBER_STATES));
 
         return templateEngine.process("form_template", context);
     }
