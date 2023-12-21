@@ -1,8 +1,9 @@
 package com.example.appforauslenderamt.service;
 
 import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
-import com.example.appforauslenderamt.entity.Sex;
+import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.DataDoNotMatchWithPassportException;
+import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
@@ -30,7 +31,8 @@ import java.util.Locale;
 @Service
 public class GenerateReportService {
 
-    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile passportImage) throws IOException, DocumentException,
+    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile passportImage)
+            throws IOException, DocumentException,
             InterruptedException {
         checkUserDataWithPassport(userDataRequestDto, passportImage);
         String html = parseThymeleafTemplate(userDataRequestDto);
@@ -47,6 +49,10 @@ public class GenerateReportService {
     }
 
     private String parseThymeleafTemplate(UserDataRequestDto userDataRequestDto) {
+        if (userDataRequestDto.getChildrenPersonalData().size() > 3) {
+            throw new InvalidDataException("Information about more than 3 children cannot be entered in form");
+        }
+
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -55,21 +61,214 @@ public class GenerateReportService {
         templateEngine.setTemplateResolver(templateResolver);
 
         Context context = new Context();
-        context.setVariable("family_name", userDataRequestDto.getPersonalData().getFamilyName());
+        context.setVariable("family_name", userDataRequestDto.getPersonalData().getFamilyName() + " " +
+                String.join(", ", userDataRequestDto.getPersonalData().getPreviousNames()));
         context.setVariable("first_name", userDataRequestDto.getPersonalData().getFirstName());
         context.setVariable("date_of_birth", userDataRequestDto.getPersonalData().getDateOfBirth());
         context.setVariable("place_of_birth", userDataRequestDto.getPersonalData().getPlaceOfBirth());
         context.setVariable("nationalities", String.join(", ",
                 userDataRequestDto.getPersonalData().getNationalities()));
-        context.setVariable("height", userDataRequestDto.getHeight());
-        context.setVariable("mobile_number", userDataRequestDto.getMobileNumber());
-        context.setVariable("email", userDataRequestDto.getEmail());
-        context.setVariable("passport_number", userDataRequestDto.getPassportNumber());
-        context.setVariable("valid_from_till", String.format("%s / %s", userDataRequestDto.getValidFrom(),
-                userDataRequestDto.getValidTill()));
         context.setVariable("sex_male", userDataRequestDto.getPersonalData().getSex().equals(Sex.MALE));
         context.setVariable("sex_female", userDataRequestDto.getPersonalData().getSex().equals(Sex.FEMALE));
         context.setVariable("sex_diversity", userDataRequestDto.getPersonalData().getSex().equals(Sex.DIVERSITY));
+        context.setVariable("marital_status_single",
+                userDataRequestDto.getMaritalStatus().equals(MaritalStatus.SINGLE));
+        context.setVariable("marital_status_married",
+                userDataRequestDto.getMaritalStatus().equals(MaritalStatus.MARRIED));
+        context.setVariable("marital_in_registered_partnership",
+                userDataRequestDto.getMaritalStatus().equals(MaritalStatus.LIVING_IN_REGISTERED_PARTNERSHIP));
+        context.setVariable("marital_status_divorced",
+                userDataRequestDto.getMaritalStatus().equals(MaritalStatus.DIVORCED));
+        context.setVariable("marital_status_widowed",
+                userDataRequestDto.getMaritalStatus().equals(MaritalStatus.WIDOWED));
+        context.setVariable("marital_status_separated",
+                userDataRequestDto.getMaritalStatus().equals(MaritalStatus.SEPARATED));
+        context.setVariable("marital_status_since", userDataRequestDto.getMaritalStatusSince());
+        context.setVariable("color_of_eyes_blue", userDataRequestDto.getColourOfEyes().equals(ColourOfEyes.BLUE));
+        context.setVariable("color_of_eyes_grey", userDataRequestDto.getColourOfEyes().equals(ColourOfEyes.GREY));
+        context.setVariable("color_of_eyes_green",
+                userDataRequestDto.getColourOfEyes().equals(ColourOfEyes.GREEN));
+        context.setVariable("color_of_eyes_brown",
+                userDataRequestDto.getColourOfEyes().equals(ColourOfEyes.BROWN));
+        context.setVariable("height", userDataRequestDto.getHeight());
+        context.setVariable("mobile_number", userDataRequestDto.getMobileNumber());
+        context.setVariable("email", userDataRequestDto.getEmail());
+        context.setVariable("kind_of_passport_passport",
+                userDataRequestDto.getPassportType().equals(PassportType.PASSPORT));
+        context.setVariable("kind_of_passport_id_cart",
+                userDataRequestDto.getPassportType().equals(PassportType.ID_CARD));
+        context.setVariable("kind_of_passport_other",
+                userDataRequestDto.getPassportType().equals(PassportType.OTHER));
+
+        if (userDataRequestDto.getPassportType().equals(PassportType.OTHER)) {
+            context.setVariable("kind_of_passport", userDataRequestDto.getCustomPassportType());
+        }
+
+        context.setVariable("passport_number", userDataRequestDto.getPassportNumber());
+        context.setVariable("valid_from_till", String.format("%s / %s", userDataRequestDto.getValidFrom(),
+                userDataRequestDto.getValidTill()));
+        context.setVariable("passport_issued_by", userDataRequestDto.getIssuedBy());
+        context.setVariable("passport_issued_on", userDataRequestDto.getIssuedOn());
+        context.setVariable("current_place_of_residence_in_Germany",
+                userDataRequestDto.getPersonalData().getPlaceOfResidenceInGermany());
+        context.setVariable("previous_stay_in_Germany_no", !userDataRequestDto.getIsPreviousStaysInGermany());
+        context.setVariable("previous_stay_in_Germany_yes", userDataRequestDto.getIsPreviousStaysInGermany());
+        context.setVariable("previous_stay_in_Germany_from",
+                userDataRequestDto.getPreviousStaysInGermany().getFromDate());
+        context.setVariable("previous_stay_in_Germany_to",
+                userDataRequestDto.getPreviousStaysInGermany().getToDate());
+        context.setVariable("previous_stay_in_German_place", userDataRequestDto.getPreviousStaysInGermany());
+        context.setVariable("place_of_residence_abroad_retained",
+                userDataRequestDto.getIsPlaceOfResidenceAbroadRetains());
+        context.setVariable("place_of_residence_abroad_not_retained",
+                !userDataRequestDto.getIsPlaceOfResidenceAbroadRetains());
+
+        if (userDataRequestDto.getIsPlaceOfResidenceAbroadRetains()) {
+            context.setVariable("place_of_residence_abroad", userDataRequestDto.getPlaceOfResidenceAbroad());
+        }
+
+        context.setVariable("partner_family_name",
+                userDataRequestDto.getPartnerPersonalData().getFamilyName() + " " +
+                String.join(", ", userDataRequestDto.getPartnerPersonalData().getPreviousNames()));
+        context.setVariable("partner_first_name", userDataRequestDto.getPartnerPersonalData().getFirstName());
+        context.setVariable("partner_date_of_birth", userDataRequestDto.getPartnerPersonalData().getDateOfBirth());
+        context.setVariable("partner_place_of_birth", userDataRequestDto.getPartnerPersonalData().getPlaceOfBirth());
+        context.setVariable("partner_nationalities", String.join(", ",
+                userDataRequestDto.getPartnerPersonalData().getNationalities()));
+        context.setVariable("partner_sex_male",
+                userDataRequestDto.getPartnerPersonalData().getSex().equals(Sex.MALE));
+        context.setVariable("partner_sex_female",
+                userDataRequestDto.getPartnerPersonalData().getSex().equals(Sex.FEMALE));
+        context.setVariable("partner_sex_diversity",
+                userDataRequestDto.getPartnerPersonalData().getSex().equals(Sex.DIVERSITY));
+        context.setVariable("partner_current_place_of_residence_in_Germany",
+                userDataRequestDto.getPartnerPersonalData().getPlaceOfResidenceInGermany());
+
+        for (int i = 0; i < userDataRequestDto.getChildrenPersonalData().size(); i++) {
+            System.out.println(userDataRequestDto.getChildrenPersonalData().get(i).getSex());
+            context.setVariable(String.format("child%d_family_name", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getFamilyName() + " " +
+                    String.join(", ", userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames()));
+            context.setVariable(String.format("child%d_first_name", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getFirstName());
+            context.setVariable(String.format("child%d_date_of_birth", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getDateOfBirth());
+            context.setVariable(String.format("child%d_place_of_birth", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getPlaceOfBirth());
+            context.setVariable(String.format("child%d_nationalities", i + 1), String.join(", ",
+                    userDataRequestDto.getChildrenPersonalData().get(i).getNationalities()));
+            context.setVariable(String.format("child%d_sex_male", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getSex().equals(Sex.MALE));
+            context.setVariable(String.format("child%d_sex_female", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getSex().equals(Sex.FEMALE));
+            context.setVariable(String.format("child%d_sex_diversity", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getSex().equals(Sex.DIVERSITY));
+            context.setVariable(String.format("child%d_current_place_of_residence_in_Germany", i + 1),
+                    userDataRequestDto.getChildrenPersonalData().get(i).getPlaceOfResidenceInGermany());
+        }
+
+        context.setVariable("father_family_name",
+                userDataRequestDto.getFatherPersonalData().getFamilyName() + " " +
+                String.join(", ", userDataRequestDto.getFatherPersonalData().getPreviousNames()));
+        context.setVariable("father_first_name", userDataRequestDto.getFatherPersonalData().getFirstName());
+        context.setVariable("father_date_of_birth", userDataRequestDto.getFatherPersonalData().getDateOfBirth());
+        context.setVariable("father_place_of_birth", userDataRequestDto.getFatherPersonalData().getPlaceOfBirth());
+        context.setVariable("father_nationalities", String.join(", ",
+                userDataRequestDto.getFatherPersonalData().getNationalities()));
+        context.setVariable("father_sex_male",
+                userDataRequestDto.getFatherPersonalData().getSex().equals(Sex.MALE));
+        context.setVariable("father_sex_female",
+                userDataRequestDto.getFatherPersonalData().getSex().equals(Sex.FEMALE));
+        context.setVariable("father_sex_diversity",
+                userDataRequestDto.getFatherPersonalData().getSex().equals(Sex.DIVERSITY));
+        context.setVariable("mother_family_name",
+                userDataRequestDto.getMotherPersonalData().getFamilyName() + " " +
+                String.join(", ", userDataRequestDto.getMotherPersonalData().getPreviousNames()));
+        context.setVariable("mother_first_name", userDataRequestDto.getMotherPersonalData().getFirstName());
+        context.setVariable("mother_date_of_birth", userDataRequestDto.getMotherPersonalData().getDateOfBirth());
+        context.setVariable("mother_place_of_birth", userDataRequestDto.getMotherPersonalData().getPlaceOfBirth());
+        context.setVariable("mother_nationalities", String.join(", ",
+                userDataRequestDto.getMotherPersonalData().getNationalities()));
+        context.setVariable("mother_sex_male",
+                userDataRequestDto.getMotherPersonalData().getSex().equals(Sex.MALE));
+        context.setVariable("mother_sex_female",
+                userDataRequestDto.getMotherPersonalData().getSex().equals(Sex.FEMALE));
+        context.setVariable("mother_sex_diversity",
+                userDataRequestDto.getMotherPersonalData().getSex().equals(Sex.DIVERSITY));
+        context.setVariable("parents_place_of_residence_in_Germany",
+                userDataRequestDto.getMotherPersonalData().getPlaceOfResidenceInGermany());
+        context.setVariable("purpose_of_stay_in_Germany_remains_unchanged",
+                !userDataRequestDto.getPurposeOfStayInGermany().getIsChanged());
+        context.setVariable("purpose_of_stay_in_Germany_changed",
+                userDataRequestDto.getPurposeOfStayInGermany().getIsChanged());
+
+        if (userDataRequestDto.getPurposeOfStayInGermany().getIsChanged()) {
+            context.setVariable("purpose_of_stay_in_Germany",
+                    userDataRequestDto.getPurposeOfStayInGermany().getExplanation());
+        }
+
+        context.setVariable("training_studies",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.STUDIES));
+        context.setVariable("training_school_attendance",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.SCHOOL_ATTENDANCE));
+        context.setVariable("training_study_applicant",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.STUDY_APPLICANT));
+        context.setVariable("training_passing_an_approval_test",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.PASSING_AN_APPROVAL_TEST));
+        context.setVariable("training_language_course",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.LANGUAGE_COURSE_WITHOUT_STUDIES));
+        context.setVariable("training_in_school",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.SCHOOL_TRAINING));
+        context.setVariable("training_in_company",
+                userDataRequestDto.getTrainingTypes().equals(TrainingTypes.IN_COMPANY_TRAINING));
+        context.setVariable("job_seeking_after_completing_studies",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.AFTER_COMPLETING_STUDIES));
+        context.setVariable("job_seeking_after_training_in_school",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.AFTER_SCHOOL_TRAINING));
+        context.setVariable("job_seeking_after_training_in_company",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.AFTER_IN_COMPANY_TRAINING));
+        context.setVariable("job_seeking_to_recognize_qualification_acquired_abroad",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.TO_RECOGNISE_QUALIFICATION_ACQUIRED_ABROAD));
+        context.setVariable("job_seeking_after_recognition_qualification_acquired_abroad",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.AFTER_RECOGNITION_OF_QUALIFICATION_ACQUIRED_ABROAD));
+        context.setVariable("job_seeking_for_holders_of_university_degree",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.FOR_HOLDERS_OF_UNIVERSITY_DEGREE));
+        context.setVariable("job_seeking_after_research",
+                userDataRequestDto.getJobSeekingType().equals(JobSeekingType.AFTER_RESEARCH));
+        context.setVariable("employer", userDataRequestDto.getEmployer());
+        context.setVariable("employment_highly_qualified_person",
+                userDataRequestDto.getGainfulEmploymentType().equals(GainfulEmploymentType.HIGHLY_QUALIFIED_PERSON));
+        context.setVariable("employment_ict_card",
+                userDataRequestDto.getGainfulEmploymentType().equals(GainfulEmploymentType.ICT_CART));
+        context.setVariable("employment_mobile_ict_card",
+                userDataRequestDto.getGainfulEmploymentType().equals(GainfulEmploymentType.MOBILE_ICT_CARD));
+        context.setVariable("employment_short_term_mobility",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.SHORT_TERM_MOBILITY_OF_INTERNALLY_TRANSFERRED_WORKERS));
+        context.setVariable("employment_qualified_employment_with_vocational_training",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.QUALIFIED_EMPLOYMENT_WITH_VOCATIONAL_TRAINING));
+        context.setVariable("employment_qualified_employment_with_academic_training",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.QUALIFIED_EMPLOYMENT_WITH_ACADEMIC_TRAINING));
+        context.setVariable("employment_unqualified_employment",
+                userDataRequestDto.getGainfulEmploymentType().equals(GainfulEmploymentType.UNQUALIFIED_EMPLOYMENT));
+        context.setVariable("employment_self_employed",
+                userDataRequestDto.getGainfulEmploymentType().equals(GainfulEmploymentType.SELF_EMPLOYED));
+        context.setVariable("employment_research",
+                userDataRequestDto.getGainfulEmploymentType().equals(GainfulEmploymentType.RESEARCH));
+        context.setVariable("employment_short_term_mobility_for_researchers",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.SHORT_TERM_MOBILITY_FOR_RESEARCHERS));
+        context.setVariable("employment_in_another_member_state_as_internationally_protected_researcher",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.IN_OTHER_MEMBER_STATE_AS_INTERNATIONALLY_PROTECTED_RESEARCHER));
+        context.setVariable("employment_for_qualified_tolerated_persons",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.FOR_QUALIFIED_TOLERATED_PERSONS_FOR_PURPOSE_OF_EMPLOYMENT));
+        context.setVariable("employment_for_holders_of_training_allowances",
+                userDataRequestDto.getGainfulEmploymentType().equals(
+                        GainfulEmploymentType.FOR_HOLDERS_OF_TRAINING_ALLOWANCES_FOR_EMPLOYMENT_AFTER_COMPLETING_THEIR_TRAINING));
 
         return templateEngine.process("form_template", context);
     }

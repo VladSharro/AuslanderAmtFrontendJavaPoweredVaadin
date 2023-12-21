@@ -14,4 +14,8 @@ public class PlaceOfResidenceAbroad extends PlaceOfResidence{
         this.country = country;
     }
 
+    @Override
+    public String toString() {
+        return country + ", " + super.toString();
+    }
 }
