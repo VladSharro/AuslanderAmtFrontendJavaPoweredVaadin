@@ -28,29 +28,15 @@ def process_string(input_string):
 
 # Function to extract the name and surname in English from a passport image using Tesseract OCR
 def extract_name_and_surname(image_path):
-    # Load the image using OpenCV
     img = cv2.imread(image_path)
 
     # Convert the image to grayscale
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    #sobel_x = cv2.Sobel(gray_img, cv2.CV_64F, 1, 0, ksize=3)
+    
 
-    # Применение ядра Собеля по оси Y
-    #sobel_y = cv2.Sobel(gray_img, cv2.CV_64F, 0, 1, ksize=3)
-
-    # Вычисление общего градиента
-    #gradient_magnitude = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
-
-
-    #binary_img = cv2.adaptiveThreshold(
-    #    gray_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    #)
-
-    # Perform OCR using Tesseract
     extracted_text = pytesseract.image_to_string(gray_img) #, config='--psm 6'
 
-    # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
     name = ""
@@ -89,12 +75,7 @@ def extract_name_and_surname(image_path):
 
     print(mrz_data)
 
-    #print(mrz_data['country'])
-    #print(mrz_data['names'])
-    #print(mrz_data['surname'])
-    #print(mrz_data['type'])
-    #print(mrz_data['number'])
-    #print(mrz_data['expiration_date'])
+
 
     name = process_string(mrz_data['names'])
     surname = mrz_data['surname']
@@ -129,34 +110,7 @@ def extract_name_and_surname(image_path):
 
     issue = formatted_string_i
 
-    #for line in lines:
-    #    pattern = r'<([A-Z]+)<<([A-Z]+)<'
-    #    matches = re.search(pattern, line)
 
-        #print("here")
-    #    if matches:
-    #        # Extract the name and surname
-    #        name = matches.group(1)
-    #        surname = matches.group(2)
-
-            # Remove country codes if the first three letters match a pattern
-    #        country_codes = ["IRN", "RUS", "USA"]  # Add more country codes as needed
-    #        for code in country_codes:
-    #            if name[:3] == code:
-    #                name = name[3:]
-     #           if surname[:3] == code:
-     #               surname = surname[3:]
-
-    #        break
-
-    #concatenated_image = np.hstack((gray_img, gradient_magnitude))
-    #cv2.imshow('Concatenated Image', concatenated_image)
-
-    #binary_img = cv2.adaptiveThreshold(
-    #    gray_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    #)
-
-    #cv2.imshow('Binary Image', binary_img)
 
     return name, surname, gray_img, nationality, birth, sex, issue, number
 
@@ -182,12 +136,10 @@ def extract_info_from_pdf(pdf_path):
         i = i + 1
 
 
-    # Function to extract the last word or digit from a string
     def extract_last_word_or_digit(line):
         words_digits = re.findall(r'\b(\w+|\d+)\b', line)
         return words_digits[-1] if words_digits else "Not found"
 
-    # Extract the last word or digit from each line
     postleizeit = extract_last_word_or_digit(lines[1])
     wohnort = extract_last_word_or_digit(lines[2])
     strasse = extract_last_word_or_digit(lines[3])
@@ -196,10 +148,8 @@ def extract_info_from_pdf(pdf_path):
     if wohnort == "Pass":
         wohnort = "Passau"
 
-    # Convert Pillow image to NumPy array
     img_np = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
-    # Display the image
     display_image(img_np)
 
     return postleizeit, wohnort, strasse, hausnummer, doc
@@ -210,10 +160,8 @@ def extract_immatrikulation(pdf_path):
     doc = fitz.open(pdf_path)
     page = doc[0]  # Assuming the information is on the first page
 
-    # Extract text from the PDF page
     extracted_text = page.get_text()
 
-    # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
     for i, line in enumerate(lines):
@@ -231,13 +179,10 @@ def extract_health(image_path):
 
     img = cv2.imread(image_path)
 
-    # Convert the image to grayscale
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # Perform OCR using Tesseract
     extracted_text = pytesseract.image_to_string(gray_img)
 
-    # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
     date_pattern = re.compile(r'\b\d{1,2}\.\d{1,2}\.\d{4}\b')
@@ -266,7 +211,6 @@ def extract_health(image_path):
 
         i += 1
 
-        #print(time)
 
     return kassen, time, gray_img
 
@@ -291,7 +235,6 @@ def geld(pdf_path):
 
     return gold, date, doc
 
-# Function to handle the "Open" button click event
 def open_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png *.pdf")])
 
