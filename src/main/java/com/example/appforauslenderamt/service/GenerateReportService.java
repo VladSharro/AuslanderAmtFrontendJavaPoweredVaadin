@@ -331,6 +331,86 @@ public class GenerateReportService {
                 "special_residence_rights_residence_permit_for_someone_entitled_to_long_term_residence_in_other_EU_member_states",
                 userDataRequestDto.getSpecialResidenceRightsType().equals(
                         SpecialResidenceRightsType.RESIDENCE_PERMIT_FOR_SOMEONE_ENTITLED_TO_LONG_TERM_RESIDENCE_IN_OTHER_EU_MEMBER_STATES));
+        context.setVariable("means_of_support", userDataRequestDto.getMeansOfSupport());
+        context.setVariable("get_benefits_no", !userDataRequestDto.getNeedsBenefitsUnderSocialLaw());
+        context.setVariable("get_benefits_yes", userDataRequestDto.getNeedsBenefitsUnderSocialLaw());
+
+        if (userDataRequestDto.getNeedsBenefitsUnderSocialLaw()) {
+            context.setVariable("benefits_social_welfare_benefits",
+                    userDataRequestDto.getBenefitsUnderSocialLaw().equals(
+                            BenefitsUnderSocialLaw.SOCIAL_WELFARE_BENEFIT));
+            context.setVariable("benefits_basic_support_for_employment_seekers",
+                    userDataRequestDto.getBenefitsUnderSocialLaw().equals(
+                            BenefitsUnderSocialLaw.BASIC_SUPPORT_FOR_EMPLOYMENT_SEEKERS));
+        }
+
+        context.setVariable("insurance_no", !userDataRequestDto.getHealthInsuranceInfo().getHasHealthInsurance());
+        context.setVariable("insurance_yes", userDataRequestDto.getHealthInsuranceInfo().getHasHealthInsurance());
+
+        if (userDataRequestDto.getHealthInsuranceInfo().getHasHealthInsurance()) {
+            context.setVariable("insurer", userDataRequestDto.getHealthInsuranceInfo().getInsurer());
+        }
+
+        context.setVariable("violating_law_no",
+                !userDataRequestDto.getOffencesInfo().getHaveBeenConvictedForViolatingLaw());
+        context.setVariable("violating_law_yes",
+                userDataRequestDto.getOffencesInfo().getHaveBeenConvictedForViolatingLaw());
+
+        if (userDataRequestDto.getOffencesInfo().getHaveBeenConvictedForViolatingLaw()) {
+            context.setVariable("violating_law_in_Germany",
+                    userDataRequestDto.getOffencesInfo().getViolatingLocation().equals(Location.IN_GERMANY));
+            context.setVariable("violating_law_abroad",
+                    userDataRequestDto.getOffencesInfo().getViolatingLocation().equals(Location.ABROAD));
+            context.setVariable("violating_law_reason", userDataRequestDto.getOffencesInfo().getReason());
+            context.setVariable("violating_law_type_of_conviction",
+                    userDataRequestDto.getOffencesInfo().getTypeOfConviction());
+        }
+
+        context.setVariable("under_investigation_no",
+                !userDataRequestDto.getOffencesInfo().getUnderInvestigation());
+        context.setVariable("under_investigation_yes",
+                userDataRequestDto.getOffencesInfo().getUnderInvestigation());
+
+        if (userDataRequestDto.getOffencesInfo().getUnderInvestigation()) {
+            context.setVariable("under_investigation_in_Germany",
+                    userDataRequestDto.getOffencesInfo().getInvestigationLocation().equals(Location.IN_GERMANY));
+            context.setVariable("under_investigation_abroad",
+                    userDataRequestDto.getOffencesInfo().getInvestigationLocation().equals(Location.ABROAD));
+            context.setVariable("investigating_authority",
+                    userDataRequestDto.getOffencesInfo().getInvestigationAuthority());
+        }
+
+        context.setVariable("deportation_no", !userDataRequestDto.getOffencesInfo().getHaveBeenDeported());
+        context.setVariable("deportation_yes", userDataRequestDto.getOffencesInfo().getHaveBeenDeported());
+
+        if (userDataRequestDto.getOffencesInfo().getHaveBeenDeported()) {
+            context.setVariable("deportation_from", userDataRequestDto.getOffencesInfo().getDeportedFrom());
+            context.setVariable("deportation_on", userDataRequestDto.getOffencesInfo().getDeportedDate());
+        }
+
+        context.setVariable("entry_application_rejected_no",
+                !userDataRequestDto.getOffencesInfo().getHasEntryApplicationBeenRejected());
+        context.setVariable("entry_application_rejected_yes",
+                userDataRequestDto.getOffencesInfo().getHasEntryApplicationBeenRejected());
+
+        if (userDataRequestDto.getOffencesInfo().getHasEntryApplicationBeenRejected()) {
+            context.setVariable("entry_application_rejected_from",
+                    userDataRequestDto.getOffencesInfo().getEntryApplicationRejectedFrom());
+            context.setVariable("entry_application_rejected_on",
+                    userDataRequestDto.getOffencesInfo().getEntryApplicationRejectedDate());
+        }
+
+        context.setVariable("application_for_residence_title_rejected_no",
+                !userDataRequestDto.getOffencesInfo().getHasResidenceApplicationBeenRejected());
+        context.setVariable("application_for_residence_title_rejected_yes",
+                userDataRequestDto.getOffencesInfo().getHasResidenceApplicationBeenRejected());
+
+        if (userDataRequestDto.getOffencesInfo().getHasResidenceApplicationBeenRejected()) {
+            context.setVariable("application_for_residence_title_rejected_from",
+                    userDataRequestDto.getOffencesInfo().getResidenceApplicationRejectedFrom());
+            context.setVariable("application_for_residence_title_rejected_on",
+                    userDataRequestDto.getOffencesInfo().getResidenceApplicationRejectedDate());
+        }
 
         return templateEngine.process("form_template", context);
     }

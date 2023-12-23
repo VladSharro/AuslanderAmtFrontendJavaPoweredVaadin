@@ -1,7 +1,9 @@
 package com.example.appforauslenderamt.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class OffencesInfo {
 
     @JsonProperty("have_been_convicted_for_violating_law")
@@ -15,7 +17,7 @@ public class OffencesInfo {
     @JsonProperty("under_investigation")
     Boolean underInvestigation;
     @JsonProperty("investigation_location")
-    String investigationLocation;
+    Location investigationLocation;
     @JsonProperty("investigation_authority")
     String investigationAuthority;
     @JsonProperty("have_been_deported")
