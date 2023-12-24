@@ -1,17 +1,18 @@
-import os
-
 import cv2
 import pytesseract
-import re
-import tkinter as tk
-from tkinter import filedialog
-from PIL import Image, ImageTk
-import fitz  # PyMuPDF
 import numpy as np
+import sys
+import os
+import base64
+from PIL import Image
+import base64
+import re
 from datetime import datetime
-from passporteye import read_mrz, mrz
 
-# Path to the Tesseract executable
+
+from passporteye import read_mrz
+
+
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
@@ -26,15 +27,23 @@ def process_string(input_string):
 
 
 
-def extract_name_and_surname(image_path):
+# Function to extract the name and surname in English from a passport image using Tesseract OCR
+def extract_name_and_surname(encoded_image):
+    # Decode the Base64-encoded image data
+    image_data = base64.b64decode(encoded_image)
+
     # Load the image using OpenCV
-    img = cv2.imread(image_path)
+    numpy_array = np.frombuffer(image_data, np.uint8)
+    img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
 
     # Convert the image to grayscale
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+    # Use thresholding to improve OCR accuracy
+    _, thresh_img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
     # Perform OCR using Tesseract
-    extracted_text = pytesseract.image_to_string(gray_img) #, config='--psm 6'
+    extracted_text = pytesseract.image_to_string(thresh_img, config='--psm 6')
 
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
@@ -61,19 +70,19 @@ def extract_name_and_surname(image_path):
             sex = "Female"
 
 
-        print(lines[i])
+        #print(lines[i])
         i = i + 1
 
-    print(nationality)
-    print(birth)
+    #print(nationality)
+    #print(birth)
 
     mrz = read_mrz(image_path)
 
-    print(mrz)
+    #print(mrz)
 
     mrz_data = mrz.to_dict()
 
-    print(mrz_data)
+    #print(mrz_data)
 
     name = process_string(mrz_data['names'])
     surname = mrz_data['surname']
@@ -94,8 +103,14 @@ def extract_name_and_surname(image_path):
 
     number = mrz_data['personal_number']
 
+    number = number.replace("<", "")
 
     sex = mrz_data['sex']
+
+    if sex == "F":
+        sex = "Female"
+    else:
+        sex = "Male"
 
 
     year_i = int(mrz_data['expiration_date'][:2])
@@ -110,15 +125,19 @@ def extract_name_and_surname(image_path):
 
     return name, surname, nationality, birth, sex, issue, number
 
-
-
 # Access the image data from the environment variable
 image_data = os.environ.get("IMAGE_DATA")
 
+
+#image_path = 'C:\\Users\\vlads\\test\\AusPhoto7.jpg'
+
+#with open(image_path, "rb") as image_file:
+    #image_data = image_file.read()
+
+#encoded_image = base64.b64encode(image_data).decode('utf-8')
+
+
+
 # Call the function and print the result
 name, surname, nationality, birth, sex, issue, number = extract_name_and_surname(image_data)
-#print(name, surname)
-
-
-
-
+print(name, surname, nationality, birth, sex, issue, number)
