@@ -11,7 +11,6 @@ import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
 
-# Path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
@@ -41,7 +40,7 @@ def extract_health(image_path):
 
     while i < len(lines):
         current_line = lines[i]
-        print(current_line)
+        #print(current_line)
 
         if lines[i] == "Geschatszeichen":
             time = lines[i + 2]
