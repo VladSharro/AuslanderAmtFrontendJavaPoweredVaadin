@@ -9,9 +9,7 @@ import base64
 import re
 from datetime import datetime
 
-
 from passporteye import read_mrz
-
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
