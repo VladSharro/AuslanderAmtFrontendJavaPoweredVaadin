@@ -11,7 +11,6 @@ import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
 
-# Path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
@@ -26,8 +25,8 @@ def geld(pdf_path):
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
-    for i, line in enumerate(lines):
-        print(i, "   ", line)
+    #for i, line in enumerate(lines):
+    #    print(i, "   ", line)
 
     gold = lines[7]
     date = lines[0]
