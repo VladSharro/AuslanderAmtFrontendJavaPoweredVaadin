@@ -13,7 +13,7 @@ import lombok.Value;
 public class PreviousStaysInGermany {
 
     @JsonProperty("from_date")
-    String from_Date;
+    String fromDate;
     @JsonProperty("to_date")
     String toDate;
     @JsonProperty("place")
@@ -25,4 +25,8 @@ public class PreviousStaysInGermany {
     @JsonProperty("land")
     String land;
 
+    @Override
+    public String toString() {
+        return place + ", " + district + ", " + state + ", " + land;
+    }
 }

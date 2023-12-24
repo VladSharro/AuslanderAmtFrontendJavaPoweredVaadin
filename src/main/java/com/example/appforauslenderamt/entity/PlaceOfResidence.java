@@ -19,4 +19,8 @@ public class PlaceOfResidence {
     @JsonProperty("house_number")
     private final Integer houseNumber;
 
+    @Override
+    public String toString() {
+        return postalCode + ", " + place + ", " + street + ", " + houseNumber;
+    }
 }

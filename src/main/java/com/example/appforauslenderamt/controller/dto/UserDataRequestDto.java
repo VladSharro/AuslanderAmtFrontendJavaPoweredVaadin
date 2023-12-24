@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 
+import java.util.List;
 import java.util.Set;
 
 @Value
@@ -30,7 +31,9 @@ public class UserDataRequestDto {
     @JsonProperty("email")
     String email; //add validation
     @JsonProperty("passport_type")
-    String passportType;
+    PassportType passportType;
+    @JsonProperty("custom_passport_type")
+    String customPassportType;
     @JsonProperty("passport_number")
     String passportNumber;
     @JsonProperty("valid_from")
@@ -52,7 +55,7 @@ public class UserDataRequestDto {
     @JsonProperty("partner_personal_data")
     UserPersonalData partnerPersonalData;
     @JsonProperty("children_personal_data")
-    Set<UserPersonalData> childrenPersonalData;
+    List<UserPersonalData> childrenPersonalData;
     @JsonProperty("mother_personal_data")
     UserPersonalData motherPersonalData;
     @JsonProperty("father_personal_data")
