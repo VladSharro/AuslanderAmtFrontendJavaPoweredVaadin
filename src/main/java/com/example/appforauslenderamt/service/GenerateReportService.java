@@ -1,8 +1,8 @@
 package com.example.appforauslenderamt.service;
 
 import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
+import com.example.appforauslenderamt.controller.dto.UserDataResponseDto;
 import com.example.appforauslenderamt.entity.*;
-import com.example.appforauslenderamt.exceptions.DataDoNotMatchWithPassportException;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
@@ -26,15 +26,48 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Locale;
 
 @Service
 public class GenerateReportService {
 
+    public UserDataResponseDto getDataFromPassport(MultipartFile passportImage)
+            throws IOException, InterruptedException {
+        byte[] imageBytes = passportImage.getBytes();
+
+        // Encode the image data in Base64
+        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+
+        ProcessBuilder processBuilder = new ProcessBuilder("python3", "OCR/PassportAnalitics.py");
+        processBuilder.environment().put("IMAGE_DATA", encodedImage);
+        processBuilder.redirectErrorStream(true);
+
+        Process process = processBuilder.start();
+        process.waitFor();
+
+        InputStream inputStream = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
+        String line = reader.readLine();
+        // Process line of the output here
+        String[] userData = line.split(",");
+
+        UserDataResponseDto responseDto = UserDataResponseDto.builder()
+                .familyName(userData[0])
+                .firstName(userData[1])
+                .nationality(userData[2])
+                .dateOfBirth(userData[3])
+                .sex(userData[4])
+                .build();
+
+        process.waitFor(); // Wait for the process to finish
+
+        return responseDto;
+
+    }
+
     public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile passportImage)
             throws IOException, DocumentException,
             InterruptedException {
-        checkUserDataWithPassport(userDataRequestDto, passportImage);
+//        checkUserDataWithPassport(userDataRequestDto, passportImage);
         String html = parseThymeleafTemplate(userDataRequestDto);
         String outputFolder = "src/main/resources/user_form.pdf";
         OutputStream outputStream = new FileOutputStream(outputFolder);
@@ -435,36 +468,36 @@ public class GenerateReportService {
         document.close();
     }
 
-    public void checkUserDataWithPassport(UserDataRequestDto userData, MultipartFile passportImage)
-            throws IOException, InterruptedException {
-        byte[] imageBytes = passportImage.getBytes();
-
-        // Encode the image data in Base64
-        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-
-        ProcessBuilder processBuilder = new ProcessBuilder("python3", "src/main/resources/passport_analys.py");
-        processBuilder.environment().put("IMAGE_DATA", encodedImage);
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-        process.waitFor();
-
-        InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        // Process line of the output here
-        String[] familyNameAndFirstName = line.split(" ");
-
-        if (!userData.getPersonalData().getFamilyName().toLowerCase(Locale.ROOT)
-                .equals(familyNameAndFirstName[0].toLowerCase(Locale.ROOT)) ||
-                !userData.getPersonalData().getFirstName().toLowerCase(Locale.ROOT)
-                        .equals(familyNameAndFirstName[1].toLowerCase(Locale.ROOT))) {
-            throw new DataDoNotMatchWithPassportException("Family name or first name doesn't match with passport data");
-        }
-
-        process.waitFor(); // Wait for the process to finish
-
-    }
+//    public void checkUserDataWithPassport(UserDataRequestDto userData, MultipartFile passportImage)
+//            throws IOException, InterruptedException {
+//        byte[] imageBytes = passportImage.getBytes();
+//
+//        // Encode the image data in Base64
+//        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+//
+//        ProcessBuilder processBuilder = new ProcessBuilder("python3", "src/main/resources/passport_analys.py");
+//        processBuilder.environment().put("IMAGE_DATA", encodedImage);
+//        processBuilder.redirectErrorStream(true);
+//
+//        Process process = processBuilder.start();
+//        process.waitFor();
+//
+//        InputStream inputStream = process.getInputStream();
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//        String line = reader.readLine();
+//        // Process line of the output here
+//        String[] familyNameAndFirstName = line.split(" ");
+//
+//        if (!userData.getPersonalData().getFamilyName().toLowerCase(Locale.ROOT)
+//                .equals(familyNameAndFirstName[0].toLowerCase(Locale.ROOT)) ||
+//                !userData.getPersonalData().getFirstName().toLowerCase(Locale.ROOT)
+//                        .equals(familyNameAndFirstName[1].toLowerCase(Locale.ROOT))) {
+//            throw new DataDoNotMatchWithPassportException("Family name or first name doesn't match with passport data");
+//        }
+//
+//        process.waitFor(); // Wait for the process to finish
+//
+//    }
 
     private void mergePdf(MultipartFile passportImage) {
         try {

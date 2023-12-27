@@ -4,15 +4,10 @@ import numpy as np
 import sys
 import os
 import base64
-from PIL import Image
-import base64
 import re
-from datetime import datetime
-
+from io import BytesIO
 from passporteye import read_mrz
-
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
+from datetime import datetime
 
 def process_string(input_string):
     parts = input_string.split(' ', 0)
@@ -22,8 +17,6 @@ def process_string(input_string):
         return parts[0]
     else:
         return input_string
-
-
 
 # Function to extract the name and surname in English from a passport image using Tesseract OCR
 def extract_name_and_surname(encoded_image):
@@ -74,7 +67,8 @@ def extract_name_and_surname(encoded_image):
     #print(nationality)
     #print(birth)
 
-    mrz = read_mrz(image_path)
+    image_stream = BytesIO(image_data)
+    mrz = read_mrz(image_stream)
 
     #print(mrz)
 
@@ -86,8 +80,6 @@ def extract_name_and_surname(encoded_image):
     surname = mrz_data['surname']
     nationality = mrz_data['nationality']
 
-
-
     year_b = int(mrz_data['date_of_birth'][:2])
     month_b = int(mrz_data['date_of_birth'][2:4])
     day_b = int(mrz_data['date_of_birth'][4:])
@@ -97,7 +89,6 @@ def extract_name_and_surname(encoded_image):
     formatted_string = formatted_date.strftime("%d/%m/%y")
 
     birth = formatted_string
-
 
     number = mrz_data['personal_number']
 
@@ -110,32 +101,21 @@ def extract_name_and_surname(encoded_image):
     else:
         sex = "Male"
 
-
     year_i = int(mrz_data['expiration_date'][:2])
     month_i = int(mrz_data['expiration_date'][2:4])
     day_i = int(mrz_data['expiration_date'][4:])
-
 
     formatted_date_i = datetime(year_i + current_century, month_i, day_i)
     formatted_string_i = formatted_date_i.strftime("%d/%m/%y")
 
     issue = formatted_string_i
 
-    return name, surname, nationality, birth, sex, issue, number
+    return name, surname, nationality, birth, sex
+
 
 # Access the image data from the environment variable
 image_data = os.environ.get("IMAGE_DATA")
 
-
-#image_path = 'C:\\Users\\vlads\\test\\AusPhoto7.jpg'
-
-#with open(image_path, "rb") as image_file:
-    #image_data = image_file.read()
-
-#encoded_image = base64.b64encode(image_data).decode('utf-8')
-
-
-
 # Call the function and print the result
-name, surname, nationality, birth, sex, issue, number = extract_name_and_surname(image_data)
-print(name, surname, nationality, birth, sex, issue, number)
+name, surname, nationality, birth, sex = extract_name_and_surname(image_data)
+print(','.join([name, surname, nationality, birth, sex]))
