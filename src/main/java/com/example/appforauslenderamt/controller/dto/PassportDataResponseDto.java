@@ -10,7 +10,7 @@ import lombok.Value;
 @Builder
 @Getter
 @AllArgsConstructor
-public class UserDataResponseDto {
+public class PassportDataResponseDto {
 
     @JsonProperty("family_name")
     String familyName;

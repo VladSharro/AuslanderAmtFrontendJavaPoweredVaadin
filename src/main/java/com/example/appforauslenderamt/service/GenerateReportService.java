@@ -1,7 +1,8 @@
 package com.example.appforauslenderamt.service;
 
+import com.example.appforauslenderamt.controller.dto.CertificateOfEnrollmentDataResponseDto;
 import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
-import com.example.appforauslenderamt.controller.dto.UserDataResponseDto;
+import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
@@ -25,12 +26,15 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 @Service
 public class GenerateReportService {
 
-    public UserDataResponseDto getDataFromPassport(MultipartFile passportImage)
+    public PassportDataResponseDto getDataFromPassport(MultipartFile passportImage)
             throws IOException, InterruptedException {
         byte[] imageBytes = passportImage.getBytes();
 
@@ -50,13 +54,52 @@ public class GenerateReportService {
         // Process line of the output here
         String[] userData = line.split(",");
 
-        UserDataResponseDto responseDto = UserDataResponseDto.builder()
+        PassportDataResponseDto responseDto = PassportDataResponseDto.builder()
                 .familyName(userData[0])
                 .firstName(userData[1])
                 .nationality(userData[2])
                 .dateOfBirth(userData[3])
                 .sex(userData[4])
                 .build();
+
+        process.waitFor(); // Wait for the process to finish
+
+        return responseDto;
+
+    }
+
+    public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(MultipartFile passportImage)
+            throws IOException, InterruptedException {
+        byte[] imageBytes = passportImage.getBytes();
+
+        // Encode the image data in Base64
+        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+
+        ProcessBuilder processBuilder = new ProcessBuilder("python3", "OCR/ImmatrikulationAnalitics.py");
+        processBuilder.environment().put("IMAGE_DATA", encodedImage);
+        processBuilder.redirectErrorStream(true);
+
+        Process process = processBuilder.start();
+        process.waitFor();
+
+        InputStream inputStream = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
+        String line = reader.readLine();
+        // Process line of the output here
+        String[] userData = line.split(",");
+
+        CertificateOfEnrollmentDataResponseDto responseDto = CertificateOfEnrollmentDataResponseDto.builder()
+                .name(userData[0])
+                .dateOfBirth(userData[1])
+                .placeOfBirth(userData[2])
+                .address(userData[3])
+                .semesterEndsDate(userData[4])
+                .build();
+
+        if (LocalDate.parse(responseDto.getSemesterEndsDate(),
+                DateTimeFormatter.ofPattern("dd.MM.yyyy")).isBefore(LocalDate.now())) {
+            throw new InvalidDataException("The document was expired");
+        }
 
         process.waitFor(); // Wait for the process to finish
 

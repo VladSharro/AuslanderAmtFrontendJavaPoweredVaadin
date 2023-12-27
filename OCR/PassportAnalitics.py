@@ -12,7 +12,6 @@ from datetime import datetime
 def process_string(input_string):
     parts = input_string.split(' ', 0)
 
-
     if len(parts) > 1 and parts[1].isspace():
         return parts[0]
     else:
@@ -60,21 +59,12 @@ def extract_name_and_surname(encoded_image):
         if re.search(r'\bF\b', lines[i]):
             sex = "Female"
 
-
-        #print(lines[i])
         i = i + 1
-
-    #print(nationality)
-    #print(birth)
 
     image_stream = BytesIO(image_data)
     mrz = read_mrz(image_stream)
 
-    #print(mrz)
-
     mrz_data = mrz.to_dict()
-
-    #print(mrz_data)
 
     name = process_string(mrz_data['names'])
     surname = mrz_data['surname']

@@ -1,7 +1,8 @@
 package com.example.appforauslenderamt.controller;
 
+import com.example.appforauslenderamt.controller.dto.CertificateOfEnrollmentDataResponseDto;
 import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
-import com.example.appforauslenderamt.controller.dto.UserDataResponseDto;
+import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
 import com.example.appforauslenderamt.service.GenerateReportService;
 import com.lowagie.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
@@ -26,12 +27,22 @@ public class FileController {
     }
 
     @ApiOperation(value = "Endpoint for getting user's data from passport picture",
-            notes = "Takes passport image and returns information getting from passport with using OCR")
+            notes = "Takes passport image and returns information getting from it with using OCR")
     @PostMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public UserDataResponseDto getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
+    public PassportDataResponseDto getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
             throws IOException, InterruptedException {
         return generateReportService.getDataFromPassport(passportImage);
+    }
+
+    @ApiOperation(value = "Endpoint for getting user's data from certificate of enrollment",
+            notes = "Takes the image of the certificate of enrollment and returns information getting from it with using OCR")
+    @PostMapping(value = "/get_data_from_certificate_of_enrollment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
+                                                                              MultipartFile certificateOfEnrollment)
+            throws IOException, InterruptedException {
+        return generateReportService.getDataFromCertificateOfEnrollment(certificateOfEnrollment);
     }
 
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",
