@@ -1,8 +1,9 @@
 package com.example.appforauslenderamt.service;
 
 import com.example.appforauslenderamt.controller.dto.CertificateOfEnrollmentDataResponseDto;
-import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
+import com.example.appforauslenderamt.controller.dto.HealthInsuranceCertificateDataResponseDto;
 import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
+import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
@@ -27,7 +28,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
@@ -36,25 +36,11 @@ public class GenerateReportService {
 
     public PassportDataResponseDto getDataFromPassport(MultipartFile passportImage)
             throws IOException, InterruptedException {
-        byte[] imageBytes = passportImage.getBytes();
-
-        // Encode the image data in Base64
-        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-
-        ProcessBuilder processBuilder = new ProcessBuilder("python3", "OCR/PassportAnalitics.py");
-        processBuilder.environment().put("IMAGE_DATA", encodedImage);
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-        process.waitFor();
-
-        InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
-        String line = reader.readLine();
+        String line = processWithOCR(passportImage, "OCR/PassportAnalitics.py");
         // Process line of the output here
         String[] userData = line.split(",");
 
-        PassportDataResponseDto responseDto = PassportDataResponseDto.builder()
+        return PassportDataResponseDto.builder()
                 .familyName(userData[0])
                 .firstName(userData[1])
                 .nationality(userData[2])
@@ -62,29 +48,12 @@ public class GenerateReportService {
                 .sex(userData[4])
                 .build();
 
-        process.waitFor(); // Wait for the process to finish
-
-        return responseDto;
-
     }
 
-    public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(MultipartFile passportImage)
+    public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(
+            MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
-        byte[] imageBytes = passportImage.getBytes();
-
-        // Encode the image data in Base64
-        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-
-        ProcessBuilder processBuilder = new ProcessBuilder("python3", "OCR/ImmatrikulationAnalitics.py");
-        processBuilder.environment().put("IMAGE_DATA", encodedImage);
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-        process.waitFor();
-
-        InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
-        String line = reader.readLine();
+        String line = processWithOCR(certificateOfEnrollment, "OCR/ImmatrikulationAnalitics.py");
         // Process line of the output here
         String[] userData = line.split(",");
 
@@ -101,9 +70,21 @@ public class GenerateReportService {
             throw new InvalidDataException("The document was expired");
         }
 
-        process.waitFor(); // Wait for the process to finish
-
         return responseDto;
+
+    }
+
+    public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(
+            MultipartFile healthInsuranceCertificateImage)
+            throws IOException, InterruptedException {
+        String line = processWithOCR(healthInsuranceCertificateImage, "OCR/Health_Analitics.py");
+        // Process line of the output here
+        String[] userData = line.split(",");
+
+        return HealthInsuranceCertificateDataResponseDto.builder()
+                .insurer(userData[0])
+                .dateOfExpire(userData[1])
+                .build();
 
     }
 
@@ -489,6 +470,24 @@ public class GenerateReportService {
         }
 
         return templateEngine.process("form_template", context);
+    }
+
+    private String processWithOCR(MultipartFile file, String pathToFile) throws IOException, InterruptedException {
+        byte[] imageBytes = file.getBytes();
+
+        // Encode the image data in Base64
+        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
+
+        ProcessBuilder processBuilder = new ProcessBuilder("python3", pathToFile);
+        processBuilder.environment().put("IMAGE_DATA", encodedImage);
+        processBuilder.redirectErrorStream(true);
+
+        Process process = processBuilder.start();
+        process.waitFor();
+
+        InputStream inputStream = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
+        return reader.readLine();
     }
 
     private void generateHTMLFromPDF(String filename) throws IOException {
