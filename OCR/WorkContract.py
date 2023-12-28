@@ -1,3 +1,7 @@
+import os
+
+
+
 import fitz
 import cv2
 import pytesseract
@@ -91,7 +95,15 @@ def convert_pdf_to_images(pdf_path):
     doc.close()
 
     return final_count
-pdf_path = "C:\\Users\\vlads\\test\\Arbeitsvertrag_Muster_Photo.pdf"
+#pdf_path = "C:\\Users\\vlads\\test\\Arbeitsvertrag_Muster_Photo.pdf"
+
+image_data = os.environ.get("IMAGE_DATA")
+
+
+
+
 moneys = convert_pdf_to_images(pdf_path)
 
-print(moneys)
+print(','.join([moneys]))
+
+#print(moneys)
