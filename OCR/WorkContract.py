@@ -7,7 +7,6 @@ import re
 from difflib import SequenceMatcher
 
 
-# Path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def similar(a, b):
@@ -15,7 +14,6 @@ def similar(a, b):
 
 
 def extract_number_after_word(text, word):
-    # Используем регулярное выражение для поиска числа после указанного слова
     pattern = re.compile(rf'{word}\D*(\d+)')
     match = pattern.search(text)
     if match:
@@ -24,7 +22,6 @@ def extract_number_after_word(text, word):
         return None
 
 def extract_first_number_after_word(text, word):
-    # Используем регулярное выражение для поиска первого числа после указанного слова
     pattern = re.compile(rf'{word}\D*(\d+)')
     match = pattern.search(text)
     if match:
@@ -46,14 +43,11 @@ def convert_pdf_to_images(pdf_path):
 
             image_bytes = base_image["image"]
 
-            # Convert image bytes to a numpy array
             image_np = np.frombuffer(image_bytes, dtype=np.uint8)
             image = cv2.imdecode(image_np, flags=cv2.IMREAD_COLOR)
 
-            # Convert image to grayscale for better OCR results
             gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-            # Use pytesseract to perform OCR on the grayscale image
             extracted_text = pytesseract.image_to_string(Image.fromarray(gray_image, 'L'))
 
 
@@ -64,7 +58,6 @@ def convert_pdf_to_images(pdf_path):
 
             # Поиск строки с заданным словом "Arbeitsvergitung" в качестве заголовка пункта
             if "Arbeitsvergitung" in extracted_text:
-                # Извлечение числа после слова "von"
 
                 money = extract_number_after_word(extracted_text, "von")
                 #if number is not None:
@@ -77,7 +70,6 @@ def convert_pdf_to_images(pdf_path):
                 #cv2.destroyAllWindows()
 
 
-            # Поиск строки с заданным словом "Arbeitszeit" в качестве заголовка пункта
             if "Arbeitszoit" in extracted_text:
 
 
@@ -99,7 +91,6 @@ def convert_pdf_to_images(pdf_path):
     doc.close()
 
     return final_count
-# Example usage
 pdf_path = "C:\\Users\\vlads\\test\\Arbeitsvertrag_Muster_Photo.pdf"
 moneys = convert_pdf_to_images(pdf_path)
 
