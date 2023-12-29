@@ -8,7 +8,7 @@ import pytesseract
 from PIL import Image
 import numpy as np
 import re
-from difflib import SequenceMatcher
+#from difflib import SequenceMatcher
 from datetime import datetime
 
 
@@ -16,8 +16,8 @@ from datetime import datetime
 # Path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def similar(a, b):
-    return SequenceMatcher(None, a, b).ratio()
+#def similar(a, b):
+#    return SequenceMatcher(None, a, b).ratio()
 
 
 def extract_date_after_word(text, word, lines_before=200):
