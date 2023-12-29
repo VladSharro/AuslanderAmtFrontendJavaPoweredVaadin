@@ -1,9 +1,6 @@
 package com.example.appforauslenderamt.service;
 
-import com.example.appforauslenderamt.controller.dto.CertificateOfEnrollmentDataResponseDto;
-import com.example.appforauslenderamt.controller.dto.HealthInsuranceCertificateDataResponseDto;
-import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
-import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
+import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
@@ -84,6 +81,20 @@ public class GenerateReportService {
         return HealthInsuranceCertificateDataResponseDto.builder()
                 .insurer(userData[0])
                 .dateOfExpire(userData[1])
+                .build();
+
+    }
+
+    public FinancialDocumentResponseDto getDataFromFinancialDocument(
+            MultipartFile financialDocument)
+            throws IOException, InterruptedException {
+        String line = processWithOCR(financialDocument, "OCR/Geld.py");
+        // Process line of the output here
+        String[] userData = line.split(",");
+
+        return FinancialDocumentResponseDto.builder()
+                .sum(userData[0])
+                .date(userData[1])
                 .build();
 
     }
