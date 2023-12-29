@@ -1,6 +1,7 @@
 package com.example.appforauslenderamt.controller;
 
 import com.example.appforauslenderamt.controller.dto.CertificateOfEnrollmentDataResponseDto;
+import com.example.appforauslenderamt.controller.dto.HealthInsuranceCertificateDataResponseDto;
 import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
 import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
 import com.example.appforauslenderamt.service.GenerateReportService;
@@ -43,6 +44,16 @@ public class FileController {
                                                                               MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
         return generateReportService.getDataFromCertificateOfEnrollment(certificateOfEnrollment);
+    }
+
+    @ApiOperation(value = "Endpoint for getting user's data from health insurance certificate",
+            notes = "Takes the image of the health insurance certificate and returns information getting from it with using OCR")
+    @PostMapping(value = "/get_data_from_health_insurance_certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
+                                                                                             MultipartFile healthInsuranceCertificate)
+            throws IOException, InterruptedException {
+        return generateReportService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate);
     }
 
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",
