@@ -1,9 +1,6 @@
 package com.example.appforauslenderamt.controller;
 
-import com.example.appforauslenderamt.controller.dto.CertificateOfEnrollmentDataResponseDto;
-import com.example.appforauslenderamt.controller.dto.HealthInsuranceCertificateDataResponseDto;
-import com.example.appforauslenderamt.controller.dto.UserDataRequestDto;
-import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
+import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.service.GenerateReportService;
 import com.lowagie.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
@@ -54,6 +51,16 @@ public class FileController {
                                                                                              MultipartFile healthInsuranceCertificate)
             throws IOException, InterruptedException {
         return generateReportService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate);
+    }
+
+    @ApiOperation(value = "Endpoint for getting financial data from financial document",
+            notes = "Takes the image of financial document and returns information getting from it with using OCR")
+    @PostMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public FinancialDocumentResponseDto getDataFromFinancialDocument(@RequestPart("financial_document")
+                                                                                 MultipartFile financialDocument)
+            throws IOException, InterruptedException {
+        return generateReportService.getDataFromFinancialDocument(financialDocument);
     }
 
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",
