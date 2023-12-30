@@ -5,11 +5,10 @@ import { FaqModel } from '../Models/FAQModel';
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../environments/environment"
 
-
 @Injectable({
   providedIn: 'root'
 })
-export class NetworkServiceService {
+export class FaqService {
 
   constructor(private firestore: Firestore) { }
 
@@ -48,28 +47,6 @@ try{
   console.error('Error Deleting FAQ document:', err);
 }
 
+
 }
-
-
-
-  // async modifyFAQ(question: string, newAnswer: string): Promise<void> {
-  //   const faqCollection = collection(this.firestore, 'FAQ');
-
-  //   try {
-  //     // Get the document reference based on the question
-  //     const querySnapshot = await faqCollection.ref()('faqQuestion', '==', question).get();
-
-  //     if (querySnapshot.size === 1) {
-  //       // Only modify if a single document is found
-  //       const docRef = querySnapshot.docs[0].ref;
-  //       await docRef.update({ faqAnswer: newAnswer });
-  //     } else {
-  //       console.error('Error: Found multiple or no documents with the given question.');
-  //       // Handle the error as needed
-  //     }
-  //   } catch (error) {
-  //     console.error('Error modifying FAQ document:', error);
-  //     throw error; // You might want to handle the error appropriately in your application
-  //   }
-  // }
 }

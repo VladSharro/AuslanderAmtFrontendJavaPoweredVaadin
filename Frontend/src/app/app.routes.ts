@@ -7,6 +7,7 @@ import { DocumentsComponent } from './Components/MainPagesComponents/documents/d
 import { ContactComponent } from './Components/MainPagesComponents/contact/contact.component';
 import { AdminLoginComponent } from './Components/admin-login/admin-login.component';
 import { NonEuFirstAppComponent } from './Components/non-eu-first-app/non-eu-first-app.component';
+import { AdminDashboardComponent } from './Components/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
@@ -17,5 +18,6 @@ export const routes: Routes = [
     {path:"Contact", component: ContactComponent},
     {path:"adminLogIn", component: AdminLoginComponent},
     {path: "nonEuFirstTimeApp", component:NonEuFirstAppComponent},
+    {path: "adminDashboard", component:AdminDashboardComponent}
 
 ];

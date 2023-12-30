@@ -4,9 +4,9 @@ import { ApplicationTypeLabels } from '../../Labels/applicationType_labels';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MissingDataDialogueComponent } from '../../Dialogues/missing-data-dialogue/missing-data-dialogue.component';
 
 

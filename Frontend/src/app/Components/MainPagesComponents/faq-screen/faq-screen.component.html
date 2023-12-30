@@ -1,1 +1,30 @@
-<p>faq-screen works!</p>
+<div class="Header-class">
+FAQ
+</div>
+<div class="main_div">
+    
+    <mat-card #content class="faq-card" *ngIf="!isDataLoading; else spinner">
+        <div class="faq-container">
+      
+          <div *ngFor="let faqItem of faqData, let i =index" class="faq-item">
+            <div class="faq-question" (click)="toggleAnswer(i)">
+              {{ faqData[i].question }}
+              <mat-icon class="arrow-icon">{{ faqData[i].isOpened ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </div>
+            <div class="faq-answer" *ngIf="faqData[i].isOpened == true">
+              {{ faqData[i].answer }}
+            </div>
+            <mat-divider></mat-divider>
+          </div>
+      
+        </div>
+      </mat-card>
+
+
+
+<ng-template #spinner>
+        <!-- Spinner overlay -->
+        <div class="spinner-overlay" [ngClass]="{'custom-spinner-color': isDataLoading}">
+          <mat-spinner color="white" ></mat-spinner>
+        </div>
+</ng-template>
