@@ -6,6 +6,8 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import { FaqComponentComponent } from '../Dashboard-components/faq-component/faq-component.component';
 import { DocumentsComponent } from '../Dashboard-components/documents/documents.component';
+import { ContactsComponent } from '../Dashboard-components/contacts/contacts.component';
+
 
 
 
@@ -17,7 +19,7 @@ import { DocumentsComponent } from '../Dashboard-components/documents/documents.
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent],
+  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
