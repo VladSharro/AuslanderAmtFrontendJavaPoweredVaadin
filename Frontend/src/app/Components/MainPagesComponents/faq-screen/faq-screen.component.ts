@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { FaqModel } from '../../../Models/FAQModel';
@@ -20,23 +20,21 @@ export class FaqScreenComponent implements AfterViewInit{
   isDataLoading = false;
   faqData: FaqModel[] = [];
 
-  constructor(private faqService: FaqService, private cdr: ChangeDetectorRef){
+  constructor(private faqService: FaqService) {
+  
     this.isDataLoading = true;
   }
-  ngAfterViewInit(): void {
-   this.getFaqData();
-  }
-
   
-
-
+  ngAfterViewInit(): void {
+    this.getFaqData();
+  }
+  
   async getFaqData() {
     try {
-      
       this.faqData = await this.faqService.getFAQ();
+      
       this.isDataLoading = false;
     } catch (error) {
-      // Handle the error, e.g., log it or show an error message to the user
       console.error('Error fetching FAQ data:', error);
     }
   }
@@ -45,7 +43,6 @@ export class FaqScreenComponent implements AfterViewInit{
   toggleAnswer(index: number){
 
     this.faqData[index].isOpened = !this.faqData[index].isOpened
-    this.cdr.detectChanges();
 
   }
 

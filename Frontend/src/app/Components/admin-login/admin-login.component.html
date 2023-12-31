@@ -5,7 +5,7 @@
         <form class="form-class" [formGroup]="emailForm" (ngSubmit)="onSubmit()" >
             
 
-            <h2>{{login_labels.pageTitle}}</h2>
+            <h1 style="color: #b42e29;">{{login_labels.pageTitle}}</h1>
             <div class="rounded-input-container" >
                 <input class="rounded-input" required type="email" name="email_field" id="email_field" formControlName = "email" placeholder="{{login_labels.email_label}}">
                 <label class="placeholder-label">{{login_labels.email_label}}</label>

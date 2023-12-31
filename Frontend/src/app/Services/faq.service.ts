@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { addDoc, collection, deleteDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, getDocs, query} from 'firebase/firestore';
 import { FaqModel } from '../Models/FAQModel';
-import { doc, getDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 import { db } from "../../environments/environment"
 
 @Injectable({

@@ -1,20 +1,20 @@
-<div class="Header-class">
-FAQ
-</div>
+
 <div class="main_div">
     
-    <mat-card #content class="faq-card" *ngIf="!isDataLoading; else spinner">
-        <div class="faq-container">
-      
+    <mat-card class="card-container" *ngIf="!isDataLoading; else spinner">
+      <h1 style="color: #b42e29;">Questions? Look here.</h1>
+          <h3 style="color: grey;">Can't find an answer? Contact us directly.</h3>
+        <div style="width: 70%;">
+          
           <div *ngFor="let faqItem of faqData, let i =index" class="faq-item">
             <div class="faq-question" (click)="toggleAnswer(i)">
-              {{ faqData[i].question }}
-              <mat-icon class="arrow-icon">{{ faqData[i].isOpened ? 'expand_less' : 'expand_more' }}</mat-icon>
+              <mat-icon style="color: #b42e29;">{{ faqData[i].isOpened ? 'remove' : 'add' }}</mat-icon> 
+              <span class="question-text"> {{ faqData[i].question }}</span>
             </div>
-            <div class="faq-answer" *ngIf="faqData[i].isOpened == true">
-              {{ faqData[i].answer }}
+            <div class="faq-answer" *ngIf="faqData[i].isOpened">
+              <p class="answer-text">{{ faqData[i].answer }}</p>
             </div>
-            <mat-divider></mat-divider>
+            <mat-divider class="custom-divider"></mat-divider>            
           </div>
       
         </div>
