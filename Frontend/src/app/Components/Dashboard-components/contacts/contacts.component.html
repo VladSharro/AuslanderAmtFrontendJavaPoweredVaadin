@@ -1,0 +1,72 @@
+<div *ngIf="!isDataLoading; else spinner">
+    <div  *ngIf="isNewCont == false">
+
+        <div *ngFor="let contact of pagedContactsData; let i = index">
+        
+            <p style="font-weight: bold;">Contact Method: {{ contact.title }}</p>
+            <p>Description: {{ contact.value }}</p>
+            <button mat-icon-button color="warn" style="width: 25%; margin: auto" (click)="removeContact(i)"><mat-icon>remove</mat-icon></button>
+            
+            <mat-divider></mat-divider>
+        </div>
+        <mat-paginator [length]="contactsData.length"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onPageChange($event)"
+              (page)="onPageSizeChange($event)"
+              >
+        </mat-paginator>
+    </div>
+    <div *ngIf="isNewCont == true">
+    <div style="display: flex; justify-content: space-between;" >
+        <mat-form-field color="primary" style="margin: auto; margin-left: 10px; margin-right: 10px;">
+            <mat-label>Contact Method</mat-label>
+            <textarea matInput
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="5"
+                      [(ngModel)] = "newTitle">
+            </textarea>
+               
+        </mat-form-field>
+        <mat-form-field style="margin: auto; margin-left: 10px; margin-right: 10px;">
+            <mat-label>Description</mat-label>
+
+            <textarea matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"
+                [(ngModel)]="newValue">
+
+            </textarea>
+        </mat-form-field>
+    </div>
+    <button mat-raised-button  style="width: 50%; margin: auto; margin-top: 15px; margin-bottom: 15px; background-color: #b42e29; color: white;" (click)="saveContact()">Save to Contact Details </button>
+
+
+    </div>
+    <mat-divider></mat-divider>
+
+        <div style="display: flex; align-items: center; margin: 10px; padding-top: 20px;">
+
+            <button mat-raised-button  style="width: 25%; margin: auto; background-color: #b42e29; color: white;" (click)="AddContact()">Add new </button>
+            <button mat-raised-button  style="width: 25%; margin: auto; background-color: #b42e29; color: white;" (click)="ShowAllContacts()">Show All </button>
+        </div>
+
+    
+</div>
+
+
+
+
+
+
+
+<ng-template #spinner>
+        <!-- Spinner overlay -->
+        <div class="spinner-overlay" [ngClass]="{'custom-spinner-color': isDataLoading}">
+          <mat-spinner color="white" ></mat-spinner>
+        </div>
+      </ng-template>

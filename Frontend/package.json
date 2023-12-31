@@ -27,6 +27,7 @@
     "express": "^4.18.2",
     "firebase": "^10.7.1",
     "igniteui-angular": "^17.0.2",
+    "jspdf": "^2.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

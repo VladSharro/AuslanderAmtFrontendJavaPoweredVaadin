@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div *ngIf="!isDataLoading; else spinner">
+    <div  *ngIf="isNewUser == false">
+
+        <div *ngFor="let user of pagedUsersData; let i = index">
+        
+            <div class="rounded-input-container" >
+                <input class="rounded-input" readonly type="email" name="users_email_field" id="users_email_field" [(ngModel)] = "user.mail" placeholder="{{login_labels.email_label}}">
+                <label class="placeholder-label">{{login_labels.email_label}}</label>
+            </div>
+            <div class="rounded-input-container"  >
+                <input class="rounded-input" readonly type="{{ user.isOpened ? 'text' : 'password' }}" name="users_password_field" id="users_password_field" [(ngModel)] = "user.password" placeholder="{{login_labels.password}}">
+                <label class="placeholder-label">{{login_labels.password}}</label>
+
+            </div>
+            <div style="display: flex; align-items: center; margin: 10px; padding-top: 20px;">
+
+                <button mat-raised-button  style="width: 50%; margin: auto; background-color: #b42e29; color: white;" (click)="flipPassowrd(i)"> {{user.isOpened? 'Hide Password':'Show Password'}} </button>
+            </div>
+            
+            <mat-divider></mat-divider>
+        </div>
+        <mat-paginator [length]="usersData.length"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onPageChange($event)"
+              (page)="onPageSizeChange($event)"
+              >
+        </mat-paginator>
+    </div>
+    <div *ngIf="isNewUser == true">
+
+        <div class="rounded-input-container" >
+            <input class="rounded-input"  type="email" name="email_field" id="email_field" [(ngModel)] = "newEmail" placeholder="{{login_labels.email_label}}">
+            <label class="placeholder-label">{{login_labels.email_label}}</label>
+        </div> 
+        <div class="rounded-input-container"  > 
+            <input class="rounded-input"  type="password" name="password_field" id="password_field" [(ngModel)] = "newPassword" placeholder="{{login_labels.password}}">
+            <label class="placeholder-label">{{login_labels.password}}</label>
+        </div>
+        <div class="rounded-input-container"  >
+            <input class="rounded-input"  type="password" name="confirm_password_field" id="confirm_password_field" [(ngModel)] = "newPasswordConfirm" placeholder="{{login_labels.password}}">
+            <label class="placeholder-label">{{login_labels.password}}</label>
+        </div>
+        <button mat-raised-button  style="width: 50%; margin: auto; margin-top: 15px; margin-bottom: 15px; background-color: #b42e29; color: white;" (click)="saveUser()">Save to Users </button>
+
+    </div>
+    <mat-divider></mat-divider>
+
+        <div style="display: flex; align-items: center; margin: 10px; padding-top: 20px;">
+
+            <button mat-raised-button  style="width: 25%; margin: auto; background-color: #b42e29; color: white;" (click)="AddUser()">Add new </button>
+            <button mat-raised-button  style="width: 25%; margin: auto; background-color: #b42e29; color: white;" (click)="ShowAllUsers()">Show All </button>
+        </div>
+
+    
+</div>
+
+
+
+
+
+
+
+<ng-template #spinner>
+        <!-- Spinner overlay -->
+        <div class="spinner-overlay" [ngClass]="{'custom-spinner-color': isDataLoading}">
+          <mat-spinner color="white" ></mat-spinner>
+        </div>
+      </ng-template>

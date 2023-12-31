@@ -123,7 +123,7 @@ label {
     width: 95%;
 }
 
-.main_div h1 {
+.main_div h2 {
     margin-top: 10px; /* Adjust the top margin between each text element based on your preference */
     font-family: 'Open Sans', sans-serif;
     color: rgba(0, 0, 0, 0.87);
