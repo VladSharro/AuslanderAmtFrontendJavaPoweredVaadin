@@ -63,15 +63,28 @@ public class FileController {
         return generateReportService.getDataFromFinancialDocument(financialDocument);
     }
 
+    @ApiOperation(value = "Endpoint for extracting user data from filled form",
+            notes = "Takes filled form in pdf format and return user data extracting from it with using OCR")
+    @PostMapping(value = "/extract_data_from_filled_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public UserDataRequestDto getDataFromFilledForm(@RequestPart("filled_form") MultipartFile filledForm)
+            throws IOException, InterruptedException {
+        return generateReportService.extractDataFromFilledForm(filledForm);
+    }
+
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",
             notes = "Takes user data and passport image, compares entered data with passport and if matches " +
                     "generate application form")
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void uploadFile(@RequestPart("passport_image") MultipartFile passportImage,
+                           @RequestPart("certificate_of_enrollment_image") MultipartFile certificateOfEnrollment,
+                           @RequestPart("health_insurance_certificate") MultipartFile healthInsuranceCertificate,
+                           @RequestPart("financial_document") MultipartFile financialDocument,
                            @RequestPart("user_data") UserDataRequestDto userData)
             throws IOException, ScriptException, InterruptedException, DocumentException {
-        generateReportService.generatePdfFromHtml(userData, passportImage);
+        generateReportService.generatePdfFromHtml(userData, passportImage, certificateOfEnrollment,
+                healthInsuranceCertificate, financialDocument);
     }
 
 //    @ApiOperation(value = "Endpoint for generation html template from pdf file",
