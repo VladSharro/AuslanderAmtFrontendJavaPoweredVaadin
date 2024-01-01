@@ -1,0 +1,165 @@
+<form>
+    <h3 style="text-align: left;" *ngIf="isPartnerDataNeeded()">Partner Data</h3>
+
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerLastName" >
+      <input class="rounded-input" type="text" name="partner_last_name_field" id="partner_last_name_field" [(ngModel)]="familyData.partnerLastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+    </div>
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerFirstName" >
+      <input class="rounded-input" type="text" name="partner_first_name_field" id="partner_first_name_field" [(ngModel)]="familyData.partnerFirstName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerDateOfBirth" >
+      <input class="rounded-input" type="date" name="partner_birth_date_field" id="partner_birth_date_field" [(ngModel)]="familyData.partnerDateOfBirth" placeholder="{{familyData.partnerDateOfBirth}}">
+      <label class="placeholder-label">{{familyData.partnerDateOfBirth}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerPlaceOfBirth" >
+      <input class="rounded-input" type="text" name="partner_birth_place_field" id="partner_birth_place_field" [(ngModel)]="familyData.partnerPlaceOfBirth" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerNationality" >
+      <input class="rounded-input" type="text" name="partner_nationality_field" id="partner_nationality_field" [(ngModel)]="familyData.partnerNationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidNationality}}</label>
+    </div>
+
+  
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerSex" >
+      <select id="partner_sex" name="partner_sex" [(ngModel)]="familyData.partnerSex" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.partnerSex === ''}">
+        <option value="" disabled selected>{{fmailyLabels.partnerOrKidSex}}</option>
+        <option *ngFor="let sex_option of sexOptions" [value]="sex_option">{{ sex_option }}</option>
+      </select>
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidSex}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPartnerDataNeeded()" [class.filled]="familyData.partnerCurrentResidenceInGermany" >
+      <input class="rounded-input" type="text" name="partner_current_residence" id="partner_current_residence" [(ngModel)]="familyData.partnerCurrentResidenceInGermany" placeholder="{{familyData.partnerCurrentResidenceInGermany}}">
+      <label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+    </div>
+
+
+    <div class="rounded-input-container" [class.filled]="familyData.isChildrenAvailable" >
+      <select id="is_children_available" name="is_children_available" [(ngModel)]="familyData.isChildrenAvailable" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.isChildrenAvailable === ''}">
+        <option value="" disabled selected>{{fmailyLabels.isChildrenAvailableQuestion}}</option>
+        <option *ngFor="let yes_no_option of yesNoOptions" [value]="yes_no_option">{{ yes_no_option }}</option>
+      </select>
+      <label class="placeholder-label">{{fmailyLabels.isChildrenAvailableQuestion}}</label>
+    </div>
+    
+
+<div *ngIf="familyData.isChildrenAvailable === 'Yes'">
+<div *ngFor="let child of familyData.childern; let i = index" class="rounded-input-container">
+<h3>{{fmailyLabels.childNo}}{{ i + 1}}</h3>
+<div class="rounded-input-container">
+<input class="rounded-input" type="text" name="child_last_name_{{i}}" [(ngModel)]="child.lastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+</div>
+<div class="rounded-input-container">
+<input class="rounded-input" type="text" name="child_first_name_{{i}}" [(ngModel)]="child.firstName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+</div>
+<div class="rounded-input-container">
+<select id="child_sex_{{i}}" name="child_sex{{i}}" [(ngModel)]="child.sex" class="custom-select" [ngClass]="{'palceholder_selector': familyData.partnerSex === ''}">
+<option value="" disabled selected>{{fmailyLabels.partnerOrKidSex}}</option>
+<option *ngFor="let sex_option of sexOptions" [value]="sex_option">{{sex_option}}</option>
+</select>
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidSex}}</label>
+</div>
+
+<div class="rounded-input-container">
+<input class="rounded-input" type="date" name="child_birth_date_{{i}}" [(ngModel)]="child.dateOfBirth" placeholder="{{fmailyLabels.partnerOrKidBirthDate}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidBirthDate}}</label>
+</div>
+
+<div class="rounded-input-container">
+<input class="rounded-input" type="text" name="child_birth_place_{{i}}" [(ngModel)]="child.placeOfBirth" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+</div>
+
+<div class="rounded-input-container">
+<input class="rounded-input" type="text" name="child_nationality_{{i}}" [(ngModel)]="child.nationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidNationality}}</label>
+</div>
+
+<div class="rounded-input-container">
+<input class="rounded-input" type="text" name="child_current_residence_{{i}}" [(ngModel)]="child.currentPlaceOfResidence" placeholder="{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+</div>
+</div>
+<div style="display: flex; align-items: center;">
+<button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="addChild()">{{fmailyLabels.addChildLabel}} </button></div>
+</div>
+
+<div class="rounded-input-container" [class.filled]="familyData.isFatherApplicable" >
+<select id="is_father_applicable" name="is_father_applicable" [(ngModel)]="familyData.isFatherApplicable" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.isFatherApplicable === ''}">
+<option value="" disabled selected>{{fmailyLabels.isFatherApplicable}}</option>
+<option *ngFor="let yes_no_option of yesNoOptions" [value]="yes_no_option">{{ yes_no_option }}</option>
+</select>
+<label class="placeholder-label">{{fmailyLabels.isFatherApplicable}}</label>
+</div>
+
+<div class="rounded-input-container" *ngIf="familyData.isFatherApplicable" [class.filled]="familyData.fatherLastName" >
+<input class="rounded-input" type="text" name="father_last_name_field" id="father_last_name_field" [(ngModel)]="familyData.fatherLastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="familyData.isFatherApplicable" [class.filled]="familyData.fatherFisrtName" >
+<input class="rounded-input" type="text" name="father_first_name_field" id="father_first_name_field" [(ngModel)]="familyData.fatherFisrtName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="familyData.isFatherApplicable" [class.filled]="familyData.fatherNationality" >
+<input class="rounded-input" type="text" name="father_nationality_field" id="father_nationality_field" [(ngModel)]="familyData.fatherNationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="isMinorWithFather()" [class.filled]="familyData.fatherPlaceOfBirthForMinors" >
+<input class="rounded-input" type="text" name="father_place_birth_field" id="father_place_birth_field" [(ngModel)]="familyData.fatherPlaceOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="isMinorWithFather()" [class.filled]="familyData.fatherDateOfBirthForMinors" >
+<input class="rounded-input" type="date" name="father_date_birth_field" id="father_date_birth_field" [(ngModel)]="familyData.fatherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidBirthDate}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidBirthDate}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="isMinorWithFather()" [class.filled]="familyData.fatherCurrentResidenceForMinors" >
+<input class="rounded-input" type="date" name="father_current_residence_field" id="father_date_birth_field" [(ngModel)]="familyData.fatherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+</div>
+
+<div class="rounded-input-container" [class.filled]="familyData.isMotherApplicable" >
+<select id="is_father_applicable" name="is_mother_applicable" [(ngModel)]="familyData.isMotherApplicable" class="custom-select"  [ngClass]="{'palceholder_selector': familyData.isMotherApplicable === ''}">
+<option value="" disabled selected>{{fmailyLabels.isMotherApplicable}}</option>
+<option *ngFor="let yes_no_option of yesNoOptions" [value]="yes_no_option">{{ yes_no_option }}</option>
+</select>
+<label class="placeholder-label">{{fmailyLabels.isMotherApplicable}}</label>
+</div>
+
+<div class="rounded-input-container" *ngIf="familyData.isMotherApplicable" [class.filled]="familyData.motherLastName" >
+<input class="rounded-input" type="text" name="mother_last_name_field" id="mother_last_name_field" [(ngModel)]="familyData.motherLastName" placeholder="{{fmailyLabels.partnerOrKidLastNames}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidLastNames}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="familyData.isMotherApplicable" [class.filled]="familyData.motherFisrtName" >
+<input class="rounded-input" type="text" name="mother_first_name_field" id="mother_first_name_field" [(ngModel)]="familyData.motherFisrtName" placeholder="{{fmailyLabels.partnerOrKidFirstName}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="familyData.isMotherApplicable" [class.filled]="familyData.motherNationality" >
+<input class="rounded-input" type="text" name="mother_nationality_field" id="mother_nationality_field" [(ngModel)]="familyData.motherNationality" placeholder="{{fmailyLabels.partnerOrKidNationality}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidFirstName}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="isMinorWithMother()" [class.filled]="familyData.motherPlaceOfBirthForMinors" >
+<input class="rounded-input" type="text" name="mother_place_birth_field" id="mother_place_birth_field" [(ngModel)]="familyData.motherPlaceOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidPlaceOfBirth}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidPlaceOfBirth}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="isMinorWithMother()" [class.filled]="familyData.motherDateOfBirthForMinors" >
+<input class="rounded-input" type="date" name="mother_date_birth_field" id="mother_date_birth_field" [(ngModel)]="familyData.motherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidBirthDate}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidBirthDate}}</label>
+</div>
+<div class="rounded-input-container" *ngIf="isMinorWithMother()" [class.filled]="familyData.motherCurrentResidenceForMinors" >
+<input class="rounded-input" type="date" name="mother_current_residence_field" id="mother_date_birth_field" [(ngModel)]="familyData.motherDateOfBirthForMinors" placeholder="{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}">
+<label class="placeholder-label">{{fmailyLabels.partnerOrKidCurrentPlaceOfResidence}}</label>
+</div>
+
+<div  style="display: flex; justify-content: right; margin-top: 15px;">
+<button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{fmailyLabels.back_button_label}}</button>
+<button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="familyNextButtonClicked()"> {{fmailyLabels.next_button_label}}</button>
+</div>  
+  </form>

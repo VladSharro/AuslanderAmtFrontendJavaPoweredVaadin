@@ -1,0 +1,53 @@
+<form>
+    <div style="display: flex; align-items: center;">
+      <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openRegistrationInput()">{{residence_labels.city_registration_document_upload_button_label}} </button>
+    <input id="registrationFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="registrationUpload($event)">
+    <span *ngIf="registrationFile" style="margin-left: 10px;">{{ registrationFile.name }}</span>
+  </div>
+
+    <div class="rounded-input-container" [class.filled]="residenceData.placeOfResidence" >
+      <input class="rounded-input" type="text" name="residence_place_field" id="residence_place_field" [(ngModel)]="residenceData.placeOfResidence" placeholder="{{residence_labels.current_residence_in_germany_label}}">
+      <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>
+    </div>
+  
+    <div class="rounded-input-container" [class.filled]="residenceData.isPreviousStays" >
+      <select id="is_previous_stay" name="is_previous_stay" [(ngModel)]="residenceData.isPreviousStays" class="custom-select"  [ngClass]="{'palceholder_selector': residenceData.isPreviousStays === ''}">
+        <option value="" disabled selected>{{residence_labels.previous_stays_label}}</option>
+        <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+      </select>
+      <label class="placeholder-label">{{residence_labels.previous_stays_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPreviousAddressInGermany()" [class.filled]="residenceData.dateFrom" >
+      <input class="rounded-input" type="date" name="previous_stay_from" id="previous_stay_from" [(ngModel)]="residenceData.dateFrom" placeholder="{{residence_labels.from_date_label}}">
+      <label class="placeholder-label">{{residence_labels.from_date_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPreviousAddressInGermany()" [class.filled]="residenceData.dateTo" >
+      <input class="rounded-input" type="date" name="previous_stay_to" id="previous_stay_to" [(ngModel)]="residenceData.dateTo" placeholder="{{residence_labels.to_date_label}}">
+      <label class="placeholder-label">{{residence_labels.to_date_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isPreviousAddressInGermany()" [class.filled]="residenceData.previousStayAddress" >
+      <input class="rounded-input" type="text" name="previous_stay_address" id="previous_stay_address" [(ngModel)]="residenceData.previousStayAddress" placeholder="{{residence_labels.previous_stays_label}}">
+      <label class="placeholder-label">{{residence_labels.previous_stays_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="residenceData.isResidenceAbroadRetained" >
+      <select id="is_residence_abroad_retained" name="is_residence_abroad_retained" [(ngModel)]="residenceData.isResidenceAbroadRetained" class="custom-select"  [ngClass]="{'palceholder_selector': residenceData.isResidenceAbroadRetained === ''}">
+        <option value="" disabled selected>{{residence_labels.residence_place_abroad_label}}</option>
+        <option *ngFor="let yes_no_option of yes_no_options" [value]="yes_no_option">{{ yes_no_option }}</option>
+      </select>
+      <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="isAddressAbroadRetained()" [class.filled]="residenceData.residenceAbroadIfRetained">
+      <input class="rounded-input" type="text" name="previous_stay_abroad_address" id="previous_stay_abroad_address" [(ngModel)]="residenceData.residenceAbroadIfRetained" placeholder="{{residence_labels.residence_place_abroad_label}}">
+      <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>
+    </div>
+
+    <div  style="display: flex; justify-content: right; margin-top: 15px;">
+      <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{residence_labels.back_button_label}}</button>
+      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="residenceNextButtonClicked()"> {{residence_labels.next_button_label}}</button>
+    </div>
+  </form>

@@ -1,0 +1,10 @@
+<div style="display: flex; align-items: center;">
+    <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPhotoInput()">{{photoLabels.photo_button_label}} </button>
+    <input id="photoFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="photoUpload($event)">
+    <span *ngIf="photoFile" style="margin-left: 10px;">{{ photoFile.name }}</span>
+  </div>
+
+  <div  style="display: flex; justify-content: right; margin-top: 15px;">
+    <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;" >{{photoLabels.back_button_label}}</button>
+    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="photoNextClicked()">{{photoLabels.next_button_label}}</button>
+  </div>

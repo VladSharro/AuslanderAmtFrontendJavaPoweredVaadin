@@ -9,7 +9,7 @@
           <div *ngFor="let contactItem of contactsData, let i =index" class="contact-item">
             <div class="contact-title" (click)="toggleAnswer(i)">
               <!-- <mat-icon style="color: #b42e29;">{{ contactsData[i].isOpened ? 'remove' : 'add' }}</mat-icon>  -->
-              <span class="title-text"> {{ contactsData[i].title }}</span>
+              <span  class="title-text"> {{ contactsData[i].title }}</span>
             </div>
             <div class="contact-value" >
               <p class="value-text">{{ contactsData[i].value }}</p>

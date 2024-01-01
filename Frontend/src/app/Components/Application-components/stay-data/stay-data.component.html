@@ -1,0 +1,65 @@
+<form>
+            
+    <div style="display: flex; align-items: center;">
+      <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openVisaInput()">{{stayLabels.upload_entry_visa_document}} </button>
+    <input id="visaFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="visaUpload($event)">
+    <span *ngIf="visaFile" style="margin-left: 10px;">{{ visaFile.name }}</span>
+   </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.lastEntryDate" >
+      <input class="rounded-input" type="date" name="entry_date_field" id="entry_date_field" [(ngModel)]="stayData.lastEntryDate" placeholder="{{stayData.lastEntryDate}}">
+      <label class="placeholder-label">{{stayLabels.last_entry_date}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.lastEntryVisaType" >
+      <select id="last_entry_type" name="ilast_entry_type" [(ngModel)]="stayData.lastEntryVisaType" class="custom-select"  [ngClass]="{'palceholder_selector': stayData.lastEntryVisaType === ''}">
+        <option value="" disabled selected>{{stayLabels.entry_visa_type_label}}</option>
+        <option *ngFor="let enrty_visa_option of lastEntryTypeOptions" [value]="enrty_visa_option">{{ enrty_visa_option }}</option>
+      </select>
+      <label class="placeholder-label">{{stayLabels.entry_visa_type_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.visaIssueBy" >
+      <input class="rounded-input" type="text" name="visa_issue_by_field" id="visa_issue_by_field" [(ngModel)]="stayData.visaIssueBy" placeholder="{{stayLabels.visa_issue_by_label}}">
+      <label class="placeholder-label">{{stayLabels.visa_issue_by_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.visaIssueOn" >
+      <input class="rounded-input" type="date" name="visa_issue_on_field" id="visa_issue_on_field" [(ngModel)]="stayData.visaIssueOn" placeholder="{{stayLabels.visa_issue_on_label}}">
+      <label class="placeholder-label">{{stayLabels.visa_issue_on_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.visaNumber" >
+      <input class="rounded-input" type="text" name="visa_number_field" id="visa_number_field" [(ngModel)]="stayData.visaNumber" placeholder="{{stayLabels.visa_number_label}}">
+      <label class="placeholder-label">{{stayLabels.visa_number_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.visaValidFrom" >
+      <input class="rounded-input" type="date" name="visa_valid_from_field" id="visa_valid_from_field" [(ngModel)]="stayData.visaValidFrom" placeholder="{{stayLabels.visa_valid_from_label}}">
+      <label class="placeholder-label">{{stayLabels.visa_valid_from_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.visaValidTo" >
+      <input class="rounded-input" type="date" name="visa_valid_to_field" id="visa_valid_to_field" [(ngModel)]="stayData.visaValidTo" placeholder="{{stayLabels.visa_valid_to_label}}">
+      <label class="placeholder-label">{{stayLabels.visa_valid_to_label}}</label>
+    </div>
+    <div class="rounded-input-container" [class.filled]="stayData.lengthOfStay" >
+      <input class="rounded-input" type="number" name="length_of_length_field" id="length_of_stay_field" [(ngModel)]="stayData.lengthOfStay" placeholder="{{stayLabels.visa_length_of_stay}}">
+      <label class="placeholder-label">{{stayLabels.visa_length_of_stay}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="stayData.purposeOfStay" >
+      <select id="purpose_of_stay_type" name="purpose_of_stay_type" [(ngModel)]="stayData.purposeOfStay" class="custom-select"  [ngClass]="{'palceholder_selector': stayData.purposeOfStay === ''}">
+        <option value="" disabled selected>{{stayLabels.purpose_of_stay_label}}</option>
+        <option *ngFor="let stayPurposeOption of stayPurposeOptions" [value]="stayPurposeOption">{{ stayPurposeOption }}</option>
+      </select>
+      <label class="placeholder-label">{{stayLabels.entry_visa_type_label}}</label>
+    </div>
+
+
+    <div  style="display: flex; justify-content: right; margin-top: 15px;">
+        <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{stayLabels.back_button_label}}</button>
+        <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="staySectionButtonClicked()"> {{stayLabels.next_button_label}}</button>
+    </div> 
+
+  </form>

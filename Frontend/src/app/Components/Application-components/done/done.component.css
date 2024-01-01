@@ -1,0 +1,128 @@
+
+
+.mat-primary {
+    background:   rgba(255, 255, 255, 0.7) !important;
+  }
+
+  mat-stepper{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    
+  }
+  input{
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .radio_btn_div{
+    text-align: left;
+}
+
+  form{
+    text-align: center;
+    align-items: left;
+    justify-content: left;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+.card-container {
+    /* Adjust the maximum width as needed */
+    width: 80%; 
+    margin: auto;
+    margin-top: 50px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    background-color: rgba(255, 255, 255, 0.8);
+        }
+  
+  
+  .main_div{
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+        }
+
+.example-input-wrapper {
+            margin-bottom: 10px;
+          }
+
+        
+          
+label {
+            margin-right: 4px;
+          }
+
+          mat-form-field {
+            display: block;
+            margin-bottom: 5px; /* Adjust the margin as needed for spacing between radio buttons */
+            margin-top: 5px;
+            width: 50%;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.2);
+          }
+
+          md-input-container:not(.md-input-invalid).md-input-focused .md-input {
+            border-color: red; 
+        }
+         
+          
+/* rounded-input.component.css */
+.rounded-input, .custom-select  {
+  position: relative;
+  border-radius: 10px;
+  padding: 8px;
+  border: 1px solid var(--custom-primary);
+  /* border-color: ; */
+  width: 30%;
+  height: 10%;
+}
+.custom-select{
+  background-color:  rgba(255, 255, 255, 0.2);
+  width: 31%;
+}
+
+.rounded-input-container {
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px; /* Optional: Add some spacing between input and other elements */
+  justify-items: left;
+  justify-content: left;
+  text-align: left;
+
+}
+
+.placeholder-label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out, font-size 0.2s ease-out;
+  opacity: 0;
+  color: var(--custom-primary);
+}
+
+.filled .placeholder-label,
+.rounded-input:not(:placeholder-shown) + .placeholder-label,
+.rounded-input[type="date"]:not(:placeholder-shown) + .placeholder-label {
+  opacity: 1;
+  transform: translateY(-200%) scale(0.9);
+  font-size: 13px;
+}
+
+.rounded-input:focus {
+  border: 3px solid var(--custom-primary);
+  /* Change the border color when the input is focused */
+}
+
+.palceholder_selector{
+  color: #777777;
+}
+          

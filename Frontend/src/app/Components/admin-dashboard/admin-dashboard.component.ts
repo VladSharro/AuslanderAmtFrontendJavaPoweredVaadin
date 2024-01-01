@@ -8,6 +8,7 @@ import { FaqComponentComponent } from '../Dashboard-components/faq-component/faq
 import { DocumentsComponent } from '../Dashboard-components/documents/documents.component';
 import { ContactsComponent } from '../Dashboard-components/contacts/contacts.component';
 import { UsersComponent } from '../Dashboard-components/users/users.component';
+import { AdditionalDocumentsComponent } from '../Dashboard-components/additional-documents/additional-documents.component';
 
 
 
@@ -15,7 +16,7 @@ import { UsersComponent } from '../Dashboard-components/users/users.component';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent, UsersComponent],
+  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent, UsersComponent, AdditionalDocumentsComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
@@ -47,6 +48,6 @@ export class AdminDashboardComponent {
     {name: 'Documents'},
     {name: 'Contact'},
     {name: 'Users'},
-    {name: 'Application Documents'}
+    {name: 'Application-Documents'}
   ];
 }
