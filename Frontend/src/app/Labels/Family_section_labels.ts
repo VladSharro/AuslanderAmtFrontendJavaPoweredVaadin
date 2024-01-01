@@ -1,6 +1,5 @@
 export class familyLabels{
 
-    readonly sectionLabel = "Family";
     readonly isHusbandOrWifeRegistered="Do you have Husband/wife registered partner pursuant to LPartG (Partnership Act)?";
     readonly partnerOrKidLastNames = "Family name, previous name(s)";
     readonly partnerOrKidFirstName = "First name(s)";
@@ -17,4 +16,16 @@ export class familyLabels{
 
     readonly isChildrenAvailableQuestion = "Do you have Children ?"
 
+
+
+    readonly sex_options_m= "M";
+    readonly sex_options_f= "F";
+    readonly sex_options_d= "D";
+
+
+    readonly no_option = "No";
+    readonly yes_option = "Yes";
+
+    readonly next_button_label = "Next";
+    readonly back_button_label = "Back";
 }

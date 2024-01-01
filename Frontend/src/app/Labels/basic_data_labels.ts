@@ -1,5 +1,4 @@
 export class BasicDataLabels{
-    readonly basic_data_label = "Basic";
     readonly first_name_label = "First name";
     readonly last_name_label = "Last name";
     readonly birth_date_label = "Date of birth";
@@ -20,7 +19,6 @@ export class BasicDataLabels{
     readonly inValid_mail_label= "Invalid email address"
 
 
-    readonly passport_label = "Passport"
     readonly passoport_number = "passportNo.";
     readonly valid_from = "valid from";
     readonly valid_to = "valid till";

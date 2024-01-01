@@ -1,6 +1,5 @@
 export class offenciesLabels{
 
-    readonly section_label = "Offences";
     readonly conviction_question_label = " Have you been convicted for violating the law?";
     readonly yesOption = "Yes";
     readonly noOption = "No";
@@ -18,4 +17,9 @@ export class offenciesLabels{
     readonly entryRejectionQuestion = "Has any entry application you may have filed been rejected by Germany or a signatory nation to the Schengen Convention?";
     readonly residenceRejectionQuestion = "Has any application for a residence title / a residence authorization you may have filed been rejected by Germany or a signatory nation to the Schengen Convention?";
 
+    readonly no_option = "No";
+    readonly yes_option = "Yes";
+
+    readonly next_button_label = "Next";
+    readonly back_button_label = "Back";
 }

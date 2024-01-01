@@ -33,10 +33,8 @@ export class StartApplicationComponent {
   applicationLabels = new ApplicationTypeLabels()
 
   applicationType = ""
-  euOption=""
 
   applicationOptions = [this.applicationLabels.application_type_first_time_option , this.applicationLabels.application_type_extension_option]
-  euOptions = [this.applicationLabels.application_Yes_option, this.applicationLabels.application_No_option]
 
 
   
@@ -44,37 +42,23 @@ export class StartApplicationComponent {
 
   onSubmit() {
   if (this.validateInput()) {
-    this.navigateToProperApplication(this.isEuCitizen, this.isFirstTime)
+    this.navigateToProperApplication(this.isFirstTime)
   }
   else{
     if (this.applicationType == ''){
       this.openMissingDataDialogue('application', '2000ms', '1500ms')
-    }else{
-      if(this.euOption == ''){
-        this.openMissingDataDialogue('citizen',  '2000ms', '1500ms')
-      }
+    }
       else{
         this.openMissingDataDialogue('ERROR',  '2000ms', '1500ms')
       }
-    }
+    
 
   }
 
     }
 
   validateInput(): boolean{
-    switch (this.euOption){
-      case this.applicationLabels.application_Yes_option:
-        this.isEuCitizen = true;
-        break;
-      case this.applicationLabels.application_No_option:
-        this.isEuCitizen = false;
-        break;
-
-      default:
-        return false;  
-    }
-
+    
     switch (this.applicationType){
       case this.applicationLabels.application_type_first_time_option:
         this.isFirstTime = true;
@@ -103,8 +87,8 @@ export class StartApplicationComponent {
   }
 
 
-  navigateToProperApplication(isEu: Boolean, isFirstTime: Boolean){
-      if(!isEu && isFirstTime){
+  navigateToProperApplication(isFirstTime: Boolean){
+      if(isFirstTime){
         this.router.navigateByUrl('nonEuFirstTimeApp')
       }
   }
