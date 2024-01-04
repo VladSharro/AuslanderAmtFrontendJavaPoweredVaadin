@@ -11,7 +11,7 @@ stages:
   - test
 
 e2e-test:
-  image: python:3.11.7-bullseye
+  image: ppandiyan/robotframework
   stage: test
   script:
     # - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -22,7 +22,7 @@ e2e-test:
     #- tar xvf geckodriver*
     #- chmod +x geckodriver
     #- mv geckodriver /usr/bin/geckodriver
-    - pip install -r Tests/requirements.txt
+    #- pip install -r Tests/requirements.txt
     #- python Tests/chromedriver_download.py
     #- mkdir -p ~/.local/bin
     #- mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
