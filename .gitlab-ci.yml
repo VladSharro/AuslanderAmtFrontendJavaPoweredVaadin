@@ -23,6 +23,7 @@ e2e-test:
     - mkdir -p ~/.local/bin
     - mv chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
     - chmod +x ~/.local/bin/chromedriver
+    - export PATH=$PATH:~/.local/bin/chromedriver
     - chromedriver --version
     - robot --outputdir results Tests/ui/home.robot
   artifacts:
