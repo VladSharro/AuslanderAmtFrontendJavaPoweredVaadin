@@ -9,12 +9,16 @@ stages:
 fe-build:
   image: debian:stable
   stage: build
-  script:
+  before-script:
     - apt-get update
-    - apt-get install -y sshpass
-    - sshpass -e ssh -v -tt borisov@boriso02.stud.fim.uni-passau.de
-    - cd aspd/
-    - get pull origin main
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - ssh borisov@boriso02.stud.fim.uni-passau.de
 
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
