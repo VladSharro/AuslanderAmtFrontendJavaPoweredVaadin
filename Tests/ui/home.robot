@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation      Home page tests
 Resource           ../resources/common.resource
-Suite Setup        Open Browser To Test
+Suite Setup        Open Browser On Home Page
 Suite Teardown     Close Browser
 
 *** Test Cases ***

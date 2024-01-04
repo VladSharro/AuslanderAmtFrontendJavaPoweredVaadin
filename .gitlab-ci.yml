@@ -1,55 +1,41 @@
 ### Owner: Kirill Borisov
-### 
-### The pipeline is currently under development
-### and can only be fully implemented when we have a machine to run the project
-### 
+###
 ### The pipeline includes sample jobs for E2E tests and a skeleton for build.
 
 stages:
-  - dependencies
-  - run
+  - precheck
+  - build
   - test
 
-image: python:3.11-slim-bullseye
+fe-build-test:
+  image: node:lts-alpine
+  stage: precheck
+  script:
+    - cd Frontend
+    - npm install
+    - npm run build
 
-# node-install:
-#     stage: dependencies
-#     script:
-#         - apt-get install -y ca-certificates curl gnupg
-#         - mkdir -p /etc/apt/keyrings
-#         - curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-#         - NODE_MAJOR=20
-#         - echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-#         - apt-get update
-#         - apt-get install nodejs -y
-#         - cd ./Frontend
-#         - npm install --prefer-offline
-#         - cd ..
-#     cache:
-#         key:
-#             files:
-#                 - package.json
-#         paths:
-#             - node_modules
-
-# fe-run-job:       # This job runs in the build stage, which runs first.
-#   stage: run
-#   needs: ["node-install"]
-#   script:
-#       - ng serve
+fe-build:
+  image: debian:stable
+  stage: build
+  before_script:
+    - apt-get update
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git pull origin prod; sudo docker stop aspd; sudo docker rm aspd; sudo docker build -t aspd ./Frontend/; sudo docker run --name aspd -d -p 80:80 aspd'
 
 e2e-test:
-    stage: test
-    before_script:
-        #- apt-get update
-        #- apt-get -y install wget unzip
-        #- wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.71/linux64/chromedriver-linux64.zip
-        #- mkdir -p ~/.local/bin
-        #- unzip chromedriver-linux64.zip -d ~/.local/bin
-        #- mv ~/.local/bin/chromedriver-linux64/chromedriver  ~/.local/bin/chromedriver
-        #- chmod +x ~/.local/bin/chromedriver
-        - pip install robotframework
-        - pip install robotframework-seleniumlibrary
-        #- export PATH=$PATH:~/.local/bin
-    script:
-        - robot Tests/ui/home.robot
+  image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
+  stage: test
+  script:
+    - robot -d results Tests/ui/home.robot
+  artifacts:
+    paths:
+      - results
