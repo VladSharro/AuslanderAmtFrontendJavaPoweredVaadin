@@ -14,10 +14,12 @@ e2e-test:
   image: python:3.11-slim-bullseye
   stage: test
   before_script:
+    - apt-get update
+    - apt-get -y install wget
     - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    - sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-    - sudo apt-get update
-    - sudo apt-get install google-chrome-stable
+    - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    - apt-get update
+    - apt-get install google-chrome-stable
     - pip install -r Tests/requirements.txt
     - python Tests/chromedriver_download.py
     - mkdir -p ~/.local/bin
