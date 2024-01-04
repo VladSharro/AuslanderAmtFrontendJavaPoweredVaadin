@@ -20,7 +20,7 @@ fe-build:
     - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - echo $SUDO | ssh borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git pull origin main; sudo docker ps -a'
+    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git pull origin main; sudo docker ps -a'
 
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
