@@ -21,9 +21,8 @@ e2e-test:
     - pip install -r Tests/requirements.txt
     - python Tests/chromedriver_download.py
     - mkdir -p ~/.local/bin
-    - mv chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
-    - chmod +x ~/.local/bin/chromedriver
-    - export PATH=$PATH:~/.local/bin/chromedriver
+    - mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
+    - chmod +x /usr/bin/chromedriver
     - chromedriver --version
     - robot --outputdir results Tests/ui/home.robot
   artifacts:
