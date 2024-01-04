@@ -13,20 +13,17 @@ stages:
 e2e-test:
   image: python:3.11.7-bullseye
   stage: test
-  services:
-    - selenium/standalone-chrome
-  before_script:
-    # - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-    # - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-    # - apt-get update
-    # - apt-get install -y google-chrome-stable
   script:
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    - apt-get update
+    - apt-get install -y google-chrome-stable
     - pip install -r Tests/requirements.txt
     - python Tests/chromedriver_download.py
     - mkdir -p ~/.local/bin
     - mv chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
     - chmod +x ~/.local/bin/chromedriver
-    - robot --outputdir reports Tests/ui/home.robot
+    - robot --outputdir results Tests/ui/home.robot
   artifacts:
     paths:
-      - reports
+      - results
