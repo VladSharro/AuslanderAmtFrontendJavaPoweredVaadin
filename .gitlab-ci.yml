@@ -18,6 +18,7 @@ fe-build-test:
 fe-build:
   image: debian:stable
   stage: build
+  when: manual
   before_script:
     - apt-get update
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
@@ -29,7 +30,7 @@ fe-build:
     - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git pull origin prod; sudo docker stop aspd; sudo docker rm aspd; sudo docker build -t aspd ./Frontend/; sudo docker run --name aspd -d -p 80:80 aspd'
+    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git checkout prod; git pull origin prod; sudo docker stop aspd; sudo docker rm aspd; sudo docker build -t aspd ./Frontend/; sudo docker run --name aspd -d -p 80:80 aspd'
 
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
