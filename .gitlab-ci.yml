@@ -6,23 +6,24 @@
 ### The pipeline includes sample jobs for E2E tests and a skeleton for build.
 
 stages:
-  - dependencies
-  - run
+  - build
   - test
 
 e2e-test:
-  image: python:3.11.7-bullseye
+  # image: python:3.11.7-bullseye
+  image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
   stage: test
   script:
-    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-    - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-    - apt-get update
-    - apt-get install -y google-chrome-stable
-    - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome && echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome && chmod 755 /opt/google/chrome/google-chrome
-    - pip install -r Tests/requirements.txt
-    - python Tests/chromedriver_download.py
-    - mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-    - chmod +x /usr/local/bin/chromedriver
+    # - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    # - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    # - apt-get update
+    # - apt-get install -y google-chrome-stable
+    # - dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome && echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome && chmod 755 /opt/google/chrome/google-chrome
+    # - pip install -r Tests/requirements.txt
+    # - python Tests/chromedriver_download.py
+    # - mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+    # - chmod +x /usr/local/bin/chromedriver
+    - python --version
     - robot -d results Tests/ui/home.robot
   artifacts:
     paths:
