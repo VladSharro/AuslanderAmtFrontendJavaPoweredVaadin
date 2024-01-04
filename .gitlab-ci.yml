@@ -26,4 +26,7 @@ e2e-test:
     - mv chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
     - chmod +x ~/.local/bin/chromedriver
   script:
-    - robot Tests/ui/home.robot
+    - robot --outputdir reports Tests/ui/home.robot
+  artifacts:
+    paths:
+      - reports
