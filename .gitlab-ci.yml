@@ -6,9 +6,17 @@ stages:
   - build
   - test
 
+fe-build:
+  image: debian:stable
+  stage: build
+  script:
+    - apt-get install sshpass
+    - sshpass -p $VM_PW ssh borisov@boriso02.stud.fim.uni-passau.de
+
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
   stage: test
+  requires: "fe-build"
   script:
     - robot -d results Tests/ui/home.robot
   artifacts:
