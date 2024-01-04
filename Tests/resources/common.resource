@@ -21,15 +21,21 @@ Open Browser To Test
     # Open Browser   ${GOOGLE_URL}   ${BROSWER}
     # Set Window Size   ${WIDTH}   ${HEIGHT}
     # Set Selenium Implicit Wait   5
-    Open Chrome    ${GOOGLE_URL}
+    Open No_Sandbox Chrome
 
-Open Chrome
-    [Arguments]    ${url}
-    ${chrome_options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    Call Method    ${chrome_options}    add_argument    --disable-extensions
+Create No_Sandbox Webdriver
+    ${chrome_options}    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
     Call Method    ${chrome_options}    add_argument    --headless
-    Call Method    ${chrome_options}    add_argument    --disable-gpu
     Call Method    ${chrome_options}    add_argument    --no-sandbox
-    Create Webdriver    Chrome  chrome_options=${chrome_options}
-    Set Window Size    ${WIDTH}    ${HEIGHT}
-    Go To    ${url}
+    ${options}    Call Method     ${chrome_options}    to_capabilities
+    
+    Create Webdriver    Chrome    chrome_options==${options}
+    
+    Go To   ${GOOGLE_URL}
+
+Open No_Sandbox Chrome
+    ${chrome_options}    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
+    Call Method    ${chrome_options}   add_argument    --no-sandbox
+    ${options}    Call Method     ${chrome_options}    to_capabilities     
+
+    Open Browser    ${GOOGLE_URL}    browser=chrome    desired_capabilities=${options}
