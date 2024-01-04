@@ -16,7 +16,6 @@ fe-build:
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
   stage: test
-  requires: "fe-build"
   script:
     - robot -d results Tests/ui/home.robot
   artifacts:
