@@ -18,13 +18,14 @@ e2e-test:
     - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
     - apt-get update
     - apt-get install -y google-chrome-stable
+    - apt-get install -y chromium-chromedriver
     - pip install -r Tests/requirements.txt
-    - python Tests/chromedriver_download.py
-    - mkdir -p ~/.local/bin
-    - mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
-    - chmod +x /usr/bin/chromedriver
+    #- python Tests/chromedriver_download.py
+    #- mkdir -p ~/.local/bin
+    #- mv chromedriver-linux64/chromedriver /usr/bin/chromedriver
+    #- chmod +x /usr/bin/chromedriver
     - chromedriver --version
-    - robot --outputdir results Tests/ui/home.robot
+    - robot -d results Tests/ui/home.robot
   artifacts:
     paths:
       - results
