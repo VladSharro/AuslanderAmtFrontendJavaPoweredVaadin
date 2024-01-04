@@ -12,6 +12,7 @@ fe-build-test:
   stage: precheck
   script:
     - cd Frontend
+    - npm install
     - npm run build
 
 fe-build:
