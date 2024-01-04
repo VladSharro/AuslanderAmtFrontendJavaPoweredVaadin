@@ -23,9 +23,7 @@ e2e-test:
     - pip install -r Tests/requirements.txt
     - python Tests/chromedriver_download.py
     - mkdir -p ~/.local/bin
-    - ls -a
-    - ls Tests -a
-    - mv Tests/chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
+    - mv chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
     - chmod +x ~/.local/bin/chromedriver
   script:
     - robot Tests/ui/home.robot
