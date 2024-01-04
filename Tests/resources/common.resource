@@ -4,7 +4,7 @@ Documentation   Resource file with setup keywords and base variables
 Library         SeleniumLibrary   run_on_failure=None
 
 *** Variables ***
-${BROSWER}      headlesschrome
+${BROSWER}      Firefox
 ${DOMAIN}       localhost:4200
 ${HOME_URL}     http://${DOMAIN}/
 ${GOOGLE_URL}   https://www.google.com/
