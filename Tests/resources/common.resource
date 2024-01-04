@@ -18,24 +18,6 @@ Open Browser On Home Page
     Set Selenium Implicit Wait   5
 
 Open Browser To Test
-    # Open Browser   ${GOOGLE_URL}   ${BROSWER}
-    # Set Window Size   ${WIDTH}   ${HEIGHT}
-    # Set Selenium Implicit Wait   5
-    Open No_Sandbox Chrome
-
-Create No_Sandbox Webdriver
-    ${chrome_options}    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    Call Method    ${chrome_options}    add_argument    --headless
-    Call Method    ${chrome_options}    add_argument    --no-sandbox
-    ${options}    Call Method     ${chrome_options}    to_capabilities
-    
-    Create Webdriver    Chrome    chrome_options==${options}
-    
-    Go To   ${GOOGLE_URL}
-
-Open No_Sandbox Chrome
-    ${chrome_options}    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    Call Method    ${chrome_options}   add_argument    --no-sandbox
-    ${options}    Call Method     ${chrome_options}    to_capabilities     
-
-    Open Browser    ${GOOGLE_URL}    browser=chrome    desired_capabilities=${options}
+    Open Browser   ${GOOGLE_URL}   ${BROSWER}
+    Set Window Size   ${WIDTH}   ${HEIGHT}
+    Set Selenium Implicit Wait   5

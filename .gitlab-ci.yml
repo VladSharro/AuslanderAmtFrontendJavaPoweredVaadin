@@ -25,5 +25,6 @@ e2e-test:
     - mkdir -p ~/.local/bin
     - mv chromedriver-linux64/chromedriver ~/.local/bin/chromedriver
     - chmod +x ~/.local/bin/chromedriver
+    - google-chrome --version
   script:
     - robot Tests/ui/home.robot
