@@ -20,7 +20,7 @@ fe-build:
     - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/; git pull origin main'
+    - ssh borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; git pull origin main'
 
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
