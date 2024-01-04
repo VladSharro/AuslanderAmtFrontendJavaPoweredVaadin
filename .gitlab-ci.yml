@@ -3,8 +3,17 @@
 ### The pipeline includes sample jobs for E2E tests and a skeleton for build.
 
 stages:
+  - precheck
   - build
   - test
+
+fe-build-test:
+  image: node:lts-alpine
+  stage: precheck
+  script:
+    - cd Frontend
+    - npm install
+    - npm run build
 
 fe-build:
   image: debian:stable
