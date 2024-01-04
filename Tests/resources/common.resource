@@ -30,6 +30,6 @@ Open Chrome
     Call Method    ${chrome_options}    add_argument    --headless
     Call Method    ${chrome_options}    add_argument    --disable-gpu
     Call Method    ${chrome_options}    add_argument    --no-sandbox
-    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    Create Webdriver    Chrome  chrome_options=${chrome_options}
     Set Window Size    ${WIDTH}    ${HEIGHT}
     Go To    ${url}
