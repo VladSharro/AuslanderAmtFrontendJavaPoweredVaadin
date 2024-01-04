@@ -12,7 +12,7 @@ fe-build:
   script:
     - apt-get update
     - apt-get install -y sshpass
-    - sshpass -p $VM_PW ssh -tt borisov@boriso02.stud.fim.uni-passau.de
+    - sshpass -p $VM_PW ssh -v -tt borisov@boriso02.stud.fim.uni-passau.de
     - cd aspd/
     - git pull origin main
 
