@@ -1,0 +1,80 @@
+<form>
+            
+    <div class="rounded-input-container" style="margin-top: 30px;" [class.filled]="meansOfSupportData.meansOfSupport" >
+      <input class="rounded-input" type="text" name="means_support_field" id="means_support_field" [(ngModel)]="meansOfSupportData.meansOfSupport" placeholder="{{supportLabels.support_question_label}}">
+      <label class="placeholder-label">{{supportLabels.support_question_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="meansOfSupportData.isSecondOrTwelfth" >
+      <select id="is_Second_or_twelfth" name="is_Second_or_twelfth" [(ngModel)]="meansOfSupportData.isSecondOrTwelfth" class="custom-select"  [ngClass]="{'palceholder_selector': meansOfSupportData.isSecondOrTwelfth === ''}">
+        <option value="" disabled selected>{{supportLabels.second_or_twelfth_Book_of_code_question_label}}</option>
+        <option *ngFor="let isSecondOrTwelfthYesOrNoOption of yesNoOptions" [value]="isSecondOrTwelfthYesOrNoOption">{{ isSecondOrTwelfthYesOrNoOption }}</option>
+      </select>
+      <label *ngIf="meansOfSupportData.isSecondOrTwelfth != '' " class="placeholder-label">{{supportLabels.second_or_twelfth_Book_of_code_question_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="meansOfSupportData.isSecondOrTwelfth == supportLabels.yes_option" [class.filled]="meansOfSupportData.supportTyeIfYes" >
+      <select id="supportType" name="supportType" [(ngModel)]="meansOfSupportData.supportTyeIfYes" class="custom-select"  [ngClass]="{'palceholder_selector': meansOfSupportData.supportTyeIfYes === ''}">
+        <option value="" disabled selected>{{supportLabels.code_of_social_law_question}}</option>
+        <option *ngFor="let codeOfSocialLaw of codeOfSocialLawOptions" [value]="codeOfSocialLaw">{{ codeOfSocialLaw }}</option>
+      </select>
+      <label class="placeholder-label">{{supportLabels.code_of_social_law_question}}</label>
+    </div>
+
+    <div class="rounded-input-container" [class.filled]="meansOfSupportData.isInsuranceAvailable" >
+      <select id="is_insurance_available" name="is_insurance_available" [(ngModel)]="meansOfSupportData.isInsuranceAvailable" class="custom-select"  [ngClass]="{'palceholder_selector': meansOfSupportData.isInsuranceAvailable === ''}">
+        <option value="" disabled selected>{{supportLabels.insurance_question}}</option>
+        <option *ngFor="let isInsuranceAvailableOption of yesNoOptions" [value]="isInsuranceAvailableOption">{{ isInsuranceAvailableOption }}</option>
+      </select>
+      <label *ngIf="meansOfSupportData.isInsuranceAvailable" class="placeholder-label">{{supportLabels.insurance_question}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="meansOfSupportData.isInsuranceAvailable == supportLabels.yes_option" [class.filled]="meansOfSupportData.insuranceCompany" >
+      <input class="rounded-input" type="text" name="insurance_company" id="insurance_company" [(ngModel)]="meansOfSupportData.insuranceCompany" placeholder="{{supportLabels.insurance_company_label}}">
+      <label  class="placeholder-label">{{supportLabels.insurance_company_label}}</label>
+    </div>
+
+    <div *ngIf="meansOfSupportData.isInsuranceAvailable  == supportLabels.yes_option" style="display: flex; align-items: center;">
+      <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openInsuranceInput()">{{supportLabels.upload_insurace_document}} </button>
+    <input id="insuranceFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="insuranceUpload($event)">
+    <span *ngIf="insuranceFile" style="margin-left: 10px;">{{ insuranceFile.name }}</span>
+   </div>
+    
+
+   <div *ngFor="let doc of financialSupportFiles let docIndex = index" class="rounded-input-container">
+
+      <div class="rounded-input-container" [class.filled]="financialSupportFiles[docIndex].fileType" >
+        <select id="financialsupprtType{{docIndex}}" name="financialsupprtType{{docIndex}}" [(ngModel)]="financialSupportFiles[docIndex].fileType" class="custom-select"  [ngClass]="{'palceholder_selector': financialSupportFiles[docIndex].fileType === ''}">
+          <option value="" disabled selected>{{supportLabels.financial_support_options_question}}</option>
+          <option *ngFor="let financialSupportOption of financialSupportOptions" [value]="financialSupportOption">{{ financialSupportOption }}</option>
+        </select>
+        <label  class="placeholder-label">{{supportLabels.financial_support_options_question}}</label>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openFinancialSupportInput(docIndex)">{{supportLabels.upload_financial_support_document_button_label}} </button>
+      <input id="financialSupportInput{{docIndex}}" hidden type="file" accept=".pdf, .jpeg, .png" (change)="financialSupportUploaded($event, docIndex)" >
+      <span *ngIf="financialSupportFiles[docIndex]" style="margin-left: 10px;">{{ financialSupportFiles[docIndex].file?.name }}</span>
+
+    </div>
+
+  </div>
+
+  <div style="display: flex; align-items: center;">
+    <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="addNewFinancialSupport()">{{supportLabels.add_new_financial_support_document_button_label}} </button>
+  </div>
+
+
+  <div class="rounded-input-container" [class.filled]="meansOfSupportData.finalValueOfFinancialSupport" >
+    <input class="rounded-input" type="number" name="final_financial_documents_value" id="final_financial_documents_value" [(ngModel)]="meansOfSupportData.finalValueOfFinancialSupport" placeholder="{{supportLabels.finalFinancialValueLabel}}">
+    <label  class="placeholder-label">{{supportLabels.finalFinancialValueLabel}}</label>
+   </div>
+
+   
+
+
+    <div  style="display: flex; justify-content: right; margin-top: 15px;">
+        <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{supportLabels.back_button_label}}</button>
+        <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="nextSupportClicked()"> {{supportLabels.next_button_label}}</button>
+    </div> 
+
+  </form>

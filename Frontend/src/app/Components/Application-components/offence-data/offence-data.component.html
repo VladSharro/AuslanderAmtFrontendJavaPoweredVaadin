@@ -1,0 +1,124 @@
+<form>
+            
+            
+
+    <div class="rounded-input-container" [class.filled]="offencesData.isConvicted" >
+      <select id="is_convinced" name="is_convinced" [(ngModel)]="offencesData.isConvicted" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.isConvicted === ''}">
+        <option value="" disabled selected>{{offencesLabel.conviction_question_label}}</option>
+        <option *ngFor="let isConvincedOption of yesNoOptions" [value]="isConvincedOption">{{ isConvincedOption }}</option>
+      </select>
+      <label *ngIf="offencesData.isConvicted != '' " class="placeholder-label">{{offencesLabel.conviction_question_label}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isConvicted == offencesLabel.yes_option" [class.filled]="offencesData.convictionPlace" >
+      <select id="convinced_place" name="convinced_place" [(ngModel)]="offencesData.convictionPlace" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.convictionPlace === ''}">
+        <option value="" disabled selected>{{offencesLabel.placeOfoffenceLabel}}</option>
+        <option *ngFor="let convincedPlaceOption of placesOptions" [value]="convincedPlaceOption">{{ convincedPlaceOption }}</option>
+      </select>
+      <label *ngIf="offencesData.convictionPlace != '' " class="placeholder-label">{{offencesLabel.placeOfoffenceLabel}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isConvicted == offencesLabel.yes_option" [class.filled]="offencesData.convictionReason" >
+      <input class="rounded-input" type="text" name="convinced_reason" id="convinced_reason" [(ngModel)]="offencesData.convictionReason" placeholder="{{offencesLabel.offenceReasonLabel}}">
+      <label  *ngIf="offencesData.convictionReason != '' " class="placeholder-label">{{offencesLabel.offenceReasonLabel}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isConvicted == offencesLabel.yes_option" [class.filled]="offencesData.convictionTypeAndamount" >
+      <input class="rounded-input" type="text" name="convinced_type" id="convinced_type" [(ngModel)]="offencesData.convictionTypeAndamount" placeholder="{{offencesLabel.typeAndAmountForOffenceLabel}}">
+      <label  *ngIf="offencesData.convictionTypeAndamount != '' " class="placeholder-label">{{offencesLabel.typeAndAmountForOffenceLabel}}</label>
+    </div>
+
+
+    <div class="rounded-input-container" [class.filled]="offencesData.isUnderInvestigation" >
+      <select id="is_under_investigation" name="is_under_investigation" [(ngModel)]="offencesData.isUnderInvestigation" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.isUnderInvestigation === ''}">
+        <option value="" disabled selected>{{offencesLabel.underInvestigationQuestion}}</option>
+        <option *ngFor="let isUnderInvestigationOption of yesNoOptions" [value]="isUnderInvestigationOption">{{ isUnderInvestigationOption }}</option>
+      </select>
+      <label *ngIf="offencesData.isUnderInvestigation != '' " class="placeholder-label">{{offencesLabel.underInvestigationQuestion}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isUnderInvestigation == offencesLabel.yes_option" [class.filled]="offencesData.investigationPlace" >
+      <select id="investigation_place" name="investigation_place" [(ngModel)]="offencesData.investigationPlace" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.investigationPlace === ''}">
+        <option value="" disabled selected>{{offencesLabel.placeOfInvestigationLabel}}</option>
+        <option *ngFor="let investigationPlaceOption of placesOptions" [value]="investigationPlaceOption">{{ investigationPlaceOption }}</option>
+      </select>
+      <label *ngIf="offencesData.convictionPlace != '' " class="placeholder-label">{{offencesLabel.placeOfInvestigationLabel}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isUnderInvestigation == offencesLabel.yes_option" [class.filled]="offencesData.investigationAuthority" >
+      <input class="rounded-input" type="text" name="investigation_authority" id="investigation_authority" [(ngModel)]="offencesData.investigationAuthority" placeholder="{{offencesLabel.investigationAuthorityLabel}}">
+      <label  *ngIf="offencesData.investigationAuthority != '' " class="placeholder-label">{{offencesLabel.investigationAuthorityLabel}}</label>
+    </div>
+    
+
+    <div class="rounded-input-container" [class.filled]="offencesData.isExpelledOrDeported" >
+      <select id="is_deported" name="is_deported" [(ngModel)]="offencesData.isExpelledOrDeported" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.isExpelledOrDeported === ''}">
+        <option value="" disabled selected>{{offencesLabel.deportationQuestionLabel}}</option>
+        <option *ngFor="let isDeportedOption of yesNoOptions" [value]="isDeportedOption">{{ isDeportedOption }}</option>
+      </select>
+      <label *ngIf="offencesData.isExpelledOrDeported != '' " class="placeholder-label">{{offencesLabel.deportationQuestionLabel}}</label>
+    </div>
+
+    
+
+    <div class="rounded-input-container" *ngIf="offencesData.isExpelledOrDeported == offencesLabel.yes_option" [class.filled]="offencesData.expelledFrom" >
+      <input class="rounded-input" type="text" name="expelled_from" id="expelled_from" [(ngModel)]="offencesData.expelledFrom" placeholder="{{offencesLabel.fromLabel}}">
+      <label  *ngIf="offencesData.expelledFrom != '' " class="placeholder-label">{{offencesLabel.fromLabel}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isExpelledOrDeported == offencesLabel.yes_option" [class.filled]="offencesData.expelledOn" >
+      <input class="rounded-input" type="date" name="expelled_on" id="expelled_on" [(ngModel)]="offencesData.expelledOn" placeholder="{{offencesLabel.onLabel}}">
+      <label class="placeholder-label">{{offencesLabel.onLabel}}</label>
+    </div>
+
+
+    <div class="rounded-input-container" [class.filled]="offencesData.isEntryApplicationRejected" >
+      <select id="is_entry_rejected" name="is_entry_rejected" [(ngModel)]="offencesData.isEntryApplicationRejected" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.isEntryApplicationRejected === ''}">
+        <option value="" disabled selected>{{offencesLabel.entryRejectionQuestion}}</option>
+        <option *ngFor="let isEntryRejectedOption of yesNoOptions" [value]="isEntryRejectedOption">{{ isEntryRejectedOption }}</option>
+      </select>
+      <label *ngIf="offencesData.isEntryApplicationRejected != '' " class="placeholder-label">{{offencesLabel.entryRejectionQuestion}}</label>
+    </div>
+
+    
+
+    <div class="rounded-input-container" *ngIf="offencesData.isEntryApplicationRejected == offencesLabel.yes_option" [class.filled]="offencesData.expelledFrom" >
+      <input class="rounded-input" type="text" name="entry_rejected_from" id="entry_rejected_from" [(ngModel)]="offencesData.entryRejectedFrom" placeholder="{{offencesLabel.fromLabel}}">
+      <label  *ngIf="offencesData.entryRejectedFrom != '' " class="placeholder-label">{{offencesLabel.fromLabel}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isEntryApplicationRejected == offencesLabel.yes_option" [class.filled]="offencesData.entyRejectedOn" >
+      <input class="rounded-input" type="date" name="entry_rejected_on" id="entry_rejected_on" [(ngModel)]="offencesData.entyRejectedOn" placeholder="{{offencesLabel.onLabel}}">
+      <label class="placeholder-label">{{offencesLabel.onLabel}}</label>
+    </div>
+
+
+    <div class="rounded-input-container" [class.filled]="offencesData.isResidenceApplicationRejected" >
+      <select id="is_entry_rejected" name="is_entry_rejected" [(ngModel)]="offencesData.isResidenceApplicationRejected" class="custom-select"  [ngClass]="{'palceholder_selector': offencesData.isEntryApplicationRejected === ''}">
+        <option value="" disabled selected>{{offencesLabel.residenceRejectionQuestion}}</option>
+        <option *ngFor="let isResidenceRejectedOption of yesNoOptions" [value]="isResidenceRejectedOption">{{ isResidenceRejectedOption }}</option>
+      </select>
+      <label *ngIf="offencesData.isResidenceApplicationRejected != '' " class="placeholder-label">{{offencesLabel.residenceRejectionQuestion}}</label>
+    </div>
+
+    
+
+    <div class="rounded-input-container" *ngIf="offencesData.isResidenceApplicationRejected == offencesLabel.yes_option" [class.filled]="offencesData.residenceRejectedFrom" >
+      <input class="rounded-input" type="text" name="residence_rejected_from" id="residence_rejected_from" [(ngModel)]="offencesData.residenceRejectedFrom" placeholder="{{offencesLabel.fromLabel}}">
+      <label  *ngIf="offencesData.residenceRejectedFrom != '' " class="placeholder-label">{{offencesLabel.fromLabel}}</label>
+    </div>
+
+    <div class="rounded-input-container" *ngIf="offencesData.isResidenceApplicationRejected == offencesLabel.yes_option" [class.filled]="offencesData.residenceRejectedOn" >
+      <input class="rounded-input" type="date" name="residence_rejected_on" id="residence_rejected_on" [(ngModel)]="offencesData.residenceRejectedOn" placeholder="{{offencesLabel.onLabel}}">
+      <label class="placeholder-label">{{offencesLabel.onLabel}}</label>
+    </div>
+    
+    
+
+
+    <div  style="display: flex; justify-content: right; margin-top: 15px;">
+        <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%;  background-color: white; color: #b42e29;">{{offencesLabel.back_button_label}}</button>
+        <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="nextOffencesClicked()"> {{offencesLabel.next_button_label}}</button>
+    </div> 
+
+  </form>

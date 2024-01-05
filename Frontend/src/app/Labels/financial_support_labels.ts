@@ -1,6 +1,5 @@
 export class SupportLabels{
 
-    readonly section_label = "Support";
     readonly support_question_label = "What means of support do you have (Financial)?";
     readonly second_or_twelfth_Book_of_code_question_label = "Do you get benefits under the Second or Twelfth Book of the Code of Social Law?";
     readonly no_option = "No";
@@ -26,6 +25,10 @@ export class SupportLabels{
 
 
     readonly add_new_financial_support_document_button_label = "Add financial support document";
+
+
+    readonly next_button_label = "Next";
+    readonly back_button_label = "Back";
 
 
 

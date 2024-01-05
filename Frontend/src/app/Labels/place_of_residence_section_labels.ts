@@ -1,6 +1,5 @@
 export class PlaceOfResidenceSectionLabels{
 
-    readonly section_Label = "Residence";
     readonly current_residence_in_germany_label = "Current place of residence in Germany (postal code, place, street, house No.)";
     readonly previous_stays_label = "Previous stays in Germany"
     readonly from_date_label = "From (Date)";
@@ -12,7 +11,8 @@ export class PlaceOfResidenceSectionLabels{
     readonly city_registration_document_upload_button_label = "Upload City Registrartion Document"
 
 
-
+    readonly next_button_label = "Next";
+    readonly back_button_label = "Back";
 
 
     readonly option_yes = "Yes";
