@@ -1,10 +1,10 @@
 *** Settings ***
 Documentation   Resource file with setup keywords and base variables
-...             for ASPD23 RP application service.
+...             for ASPD23 RP application service
 Library         SeleniumLibrary   run_on_failure=None
 
 *** Variables ***
-${BROSWER}      headlesschrome
+${BROSWER}      Chrome
 ${DOMAIN}       132.231.1.189
 ${HOME_URL}     http://${DOMAIN}/
 ${WIDTH}        1400
