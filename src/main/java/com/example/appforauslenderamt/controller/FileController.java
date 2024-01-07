@@ -2,7 +2,7 @@ package com.example.appforauslenderamt.controller;
 
 import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.service.GenerateReportService;
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting user's data from passport picture",
             notes = "Takes passport image and returns information getting from it with using OCR")
-    @PostMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public PassportDataResponseDto getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
             throws IOException, InterruptedException {
@@ -35,7 +35,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting user's data from certificate of enrollment",
             notes = "Takes the image of the certificate of enrollment and returns information getting from it with using OCR")
-    @PostMapping(value = "/get_data_from_certificate_of_enrollment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/get_data_from_certificate_of_enrollment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
                                                                               MultipartFile certificateOfEnrollment)
@@ -45,7 +45,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting user's data from health insurance certificate",
             notes = "Takes the image of the health insurance certificate and returns information getting from it with using OCR")
-    @PostMapping(value = "/get_data_from_health_insurance_certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/get_data_from_health_insurance_certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
                                                                                              MultipartFile healthInsuranceCertificate)
@@ -55,7 +55,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting financial data from financial document",
             notes = "Takes the image of financial document and returns information getting from it with using OCR")
-    @PostMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public FinancialDocumentResponseDto getDataFromFinancialDocument(@RequestPart("financial_document")
                                                                                  MultipartFile financialDocument)
@@ -65,7 +65,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for extracting user data from filled form",
             notes = "Takes filled form in pdf format and return user data extracting from it with using OCR")
-    @PostMapping(value = "/extract_data_from_filled_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/extract_data_from_filled_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public UserDataRequestDto getDataFromFilledForm(@RequestPart("filled_form") MultipartFile filledForm)
             throws IOException, InterruptedException {
@@ -77,14 +77,10 @@ public class FileController {
                     "generate application form")
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void uploadFile(@RequestPart("passport_image") MultipartFile passportImage,
-                           @RequestPart("certificate_of_enrollment_image") MultipartFile certificateOfEnrollment,
-                           @RequestPart("health_insurance_certificate") MultipartFile healthInsuranceCertificate,
-                           @RequestPart("financial_document") MultipartFile financialDocument,
+    public void uploadFile(@RequestPart("documents") MultipartFile[] documents,
                            @RequestPart("user_data") UserDataRequestDto userData)
-            throws IOException, ScriptException, InterruptedException, DocumentException {
-        generateReportService.generatePdfFromHtml(userData, passportImage, certificateOfEnrollment,
-                healthInsuranceCertificate, financialDocument);
+            throws IOException, ScriptException, InterruptedException, DocumentException, com.lowagie.text.DocumentException {
+        generateReportService.generatePdfFromHtml(userData, documents);
     }
 
 //    @ApiOperation(value = "Endpoint for generation html template from pdf file",
