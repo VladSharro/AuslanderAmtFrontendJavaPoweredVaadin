@@ -25,5 +25,9 @@ def extract_checkboxes_and_text(pdf_path):
     numbered_lines = [(i + 1, line) for i, line in enumerate(lines)]
 
 
+    family_name = lines[19]
+
+
+
         pdf_file.close()
     return checkboxes, numbered_lines
