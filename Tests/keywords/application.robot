@@ -1,5 +1,7 @@
 *** Settings ***
-Library         SeleniumLibrary   run_on_failure=None
+Documentation     Keywords and base variables for application process testing
+Library           SeleniumLibrary   run_on_failure=None
+Resource          ../resources/application.resource
 
 *** Variables ***
 ${APPL_TYPE_HEADER}             xpath://h2[contains(text(), "Application Type")]
