@@ -29,6 +29,7 @@ def extract_checkboxes_and_text(pdf_path):
     first_name = lines[25]
     date_of_birth = lines[35]
     place_of_birth = lines[37]
+    nationalities = lines[47]
 
 
 
