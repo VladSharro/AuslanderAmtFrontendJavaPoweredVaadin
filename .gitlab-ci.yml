@@ -1,6 +1,6 @@
 ### Owner: Kirill Borisov
-###
-### The pipeline includes sample jobs for E2E tests and a skeleton for build.
+### 
+### The pipeline includes front-end precheck build, FE and BE builds and deployment, and UI testing.
 
 stages:
   - precheck
@@ -54,7 +54,7 @@ e2e-test:
   stage: test
   needs: ["fe-build"]
   script:
-    - robot -d results Tests/ui/home.robot
+    - robot -d results Tests/ui/*.robot
   artifacts:
     paths:
       - results
