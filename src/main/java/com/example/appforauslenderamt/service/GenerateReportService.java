@@ -1,5 +1,6 @@
 package com.example.appforauslenderamt.service;
 
+import com.example.appforauslenderamt.config.OCRConfig;
 import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
@@ -14,6 +15,7 @@ import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.lowagie.text.DocumentException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.fit.pdfdom.PDFDomTree;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
@@ -31,9 +33,16 @@ import java.util.Base64;
 @Service
 public class GenerateReportService {
 
+    private final OCRConfig OCRConfig;
+
+    @Autowired
+    public GenerateReportService(OCRConfig OCRConfig) {
+        this.OCRConfig = OCRConfig;
+    }
+
     public PassportDataResponseDto getDataFromPassport(MultipartFile passportImage)
             throws IOException, InterruptedException {
-        String line = processWithOCR(passportImage, "OCR/PassportAnalitics.py");
+        String line = processWithOCR(passportImage, OCRConfig.getPassportAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
 
@@ -50,7 +59,7 @@ public class GenerateReportService {
     public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(
             MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
-        String line = processWithOCR(certificateOfEnrollment, "OCR/ImmatrikulationAnalitics.py");
+        String line = processWithOCR(certificateOfEnrollment, OCRConfig.getCertificateOfEnrollmentAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
 
@@ -74,7 +83,8 @@ public class GenerateReportService {
     public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(
             MultipartFile healthInsuranceCertificateImage)
             throws IOException, InterruptedException {
-        String line = processWithOCR(healthInsuranceCertificateImage, "OCR/Health_Analitics.py");
+        String line = processWithOCR(healthInsuranceCertificateImage,
+                OCRConfig.getHealthInsuranceCertificateAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
 
@@ -87,7 +97,7 @@ public class GenerateReportService {
 
     public FinancialDocumentResponseDto getDataFromFinancialDocument(MultipartFile financialDocument)
             throws IOException, InterruptedException {
-        String line = processWithOCR(financialDocument, "OCR/Geld.py");
+        String line = processWithOCR(financialDocument, OCRConfig.getFinancialDocumentAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
 
@@ -115,7 +125,6 @@ public class GenerateReportService {
                                     MultipartFile financialDocument)
             throws IOException, DocumentException,
             InterruptedException {
-//        checkUserDataWithPassport(userDataRequestDto, passportImage);
         String html = parseThymeleafTemplate(userDataRequestDto);
         String outputFolder = "src/main/resources/user_form.pdf";
         OutputStream outputStream = new FileOutputStream(outputFolder);
