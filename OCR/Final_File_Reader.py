@@ -26,6 +26,8 @@ def extract_checkboxes_and_text(pdf_path):
 
 
     family_name = lines[19]
+    first_name = lines[25]
+
 
 
 
