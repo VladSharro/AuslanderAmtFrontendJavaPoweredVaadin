@@ -2,6 +2,7 @@ export class stepperLabels{
 
     readonly basic_data_label = "Basic";
     readonly passport_label = "Passport"
+    readonly family_label = "Family";
     readonly residence_Label = "Residence";
     readonly stay_label = "Stay";
     readonly support_label = "Support";

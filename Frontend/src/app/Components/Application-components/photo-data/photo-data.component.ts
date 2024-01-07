@@ -10,6 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PhotoLabels } from '../../../Labels/Photo_labels';
+import { ApplicationService } from '../../../Services/application.service';
 
 @Component({
   selector: 'app-photo-data',
@@ -29,7 +30,9 @@ import { PhotoLabels } from '../../../Labels/Photo_labels';
 })
 export class PhotoDataComponent {
 
-  photoLabels = new PhotoLabels();
+constructor(private applicationService: ApplicationService){}
+
+photoLabels = new PhotoLabels();
 
 photoFile: File |  null = null;
 
@@ -59,6 +62,8 @@ photoUpload(event: any) {
   }
 }
 
-photoNextClicked(){}
+photoNextClicked(){
+  this.applicationService.setPhotoData(this.photoFile);
+}
 
 }

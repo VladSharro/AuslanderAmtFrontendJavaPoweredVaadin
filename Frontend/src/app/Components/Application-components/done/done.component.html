@@ -4,5 +4,7 @@
 </div>
 <div  style="display: flex; justify-content: right; margin-top: 15px;">
     <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;">{{doneLabels.backButtonText}}</button>
-    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="doneApplication()">{{doneLabels.previewButtonText}}</button>
+    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="preview()">{{doneLabels.previewButtonText}}</button>
+
+    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="doneApplication()">{{doneLabels.submitButtonText}}</button>
 </div>

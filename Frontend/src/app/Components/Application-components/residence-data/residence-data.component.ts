@@ -10,6 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ApplicationService } from '../../../Services/application.service';
 
 
 @Component({
@@ -31,6 +32,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   styleUrl: './residence-data.component.css'
 })
 export class ResidenceDataComponent {
+
+  constructor(private applicationService: ApplicationService){}
 
   residence_labels = new PlaceOfResidenceSectionLabels();
 
@@ -91,5 +94,7 @@ export class ResidenceDataComponent {
     }
   }
 
-  residenceNextButtonClicked(){}
+  residenceNextButtonClicked(){
+    this.applicationService.setResidenceData(this.residenceData.placeOfResidence, this.residenceData.isPreviousStays, this.residenceData.previousStayAddress, this.residenceData.dateFrom, this.residenceData.dateTo, this.residenceData.residenceAbroadIfRetained, this.residenceData.isResidenceAbroadRetained, this.registrationFile);
+  }
 }

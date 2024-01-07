@@ -10,6 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ApplicationService } from '../../../Services/application.service';
 
 @Component({
   selector: 'app-stay-data',
@@ -28,6 +29,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   styleUrl: './stay-data.component.css'
 })
 export class StayDataComponent {
+
+  constructor(private applicationService: ApplicationService){}
+
   stayData = {
     lastEntryDate:'',
     lastEntryVisaType:'',
@@ -73,6 +77,8 @@ export class StayDataComponent {
 
 
   staySectionButtonClicked(){
+
+    this.applicationService.setStayData(this.stayData.lastEntryDate,this.stayData.lastEntryVisaType, this.stayData.visaIssueBy, this.stayData.visaIssueOn ,this.stayData.visaNumber, this.stayData.visaValidFrom, this.stayData.visaValidTo, this.stayData.lengthOfStay, this.stayData.purposeOfStay, this.visaFile)
     
   }
 }

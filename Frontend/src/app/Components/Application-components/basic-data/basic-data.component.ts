@@ -6,6 +6,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatStepperModule} from '@angular/material/stepper';
 import { BasicDataLabels } from '../../../Labels/basic_data_labels';
+import { ApplicationService } from '../../../Services/application.service';
+import { OcrService } from '../../../Services/ocr.service';
 
 @Component({
   selector: 'app-basic-data',
@@ -16,8 +18,10 @@ import { BasicDataLabels } from '../../../Labels/basic_data_labels';
 })
 export class BasicDataComponent {
 
-  constructor(private _formBuilder: FormBuilder) {}
+  constructor(private _formBuilder: FormBuilder, private applicationService: ApplicationService, private ocrService: OcrService) {}
   passportFile: File | null = null;
+
+  isLoading = false
 
   basicData = {
     first_name: '',
@@ -66,12 +70,24 @@ if (passportInput) {
     if (files && files.length > 0) {
       this.passportFile = files[0];
       console.log(this.passportFile.name);
-      console.log(1)
+      this.extractData()
     }
+  }
+
+  private async extractData(){
+    this.isLoading = true
+    const extractedData = await this.ocrService.extractPassportData(this.passportFile!);
+    this.updateData()
+  }
+
+  private updateData(){
+
   }
 
   basicDataNextButtonClicked(){
     console.log(this.basicData)
+    this.applicationService.setBasicdata(this.basicData.first_name, this.basicData.last_name, this.basicData.birth_date, this.basicData.sex_type, this.basicData.place_country, this.basicData.nationality, this.basicData.martial_type, this.basicData.since, this.basicData.eyes_color, this.basicData.height, this.basicData.mobile, this.basicData.email)
+    this.applicationService.setPassportData(this.passportData.passportNr, this.passportData.valid_from, this.passportData.valid_to, this.passportData.issued_by, this.passportData.issued_on, this.passportFile)
   }
 
   isPartnerDataNeeded(): boolean{
@@ -89,5 +105,7 @@ if (passportInput) {
     }
     return false;
   }
+
+
  
 }

@@ -11,6 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Child } from '../../../Models/Child';
+import { ApplicationService } from '../../../Services/application.service';
 
 @Component({
   selector: 'app-family-data',
@@ -29,6 +30,8 @@ import { Child } from '../../../Models/Child';
   styleUrl: './family-data.component.css'
 })
 export class FamilyDataComponent {
+
+  constructor(private applicationService: ApplicationService){}
   fmailyLabels = new familyLabels();
   sexOptions = [this.fmailyLabels.sex_options_m , this.fmailyLabels.sex_options_f, this.fmailyLabels.sex_options_d]
   yesNoOptions = [this.fmailyLabels.yes_option, this.fmailyLabels.no_option];
@@ -72,47 +75,24 @@ export class FamilyDataComponent {
   }
 
   isMinorWithFather(): boolean{
-    // if(this.familyData.isFatherApplicable === "Yes"){
-    //   if(this.basicData.birth_date === ''){
-    //   const dateObject = new Date(this.basicData.birth_date);
-    //   const year = dateObject.getFullYear();
-    //   const currentDate = new Date();
-    //   const currentYear = currentDate.getFullYear();
-
-    //   if(currentYear -  year < 19){
-    //     return true
-    //   } 
-    //   }
-    // }
+    if(this.familyData.isFatherApplicable === "Yes"){
+      return this.applicationService.isMinorWithFather();
+    }
     return false;
 
   }
 
   isMinorWithMother(): boolean{
-    // if(this.familyData.isMotherApplicable === "Yes"){
-    //   if(this.basicData.birth_date === ''){
-    //   const dateObject = new Date(this.basicData.birth_date);
-    //   const year = dateObject.getFullYear();
-    //   const currentDate = new Date();
-    //   const currentYear = currentDate.getFullYear();
-
-    //   if(currentYear -  year < 19){
-    //     return true
-    //   } 
-    //   }
-    // }
+    if(this.familyData.isMotherApplicable === "Yes"){
+      return this.applicationService.isMinorWithMother();
+    }
     return false;
 
   }
 
 
   isPartnerDataNeeded(): boolean{
-    // if(this.basicData.martial_type === this.martialOptions[1] || this.basicData.martial_type === this.martialOptions[2]){
-    //   return true;
-    // }
-    // else{
-      return false;
-    // }
+    return this.applicationService.isPartnerDataNeeded();
   }
 
 
@@ -122,6 +102,8 @@ export class FamilyDataComponent {
     this.childData = new Child()
     }
     console.log(this.familyData)
+    this.applicationService.setFamilyData(this.familyData.partnerLastName, this.familyData.partnerFirstName, this.familyData.partnerDateOfBirth, this.familyData.partnerPlaceOfBirth, this.familyData.partnerNationality, this.familyData.partnerSex, this.familyData.partnerCurrentResidenceInGermany, this.familyData.isChildrenAvailable, this.familyData.childern, this.familyData.isFatherApplicable, this.familyData.fatherLastName, this.familyData.fatherFisrtName, this.familyData.fatherNationality, this.familyData.fatherPlaceOfBirthForMinors, this.familyData.fatherDateOfBirthForMinors, this.familyData.fatherCurrentResidenceForMinors, this.familyData.isMotherApplicable, this.familyData.motherLastName, this.familyData.motherFisrtName, this.familyData.motherNationality, this.familyData.motherPlaceOfBirthForMinors, this.familyData.motherDateOfBirthForMinors, this.familyData.motherCurrentResidenceForMinors)
+
   }
 
 }

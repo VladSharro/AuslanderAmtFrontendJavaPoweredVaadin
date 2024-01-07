@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AdditionalDocumentsLabels } from '../../../Labels/additional-documents-labels';
+import { ApplicationService } from '../../../Services/application.service';
 
 @Component({
   selector: 'app-adiitional-documents',
@@ -15,8 +16,10 @@ import { AdditionalDocumentsLabels } from '../../../Labels/additional-documents-
   styleUrl: './adiitional-documents.component.css'
 })
 export class AdiitionalDocumentsComponent implements AfterViewInit{
+
+  
   additionalDocumentsLabels = new AdditionalDocumentsLabels
-  constructor(private additionalDocumentsService: AdditionalDocumentsService){     this.isDataLoading = true;  }
+  constructor(private additionalDocumentsService: AdditionalDocumentsService, private applicationService: ApplicationService){     this.isDataLoading = true;  }
   ngAfterViewInit(): void {
     this.getAdditionalDocumentsData();
 
@@ -25,9 +28,7 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
   isDataLoading = false;
   additionalDocs: DocumentModel[] = [];
   additionalDocsMap = new Map<string, File>();
-  hi(){
-    this.additionalDocsMap.get("hi")
-  }
+  
 
   openDocumentInput(variableName: string){
     let elementId = "input-"+variableName;
@@ -50,5 +51,7 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
     this.isDataLoading = false;
   }
 
-  adiitionaDocumentsNextClicked(){}
+  adiitionaDocumentsNextClicked(){
+    this.applicationService.setAdditionalDocuments(this.additionalDocsMap)
+  }
 }
