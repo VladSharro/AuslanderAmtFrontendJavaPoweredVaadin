@@ -33,6 +33,7 @@ def extract_checkboxes_and_text(pdf_path):
 
     sex_male = checkboxes[0]
     sex_female = checkboxes[1]
+    sex_diversity = checkboxes[2]
 
 
 
