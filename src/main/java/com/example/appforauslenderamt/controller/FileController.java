@@ -26,7 +26,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting user's data from passport picture",
             notes = "Takes passport image and returns information getting from it with using OCR")
-    @GetMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public PassportDataResponseDto getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
             throws IOException, InterruptedException {
@@ -35,7 +35,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting user's data from certificate of enrollment",
             notes = "Takes the image of the certificate of enrollment and returns information getting from it with using OCR")
-    @GetMapping(value = "/get_data_from_certificate_of_enrollment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/get_data_from_certificate_of_enrollment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
                                                                               MultipartFile certificateOfEnrollment)
@@ -45,7 +45,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting user's data from health insurance certificate",
             notes = "Takes the image of the health insurance certificate and returns information getting from it with using OCR")
-    @GetMapping(value = "/get_data_from_health_insurance_certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/get_data_from_health_insurance_certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
                                                                                              MultipartFile healthInsuranceCertificate)
@@ -55,7 +55,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for getting financial data from financial document",
             notes = "Takes the image of financial document and returns information getting from it with using OCR")
-    @GetMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public FinancialDocumentResponseDto getDataFromFinancialDocument(@RequestPart("financial_document")
                                                                                  MultipartFile financialDocument)
@@ -65,7 +65,7 @@ public class FileController {
 
     @ApiOperation(value = "Endpoint for extracting user data from filled form",
             notes = "Takes filled form in pdf format and return user data extracting from it with using OCR")
-    @GetMapping(value = "/extract_data_from_filled_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/extract_data_from_filled_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public UserDataRequestDto getDataFromFilledForm(@RequestPart("filled_form") MultipartFile filledForm)
             throws IOException, InterruptedException {
