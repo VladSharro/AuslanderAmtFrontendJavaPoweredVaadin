@@ -47,7 +47,7 @@ be-build:
     - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git checkout backend_deployment; git pull origin backend_deployment; sudo docker stop app-for-amt; sudo docker rm app-for-amt; sudo docker build -t app-for-amt .; sudo docker run --name app-for-amt -d -p 8080:8080 app-for-amt'
+    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git checkout prod; git pull origin prod; sudo docker stop app-for-amt; sudo docker rm app-for-amt; sudo docker build -t app-for-amt .; sudo docker run --name app-for-amt -d -p 8080:8080 app-for-amt'
 
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
