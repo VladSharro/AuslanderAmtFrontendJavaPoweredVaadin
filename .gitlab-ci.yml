@@ -5,6 +5,7 @@
 stages:
   - precheck
   - build
+  - run
   - test
 
 fe-build-test:
@@ -34,7 +35,7 @@ fe-build:
 
 be-build:
   image: debian:stable
-  stage: build
+  stage: run
   when: manual
   before_script:
     - apt-get update
