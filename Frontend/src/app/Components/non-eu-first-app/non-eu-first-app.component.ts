@@ -18,6 +18,9 @@ import { OffenceDataComponent } from '../Application-components/offence-data/off
 import { PhotoDataComponent } from '../Application-components/photo-data/photo-data.component';
 import { DoneComponent } from '../Application-components/done/done.component';
 import { AdiitionalDocumentsComponent } from '../Application-components/adiitional-documents/adiitional-documents.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { FamilyDataComponent } from '../Application-components/family-data/family-data.component';
+
 
 
 
@@ -36,7 +39,9 @@ import { AdiitionalDocumentsComponent } from '../Application-components/adiition
     MatButtonModule,
     MatCardModule,
     MatDatepickerModule,
+    MatTooltipModule,
     BasicDataComponent,
+    FamilyDataComponent,
     ResidenceDataComponent,
     StayDataComponent,
     FinancialSupportDataComponent,

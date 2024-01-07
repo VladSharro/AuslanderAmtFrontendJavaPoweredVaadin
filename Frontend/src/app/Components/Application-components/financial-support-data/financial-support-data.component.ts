@@ -11,6 +11,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ApplicationService } from '../../../Services/application.service';
 
 @Component({
   selector: 'app-financial-support-data',
@@ -30,6 +31,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 })
 export class FinancialSupportDataComponent {
 
+  constructor(private applicationService: ApplicationService){}
 
   supportLabels = new SupportLabels();
   financialSupportFiles: FinancialDocument[] = [];
@@ -112,6 +114,6 @@ export class FinancialSupportDataComponent {
   }
 
   nextSupportClicked(){
-
+    this.applicationService.setFinancialDocumentsData(this.meansOfSupportData.meansOfSupport, this.meansOfSupportData.isSecondOrTwelfth, this.meansOfSupportData.supportTyeIfYes, this.meansOfSupportData.isInsuranceAvailable, this.meansOfSupportData.insuranceCompany, this.meansOfSupportData.finalValueOfFinancialSupport, this.financialSupportFiles, this.insuranceFile)
   }
 }

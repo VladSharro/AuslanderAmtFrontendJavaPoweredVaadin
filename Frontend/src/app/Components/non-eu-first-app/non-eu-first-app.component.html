@@ -3,13 +3,13 @@
     
     <mat-stepper [linear]="true"  #stepper>
 
-        <mat-step   label="{{stepperLabels.basic_data_label}}">
+        <mat-step matTooltip="{{stepperLabels.basic_data_label}}" label="{{stepperLabels.basic_data_label}}">
           <app-basic-data></app-basic-data>
         </mat-step>
 
-        <mat-step label={{stepperLabels.residence_Label}}>
-          <app-residence-data></app-residence-data>
-        </mat-step>
+        <mat-step label={{stepperLabels.family_label}}>
+          <app-family-data></app-family-data>
+        </mat-step> 
 
         <mat-step label={{stepperLabels.residence_Label}}>
           <app-residence-data></app-residence-data>

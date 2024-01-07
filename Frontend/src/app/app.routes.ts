@@ -18,6 +18,7 @@ export const routes: Routes = [
     {path:"Contact", component: ContactComponent},
     {path:"adminLogIn", component: AdminLoginComponent},
     {path: "nonEuFirstTimeApp", component:NonEuFirstAppComponent},
-    {path: "adminDashboard", component:AdminDashboardComponent}
+    {path: "adminDashboard", component:AdminDashboardComponent},
+    // {path: "previewApplication", component: ApplicationPreviewComponent},
 
 ];

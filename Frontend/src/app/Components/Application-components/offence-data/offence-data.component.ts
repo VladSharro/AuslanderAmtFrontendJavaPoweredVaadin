@@ -10,6 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ApplicationService } from '../../../Services/application.service';
 
 @Component({
   selector: 'app-offence-data',
@@ -27,6 +28,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   styleUrl: './offence-data.component.css'
 })
 export class OffenceDataComponent {
+
+  constructor(private applicationService: ApplicationService){}
 
   offencesLabel = new offenciesLabels();
 
@@ -56,6 +59,8 @@ yesNoOptions = [this.offencesLabel.yes_option, this.offencesLabel.no_option];
 
 nextOffencesClicked(){
   console.log("Hiii");
+  
+  this.applicationService.setOffenceData(this.offencesData.isConvicted, this.offencesData.convictionPlace, this.offencesData.convictionReason, this.offencesData.convictionTypeAndamount, this.offencesData.isUnderInvestigation, this.offencesData.investigationPlace, this.offencesData.investigationAuthority, this.offencesData.isExpelledOrDeported, this.offencesData.expelledFrom, this.offencesData.expelledOn, this.offencesData.isEntryApplicationRejected, this.offencesData.entryRejectedFrom, this.offencesData.entyRejectedOn, this.offencesData.isResidenceApplicationRejected, this.offencesData.residenceRejectedFrom, this.offencesData.residenceRejectedOn)
 }
 
 
