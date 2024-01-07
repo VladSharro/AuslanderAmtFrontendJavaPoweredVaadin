@@ -36,6 +36,7 @@ def extract_checkboxes_and_text(pdf_path):
     sex_diversity = checkboxes[2]
     marital_status_single = checkboxes[3]
     marital_status_married = checkboxes[4]
+    marital_in_registered_partnership = checkboxes[5]
 
 
 
