@@ -5,15 +5,15 @@ import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
-import com.lowagie.text.DocumentException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.fit.pdfdom.PDFDomTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -120,14 +121,16 @@ public class GenerateReportService {
 
     }
 
-    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile passportImage,
-                                    MultipartFile certificateOfEnrollment, MultipartFile healthInsuranceCertificate,
-                                    MultipartFile financialDocument)
+    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile[] documents)
             throws IOException, DocumentException,
-            InterruptedException {
+            InterruptedException, com.lowagie.text.DocumentException {
         String html = parseThymeleafTemplate(userDataRequestDto);
-        String outputFolder = "src/main/resources/user_form.pdf";
-        OutputStream outputStream = new FileOutputStream(outputFolder);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
+        document.open();
 
         ITextRenderer renderer = new ITextRenderer();
         renderer.setDocumentFromString(html);
@@ -135,7 +138,7 @@ public class GenerateReportService {
         renderer.createPDF(outputStream);
 
         outputStream.close();
-        mergePdf(passportImage);
+        mergePdf(outputStream, documents);
     }
 
     private String parseThymeleafTemplate(UserDataRequestDto userDataRequestDto) {
@@ -255,9 +258,16 @@ public class GenerateReportService {
         if (userDataRequestDto.getChildrenPersonalData() != null &&
                 !userDataRequestDto.getChildrenPersonalData().isEmpty()) {
             for (int i = 0; i < userDataRequestDto.getChildrenPersonalData().size(); i++) {
-                context.setVariable(String.format("child%d_family_name", i + 1),
-                        userDataRequestDto.getChildrenPersonalData().get(i).getFamilyName() + " " +
-                                String.join(", ", userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames()));
+                if (userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames() == null ||
+                        userDataRequestDto.getPersonalData().getPreviousNames().isEmpty()) {
+                    context.setVariable(String.format("child%d_family_name", i + 1),
+                            userDataRequestDto.getChildrenPersonalData().get(i).getFamilyName());
+                } else {
+                    context.setVariable(String.format("child%d_family_name", i + 1),
+                            userDataRequestDto.getChildrenPersonalData().get(i).getFamilyName() + " " +
+                            String.join(", ",
+                                    userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames()));
+                }
                 context.setVariable(String.format("child%d_first_name", i + 1),
                         userDataRequestDto.getChildrenPersonalData().get(i).getFirstName());
                 context.setVariable(String.format("child%d_date_of_birth", i + 1),
@@ -275,6 +285,7 @@ public class GenerateReportService {
                 context.setVariable(String.format("child%d_current_place_of_residence_in_Germany", i + 1),
                         userDataRequestDto.getChildrenPersonalData().get(i).getPlaceOfResidenceInGermany());
             }
+
         }
 
         if (userDataRequestDto.getFatherPersonalData().getPreviousNames() == null ||
@@ -560,6 +571,26 @@ public class GenerateReportService {
                     userDataRequestDto.getOffencesInfo().getResidenceApplicationRejectedDate());
         }
 
+        if (userDataRequestDto.getResidencePermitValidity() != null) {
+            if (userDataRequestDto.getResidencePermitValidity().getDays() != null) {
+                context.setVariable("residence_permit_for_days",
+                        userDataRequestDto.getResidencePermitValidity().getDays());
+            }
+            if (userDataRequestDto.getResidencePermitValidity().getMonths() != null) {
+                context.setVariable("residence_permit_for_months",
+                        userDataRequestDto.getResidencePermitValidity().getMonths());
+            }
+            if (userDataRequestDto.getResidencePermitValidity().getYears() != null) {
+                context.setVariable("residence_permit_for_years",
+                        userDataRequestDto.getResidencePermitValidity().getYears());
+            }
+        }
+
+        context.setVariable("application_place_date", userDataRequestDto.getApplicationPlace() == null
+                ? LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                : userDataRequestDto.getApplicationPlace() + ", " +
+                LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
+
         return templateEngine.process("form_template", context);
     }
 
@@ -632,34 +663,46 @@ public class GenerateReportService {
 //
 //    }
 
-    private void mergePdf(MultipartFile passportImage) {
-        try {
-            Document document = new Document();
-            PdfWriter writer = PdfWriter.getInstance(document,
-                    new FileOutputStream("src/main/resources/final_document.pdf"));
-            document.open();
-            PdfContentByte contentByte = writer.getDirectContent();
+    private void mergePdf(ByteArrayOutputStream outputStream, MultipartFile[] documents) {
+        String pdfFilePath = "src/main/resources/user_form.pdf";
 
-            // Add PDF file
-            PdfReader pdfReader = new PdfReader("src/main/resources/user_form.pdf");
-            int numPages = pdfReader.getNumberOfPages();
-            for (int pageNum = 1; pageNum <= numPages; pageNum++) {
-                PdfImportedPage page = writer.getImportedPage(pdfReader, pageNum);
-                document.newPage();
-                contentByte.addTemplate(page, 0, 0);
+        try {
+            addImageToEndOfPDF(outputStream, documents, pdfFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addImageToEndOfPDF(ByteArrayOutputStream outputStream, MultipartFile[] documents, String outputFilePath)
+            throws IOException {
+        try (PDDocument document = PDDocument.load(outputStream.toByteArray())) {
+            for (MultipartFile d : documents) {
+                PDPage page = new PDPage();
+                document.addPage(page);
+
+                // Load the image
+                PDImageXObject imageXObject = LosslessFactory.createFromImage(document,
+                        ImageIO.read(d.getInputStream()));
+
+                // Get the page dimensions
+                PDRectangle pageSize = page.getMediaBox();
+
+                // Create content stream
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
+                        PDPageContentStream.AppendMode.APPEND, true)) {
+                    // Calculate the position for the image (adjust as needed)
+                    float x = 100; // X-coordinate
+                    float y = 100; // Y-coordinate
+                    float width = pageSize.getWidth() - 200; // Width
+                    float height = 200; // Height
+
+                    // Draw the image on the page
+                    contentStream.drawImage(imageXObject, x, y, width, height);
+                }
             }
 
-            // Add JPG file
-            Image jpgImage = Image.getInstance(passportImage.getBytes());
-            document.newPage();
-            jpgImage.setAbsolutePosition(0, 0);
-            jpgImage.scaleToFit(PageSize.A4);
-            contentByte.addImage(jpgImage);
-
-            document.close();
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            // Save the document with the added image
+            document.save(outputFilePath);
         }
     }
 

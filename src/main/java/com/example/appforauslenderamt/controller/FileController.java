@@ -2,7 +2,7 @@ package com.example.appforauslenderamt.controller;
 
 import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.service.GenerateReportService;
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,14 +77,10 @@ public class FileController {
                     "generate application form")
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void uploadFile(@RequestPart("passport_image") MultipartFile passportImage,
-                           @RequestPart("certificate_of_enrollment_image") MultipartFile certificateOfEnrollment,
-                           @RequestPart("health_insurance_certificate") MultipartFile healthInsuranceCertificate,
-                           @RequestPart("financial_document") MultipartFile financialDocument,
+    public void uploadFile(@RequestPart("documents") MultipartFile[] documents,
                            @RequestPart("user_data") UserDataRequestDto userData)
-            throws IOException, ScriptException, InterruptedException, DocumentException {
-        generateReportService.generatePdfFromHtml(userData, passportImage, certificateOfEnrollment,
-                healthInsuranceCertificate, financialDocument);
+            throws IOException, ScriptException, InterruptedException, DocumentException, com.lowagie.text.DocumentException {
+        generateReportService.generatePdfFromHtml(userData, documents);
     }
 
 //    @ApiOperation(value = "Endpoint for generation html template from pdf file",

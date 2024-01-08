@@ -90,5 +90,9 @@ public class UserDataRequestDto {
     HealthInsuranceInfo healthInsuranceInfo;
     @JsonProperty("offences_info")
     OffencesInfo offencesInfo;
+    @JsonProperty("residence_permit_validity")
+    ResidencePermitValidity residencePermitValidity;
+    @JsonProperty("application_place")
+    String applicationPlace;
 
 }
