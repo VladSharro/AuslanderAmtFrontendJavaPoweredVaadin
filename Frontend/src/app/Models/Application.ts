@@ -53,6 +53,7 @@ export class Application{
     //////////////////////
 
     registrationFile: File | null = null;
+    enrollmentCertificateFile: File | null = null
 
     placeOfResidence = ''
     isPreviousStays = ''

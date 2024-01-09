@@ -8,6 +8,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import { BasicDataLabels } from '../../../Labels/basic_data_labels';
 import { ApplicationService } from '../../../Services/application.service';
 import { OcrService } from '../../../Services/ocr.service';
+import { passportResponse } from '../../../Models/apiResponseModels/Passport';
 
 @Component({
   selector: 'app-basic-data',
@@ -77,11 +78,24 @@ if (passportInput) {
   private async extractData(){
     this.isLoading = true
     const extractedData = await this.ocrService.extractPassportData(this.passportFile!);
-    this.updateData()
+    this.updateData(extractedData)
   }
 
-  private updateData(){
-
+  private updateData(extractedData: passportResponse | never[]){
+    this.isLoading = false;
+    if (extractedData instanceof Array && extractedData.length === 0) {
+      // Handle the case where it's an empty array (never[])
+      console.error('Empty passport response array.');
+      return;
+    }else{
+      const passportData = extractedData as passportResponse
+      this.basicData.last_name = passportData.family_name
+      this.basicData.first_name = passportData.first_name
+      this.basicData.birth_date = passportData.date_of_birth
+      this.basicData.nationality = passportData.nationality
+      this.basicData.sex_type = passportData.sex
+    }
+    
   }
 
   basicDataNextButtonClicked(){
