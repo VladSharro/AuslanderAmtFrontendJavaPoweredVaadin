@@ -78,9 +78,10 @@ public class FileController {
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void uploadFile(@RequestPart("documents") MultipartFile[] documents,
+                           @RequestPart("signature_image") MultipartFile signatureImage,
                            @RequestPart("user_data") UserDataRequestDto userData)
             throws IOException, ScriptException, InterruptedException, DocumentException, com.lowagie.text.DocumentException {
-        generateReportService.generatePdfFromHtml(userData, documents);
+        generateReportService.generatePdfFromHtml(userData, documents, signatureImage);
     }
 
 //    @ApiOperation(value = "Endpoint for generation html template from pdf file",

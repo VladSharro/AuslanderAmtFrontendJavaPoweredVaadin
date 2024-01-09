@@ -25,6 +25,8 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -121,7 +123,8 @@ public class GenerateReportService {
 
     }
 
-    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile[] documents)
+    public void generatePdfFromHtml(UserDataRequestDto userDataRequestDto, MultipartFile[] documents,
+                                    MultipartFile signatureImage)
             throws IOException, DocumentException,
             InterruptedException, com.lowagie.text.DocumentException {
         String html = parseThymeleafTemplate(userDataRequestDto);
@@ -139,6 +142,7 @@ public class GenerateReportService {
 
         outputStream.close();
         mergePdf(outputStream, documents);
+        addHandprintedSignatureToPDF("src/main/resources/user_form.pdf", signatureImage);
     }
 
     private String parseThymeleafTemplate(UserDataRequestDto userDataRequestDto) {
@@ -704,6 +708,69 @@ public class GenerateReportService {
             // Save the document with the added image
             document.save(outputFilePath);
         }
+    }
+
+    public static void addHandprintedSignatureToPDF(String filePath, MultipartFile signatureImageFile) throws IOException {
+        try (PDDocument document = PDDocument.load(new File(filePath))) {
+            PDPage page = document.getPage(6); // Assuming the signature is added to the first page
+
+            // Load the handprinted signature image
+            BufferedImage signatureImage = ImageIO.read(signatureImageFile.getInputStream());
+
+            // Remove the background
+            BufferedImage transparentImage = removeBackground(signatureImage);
+
+            // Calculate the position and size of the signature
+            float xPosition = 300; // Adjust the X position
+            float yPosition = 570; // Adjust the Y position
+            float imageWidth = 40; // Adjust the image width
+            float imageHeight = (imageWidth / transparentImage.getWidth()) * transparentImage.getHeight();
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true)) {
+                // Convert BufferedImage to PDImageXObject
+                PDImageXObject pdImage = LosslessFactory.createFromImage(document, transparentImage);
+
+                // Draw the transparent image on the PDF
+                contentStream.drawImage(pdImage, xPosition, yPosition, imageWidth, imageHeight);
+            }
+
+            document.save(filePath);
+        }
+    }
+
+    public static BufferedImage removeBackground(BufferedImage inputImage) {
+        int width = inputImage.getWidth();
+        int height = inputImage.getHeight();
+
+        BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // Determine the background color from the corners of the image
+        Color backgroundColor = new Color(inputImage.getRGB(0, 0), true);
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Color pixelColor = new Color(inputImage.getRGB(x, y), true);
+
+                // Check if the pixel color is close to the background color
+                if (isSimilarColor(pixelColor, backgroundColor, 30)) {
+                    // Set the alpha value to 0 (transparent) for background pixels
+                    resultImage.setRGB(x, y, new Color(0, 0, 0, 0).getRGB());
+                } else {
+                    // Copy non-background pixels as they are
+                    resultImage.setRGB(x, y, pixelColor.getRGB());
+                }
+            }
+        }
+
+        return resultImage;
+    }
+
+    private static boolean isSimilarColor(Color color1, Color color2, int tolerance) {
+        int redDiff = Math.abs(color1.getRed() - color2.getRed());
+        int greenDiff = Math.abs(color1.getGreen() - color2.getGreen());
+        int blueDiff = Math.abs(color1.getBlue() - color2.getBlue());
+
+        return redDiff <= tolerance && greenDiff <= tolerance && blueDiff <= tolerance;
     }
 
 }
