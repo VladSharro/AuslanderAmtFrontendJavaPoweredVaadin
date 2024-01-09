@@ -32,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.stream.Collectors;
 
 @Service
 public class GenerateReportService {
@@ -613,7 +614,14 @@ public class GenerateReportService {
 
         InputStream inputStream = process.getInputStream();
         BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
-        return reader.readLine();
+        String line = reader.readLine();
+
+        if (line.startsWith("Traceback")) {
+            throw new InvalidDataException("Image processing with OCR was failed with exception: " +
+                    String.join("\n", reader.lines().collect(Collectors.toSet())));
+        }
+
+        return line;
     }
 
     private void generateHTMLFromPDF(String filename) throws IOException {
