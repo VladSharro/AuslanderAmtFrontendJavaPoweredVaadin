@@ -1,12 +1,14 @@
 package com.example.appforauslenderamt.controller;
 
 import com.example.appforauslenderamt.controller.dto.*;
+import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.example.appforauslenderamt.service.GenerateReportService;
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,11 @@ public class FileController {
     @Autowired
     public FileController(GenerateReportService generateReportService) {
         this.generateReportService = generateReportService;
+    }
+
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<String> handleCustomException(InvalidDataException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ApiOperation(value = "Endpoint for getting user's data from passport picture",
@@ -83,14 +90,5 @@ public class FileController {
             throws IOException, ScriptException, InterruptedException, DocumentException, com.lowagie.text.DocumentException {
         generateReportService.generatePdfFromHtml(userData, documents, signatureImage);
     }
-
-//    @ApiOperation(value = "Endpoint for generation html template from pdf file",
-//            notes = "Takes pdf file and converts in to pdf")
-//    @PostMapping(value = "/convert_to_html", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @ResponseStatus(HttpStatus.OK)
-//    public void convertToHtml(@RequestPart("passport_image") MultipartFile passportImage)
-//            throws IOException, ScriptException, InterruptedException, DocumentException {
-//        generateReportService.generateH(userData, passportImage);
-//    }
 
 }
