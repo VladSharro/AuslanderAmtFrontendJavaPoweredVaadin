@@ -38,6 +38,7 @@ export class ResidenceDataComponent {
   residence_labels = new PlaceOfResidenceSectionLabels();
 
   registrationFile: File | null = null;
+  enrollmentCertificateFile: File | null = null
 
 
   residenceData = {
@@ -61,6 +62,17 @@ export class ResidenceDataComponent {
 
     if (registrationInput) {
        registrationInput.click();
+    } else {
+      console.error("File input element not found");
+      }
+  }
+
+  openCertificateEnrollmentInput(){ 
+    // your can use ElementRef for this later
+    const enrollmentInput = document.getElementById("enrollmentFileInput");
+
+    if (enrollmentInput) {
+      enrollmentInput.click();
     } else {
       console.error("File input element not found");
       }
@@ -94,7 +106,17 @@ export class ResidenceDataComponent {
     }
   }
 
+  enrollmentCertificateUpload(event: any) {
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      this.enrollmentCertificateFile = files[0];
+      console.log(this.enrollmentCertificateFile.name);
+      console.log(2)
+
+    }
+  } 
+
   residenceNextButtonClicked(){
-    this.applicationService.setResidenceData(this.residenceData.placeOfResidence, this.residenceData.isPreviousStays, this.residenceData.previousStayAddress, this.residenceData.dateFrom, this.residenceData.dateTo, this.residenceData.residenceAbroadIfRetained, this.residenceData.isResidenceAbroadRetained, this.registrationFile);
+    this.applicationService.setResidenceData(this.residenceData.placeOfResidence, this.residenceData.isPreviousStays, this.residenceData.previousStayAddress, this.residenceData.dateFrom, this.residenceData.dateTo, this.residenceData.residenceAbroadIfRetained, this.residenceData.isResidenceAbroadRetained, this.registrationFile, this.enrollmentCertificateFile);
   }
 }

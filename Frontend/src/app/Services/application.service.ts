@@ -110,7 +110,7 @@ export class ApplicationService {
      }
   }
 
-  setResidenceData(placeOfResidence: string, isPreviousStays: string, previousStayAddress: string, dateFrom: string, dateTo: string, residenceAbroadIfRetained: string, isResidenceAbroadRetained: string, registrationFile: File | null){
+  setResidenceData(placeOfResidence: string, isPreviousStays: string, previousStayAddress: string, dateFrom: string, dateTo: string, residenceAbroadIfRetained: string, isResidenceAbroadRetained: string, registrationFile: File | null, enrollmentCertificateFile: File | null){
     
     this.applicationData.placeOfResidence  = placeOfResidence
     this.applicationData.isPreviousStays  = isPreviousStays
@@ -120,6 +120,7 @@ export class ApplicationService {
     this.applicationData.residenceAbroadIfRetained  = residenceAbroadIfRetained
     this.applicationData.isResidenceAbroadRetained  = isResidenceAbroadRetained
     this.applicationData.registrationFile = registrationFile
+    this.applicationData.enrollmentCertificateFile = enrollmentCertificateFile
   }
 
   setStayData(lastEntryDate: string, lastEntryVisaType: string, visaIssueBy: string, visaIssueOn: string, visaNumber: string, visaValidFrom: string, visaValidTo: string, lengthOfStay: string, purposeOfStay: string, visaFile: File | null){

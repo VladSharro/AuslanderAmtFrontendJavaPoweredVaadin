@@ -5,6 +5,12 @@
     <span *ngIf="registrationFile" style="margin-left: 10px;">{{ registrationFile.name }}</span>
   </div>
 
+  <div style="display: flex; align-items: center;">
+    <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openCertificateEnrollmentInput()">{{residence_labels.enrollment_certificate_button_label}} </button>
+  <input id="enrollmentFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="enrollmentCertificateUpload($event)">
+  <span *ngIf="enrollmentCertificateFile" style="margin-left: 10px;">{{ enrollmentCertificateFile.name }}</span>
+</div>
+
     <div class="rounded-input-container" [class.filled]="residenceData.placeOfResidence" >
       <input class="rounded-input" type="text" name="residence_place_field" id="residence_place_field" [(ngModel)]="residenceData.placeOfResidence" placeholder="{{residence_labels.current_residence_in_germany_label}}">
       <label class="placeholder-label">{{residence_labels.residence_place_abroad_label}}</label>

@@ -12,6 +12,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ApplicationService } from '../../../Services/application.service';
+import { OcrService } from '../../../Services/ocr.service';
+import { financialdocumentResponse } from '../../../Models/apiResponseModels/financialdocumentResponse';
+import { healthinsuranceResponse } from '../../../Models/apiResponseModels/healthinsuranceResponse';
 
 @Component({
   selector: 'app-financial-support-data',
@@ -31,11 +34,12 @@ import { ApplicationService } from '../../../Services/application.service';
 })
 export class FinancialSupportDataComponent {
 
-  constructor(private applicationService: ApplicationService){}
+  constructor(private applicationService: ApplicationService, private ocrService: OcrService){}
 
   supportLabels = new SupportLabels();
   financialSupportFiles: FinancialDocument[] = [];
   insuranceFile: File | null = null;
+  isLoading = false;
 
   meansOfSupportData = {
 
@@ -85,9 +89,47 @@ export class FinancialSupportDataComponent {
     if (files && files.length > 0) {
       this.financialSupportFiles[index].file = files[0];
       console.log(this.financialSupportFiles[index].file?.name);
-      console.log(2)
-
+      this.extractFinancialData(index)
     }
+  }
+
+private async extractInsuranceData(){
+    this.isLoading = true
+    const insuracneData = await this.ocrService.extractInsuranceCertificatetData(this.insuranceFile!);
+    this.updateInsuranceData(insuracneData)
+  }
+
+  private updateInsuranceData(extractedData: healthinsuranceResponse | never[]){
+    this.isLoading = false;
+    if (extractedData instanceof Array && extractedData.length === 0) {
+      // Handle the case where it's an empty array (never[])
+      console.error('Empty passport response array.');
+      return;
+    }else{
+      const insuranceData = extractedData as healthinsuranceResponse
+      // this.meansOfSupportData. = insuranceData.      
+    }
+    
+  }
+
+  private async extractFinancialData(index: number){
+    this.isLoading = true
+    const extractedData = await this.ocrService.extractFinancialDocuemntCertificatetData(this.financialSupportFiles[index].file!);
+    this.updateData(extractedData)
+  }
+
+  private updateData(extractedData: financialdocumentResponse | never[]){
+    this.isLoading = false;
+    if (extractedData instanceof Array && extractedData.length === 0) {
+      // Handle the case where it's an empty array (never[])
+      console.error('Empty passport response array.');
+      return;
+    }else{
+      const financialData = extractedData as financialdocumentResponse
+      this.meansOfSupportData.finalValueOfFinancialSupport += Number(financialData.sum)
+      
+    }
+    
   }
 
   noOfDocsRange: number[] = [];
@@ -98,8 +140,7 @@ export class FinancialSupportDataComponent {
     if (files && files.length > 0) {
       this.insuranceFile = files[0];
       console.log(this.insuranceFile.name);
-      console.log(2)
-
+      this.ocrService.extractInsuranceCertificatetData(this.insuranceFile)
     }
   }
 
@@ -107,6 +148,7 @@ export class FinancialSupportDataComponent {
   // ngOnChanges(): void {
   //   this.noOfDocsRange = Array.from({ length: this.meansOfSupportData.noOfFinancialSupportDocuments }, (_, index) => index + 1);
   // }
+
 
 
   addNewFinancialSupport(){

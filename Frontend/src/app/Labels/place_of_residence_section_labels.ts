@@ -9,6 +9,7 @@ export class PlaceOfResidenceSectionLabels{
     readonly retained_label = "retained";
     readonly not_retained_label = "not retained";
     readonly city_registration_document_upload_button_label = "Upload City Registrartion Document"
+    readonly enrollment_certificate_button_label = "Upload Enrollment Cerificate";
 
 
     readonly next_button_label = "Next";
