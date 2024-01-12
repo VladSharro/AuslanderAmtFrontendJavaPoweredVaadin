@@ -45,6 +45,9 @@ def extract_health(pdf_path):
         if "Techniker Krankenkasse" in lines[i]:
             krankenkasse = "Techniker Krankenkasse"
 
+        if "gern bestätigen wir Ihnen" in lines[i]:
+            match = re.search(r'dem(.*?)bei', lines[i])
+
     return kassen, time
 
 
