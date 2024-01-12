@@ -7,14 +7,12 @@ import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.fit.pdfdom.PDFDomTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +26,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -623,57 +620,6 @@ public class GenerateReportService {
 
         return line;
     }
-
-    private void generateHTMLFromPDF(String filename) throws IOException {
-        PDDocument pdf = PDDocument.load(new File(filename));
-        PDFDomTree parser = new PDFDomTree();
-        Writer output = new PrintWriter("src/main/resources/form_template.html", StandardCharsets.UTF_8);
-        parser.writeText(pdf, output);
-        output.close();
-        if (pdf != null) {
-            pdf.close();
-        }
-    }
-
-    private void generatePDFFromHTML(String filename) throws IOException, com.itextpdf.text.DocumentException {
-        Document document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document,
-                new FileOutputStream("src/main/resources/form_template.html"));
-        document.open();
-        XMLWorkerHelper.getInstance().parseXHtml(writer, document, new FileInputStream(filename));
-        document.close();
-    }
-
-//    public void checkUserDataWithPassport(UserDataRequestDto userData, MultipartFile passportImage)
-//            throws IOException, InterruptedException {
-//        byte[] imageBytes = passportImage.getBytes();
-//
-//        // Encode the image data in Base64
-//        String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
-//
-//        ProcessBuilder processBuilder = new ProcessBuilder("python3", "src/main/resources/passport_analys.py");
-//        processBuilder.environment().put("IMAGE_DATA", encodedImage);
-//        processBuilder.redirectErrorStream(true);
-//
-//        Process process = processBuilder.start();
-//        process.waitFor();
-//
-//        InputStream inputStream = process.getInputStream();
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//        String line = reader.readLine();
-//        // Process line of the output here
-//        String[] familyNameAndFirstName = line.split(" ");
-//
-//        if (!userData.getPersonalData().getFamilyName().toLowerCase(Locale.ROOT)
-//                .equals(familyNameAndFirstName[0].toLowerCase(Locale.ROOT)) ||
-//                !userData.getPersonalData().getFirstName().toLowerCase(Locale.ROOT)
-//                        .equals(familyNameAndFirstName[1].toLowerCase(Locale.ROOT))) {
-//            throw new DataDoNotMatchWithPassportException("Family name or first name doesn't match with passport data");
-//        }
-//
-//        process.waitFor(); // Wait for the process to finish
-//
-//    }
 
     private void mergePdf(ByteArrayOutputStream outputStream, MultipartFile[] documents) {
         String pdfFilePath = "src/main/resources/user_form.pdf";

@@ -97,6 +97,8 @@ def extract_name_and_surname(encoded_image):
 
     issue = formatted_string_i
 
+    issue_date = datetime.strptime(issue, "%d/%m/%y")
+
     start_date = None
 
     if nationality in ['ALB', 'DZA', 'AND', 'RUS', 'UKR']:
