@@ -12,11 +12,22 @@ import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
 
-def extract_health(image_path):
+def extract_health(pdf_path):
     name = ""
     surname = ""
     krankenkasse = ""
     date = ""
+
+    doc = fitz.open(pdf_path)
+    page = doc[0]
+
+    extracted_text = page.get_text()
+
+    lines = extracted_text.split('\n')
+
+    full_name = ""
+
+    i = 0
 
     return kassen, time
 
