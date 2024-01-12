@@ -25,4 +25,5 @@ public class OpenApiConfig {
         supportedMediaTypes.add(new MediaType("application", "octet-stream"));
         converter.setSupportedMediaTypes(supportedMediaTypes);
     }
+
 }

@@ -35,6 +35,7 @@ public class FileController {
             notes = "Takes passport image and returns information getting from it with using OCR")
     @PostMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin
     public PassportDataResponseDto getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
             throws IOException, InterruptedException {
         return generateReportService.getDataFromPassport(passportImage);

@@ -53,6 +53,7 @@ public class GenerateReportService {
                 .nationality(userData[2])
                 .dateOfBirth(userData[3])
                 .sex(userData[4])
+                .startDate(userData[5])
                 .build();
 
     }

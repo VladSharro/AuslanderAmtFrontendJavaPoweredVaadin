@@ -2,4 +2,4 @@ ocr:
   passport-analysis-file-path: "OCR/PassportAnalitics.py"
   certificate-of-enrollment-analysis-file-path: "OCR/ImmatrikulationAnalitics.py"
   health-insurance-certificate-analysis-file-path: "OCR/Health_Analitics.py"
-  financial-document-analysis-file-path: "OCR/Geld.py"
+  financial-document-analysis-file-path: "OCR/WorkContract.py"

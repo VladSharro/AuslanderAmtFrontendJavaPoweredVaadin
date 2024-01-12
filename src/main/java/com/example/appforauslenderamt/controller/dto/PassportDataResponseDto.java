@@ -22,5 +22,7 @@ public class PassportDataResponseDto {
     String dateOfBirth;
     @JsonProperty("sex")
     String sex;
+    @JsonProperty("start_date")
+    String startDate;
 
 }
