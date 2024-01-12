@@ -64,5 +64,5 @@ def extract_health(pdf_path):
 image_data = os.environ.get("IMAGE_DATA")
 
 # Call the function and print the result
-kassen, time = extract_health(image_data)
-print(','.join([kassen, time]))
+name, surname, krankenkasse, date, doc = extract_health(image_data)
+print(','.join([name, surname, krankenkasse, date, doc]))
