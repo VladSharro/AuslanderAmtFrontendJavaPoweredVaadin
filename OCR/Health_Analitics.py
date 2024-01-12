@@ -42,6 +42,9 @@ def extract_health(pdf_path):
             name = name_parts[0]
             surname = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ""
 
+        if "Techniker Krankenkasse" in lines[i]:
+            krankenkasse = "Techniker Krankenkasse"
+
     return kassen, time
 
 
