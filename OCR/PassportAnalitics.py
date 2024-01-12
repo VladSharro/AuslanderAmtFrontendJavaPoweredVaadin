@@ -97,6 +97,9 @@ def extract_name_and_surname(encoded_image):
 
     issue = formatted_string_i
 
+    start_date = None
+
+
     return name, surname, nationality, birth, sex
 
 
