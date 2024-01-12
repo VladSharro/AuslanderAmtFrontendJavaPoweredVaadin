@@ -112,11 +112,11 @@ def extract_name_and_surname(encoded_image):
         #print(start_date)
 
 
-    return name, surname, nationality, birth, sex
+    return name, surname, nationality, birth, sex, start_date
 
 
 # Access the image data from the environment variable
 image_data = os.environ.get("IMAGE_DATA")
 
-name, surname, nationality, birth, sex = extract_name_and_surname(image_data)
-print(','.join([name, surname, nationality, birth, sex]))
+name, surname, nationality, birth, sex, start_date = extract_name_and_surname(image_data)
+print(','.join([name, surname, nationality, birth, sex, start_date]))
