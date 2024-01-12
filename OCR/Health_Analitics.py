@@ -13,7 +13,10 @@ from datetime import datetime
 from passporteye import read_mrz, mrz
 
 def extract_health(image_path):
-    
+    name = ""
+    surname = ""
+    krankenkasse = ""
+    date = ""
 
     return kassen, time
 
