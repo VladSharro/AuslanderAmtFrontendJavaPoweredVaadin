@@ -7,7 +7,7 @@ import base64
 import re
 from io import BytesIO
 from passporteye import read_mrz
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
@@ -97,11 +97,26 @@ def extract_name_and_surname(encoded_image):
 
     issue = formatted_string_i
 
-    return name, surname, nationality, birth, sex
+    start_date = None
+
+    if nationality in ['ALB', 'DZA', 'AND', 'RUS', 'UKR']:
+        start_date = (issue_date - relativedelta(years=10)).strftime("%d/%m/%y")
+
+        #start_date = start_date.strftime("%d/%m/%y")
+        #print(start_date)
+
+    if nationality in ['PRT', 'IRN', 'TUN']:
+        start_date = (issue_date - relativedelta(years=5)).strftime("%d/%m/%y")
+
+        #start_date = start_date.strftime("%d/%m/%y")
+        #print(start_date)
+
+
+    return name, surname, nationality, birth, sex, start_date
 
 
 # Access the image data from the environment variable
 image_data = os.environ.get("IMAGE_DATA")
 
-name, surname, nationality, birth, sex = extract_name_and_surname(image_data)
-print(','.join([name, surname, nationality, birth, sex]))
+name, surname, nationality, birth, sex, start_date = extract_name_and_surname(image_data)
+print(','.join([name, surname, nationality, birth, sex, start_date]))
