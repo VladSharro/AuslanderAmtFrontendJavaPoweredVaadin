@@ -29,6 +29,19 @@ def extract_health(pdf_path):
 
     i = 0
 
+    while i < len(lines):
+
+        #print(i)
+
+        #print(lines[i])
+
+        #full_name = ""
+        if lines[i] == "Herrn" or lines[i] == "Frauen":
+            full_name = lines[i + 1]
+            name_parts = full_name.split()
+            name = name_parts[0]
+            surname = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ""
+
     return kassen, time
 
 
