@@ -8,6 +8,8 @@ import re
 from io import BytesIO
 from passporteye import read_mrz
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 
 def process_string(input_string):
     parts = input_string.split(' ', 0)
