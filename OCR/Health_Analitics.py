@@ -54,7 +54,10 @@ def extract_health(pdf_path):
             date = match.group(1).strip()
             #print(date)
 
-    return kassen, time
+        i = i + 1
+
+    return name, surname, krankenkasse, date, doc
+
 
 
 # Access the image data from the environment variable
