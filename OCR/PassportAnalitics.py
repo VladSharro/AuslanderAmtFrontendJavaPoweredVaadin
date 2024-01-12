@@ -7,7 +7,7 @@ import base64
 import re
 from io import BytesIO
 from passporteye import read_mrz
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
