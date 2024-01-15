@@ -9,6 +9,7 @@ from io import BytesIO
 from passporteye import read_mrz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import pycountry
 
 
 def process_string(input_string):
@@ -25,6 +26,8 @@ def extract_name_and_surname(encoded_image):
 
     numpy_array = np.frombuffer(image_data, np.uint8)
     img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+
+    country_dict = {country.alpha_3: country.name for country in pycountry.countries}
 
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -114,6 +117,9 @@ def extract_name_and_surname(encoded_image):
         #print(start_date)
 
 
+
+    nationality = country_dict[mrz_data['nationality']]
+    
     return name, surname, nationality, birth, sex, start_date
 
 
