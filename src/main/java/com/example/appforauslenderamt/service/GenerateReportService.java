@@ -23,13 +23,22 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.imageio.ImageIO;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -146,6 +155,7 @@ public class GenerateReportService {
         outputStream.close();
         mergePdf(outputStream, documents);
         addHandprintedSignatureToPDF("src/main/resources/user_form.pdf", signatureImage);
+//        sendEmail("src/main/resources/user_form.pdf");
     }
 
     private String parseThymeleafTemplate(UserDataRequestDto userDataRequestDto) {
@@ -677,7 +687,7 @@ public class GenerateReportService {
         }
     }
 
-    public static void addHandprintedSignatureToPDF(String filePath, MultipartFile signatureImageFile) throws IOException {
+    private void addHandprintedSignatureToPDF(String filePath, MultipartFile signatureImageFile) throws IOException {
         try (PDDocument document = PDDocument.load(new File(filePath))) {
             PDPage page = document.getPage(6); // Assuming the signature is added to the first page
 
@@ -705,7 +715,7 @@ public class GenerateReportService {
         }
     }
 
-    public static BufferedImage removeBackground(BufferedImage inputImage) {
+    private BufferedImage removeBackground(BufferedImage inputImage) {
         int width = inputImage.getWidth();
         int height = inputImage.getHeight();
 
@@ -738,6 +748,70 @@ public class GenerateReportService {
         int blueDiff = Math.abs(color1.getBlue() - color2.getBlue());
 
         return redDiff <= 30 && greenDiff <= 30 && blueDiff <= 30;
+    }
+
+    private void sendEmail(String filepath) {
+        // Sender's email address
+        String fromEmail = "test@gmail.com";
+        // Sender's email password
+        String password = "password";
+        // Recipient's email address
+        String toEmail = "abhmail@gmail.com";
+        // Path to the file you want to attach
+        String attachmentPath = filepath;
+
+        // Setup properties for the SMTP server
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.auth", "true");
+
+        // Create a Session object with authentication
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        try {
+            // Create a MimeMessage object
+            Message message = new MimeMessage(session);
+            // Set the sender's email address
+            message.setFrom(new InternetAddress(fromEmail));
+            // Set the recipient's email address
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            // Set the email subject
+            message.setSubject("Hello, this is a test email with attachment from Java!");
+
+            // Create a multipart message
+            Multipart multipart = new MimeMultipart();
+
+            // Text part of the email
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText("Dear User,\n\nThis is a test email with attachment sent from Java.");
+
+            // Attach the text part to the multipart message
+            multipart.addBodyPart(textPart);
+
+            // Attachment part
+            MimeBodyPart attachmentPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(attachmentPath);
+            attachmentPart.setDataHandler(new DataHandler(source));
+            attachmentPart.setFileName("user_form.pdf"); // set the name for the attachment
+
+            // Attach the attachment part to the multipart message
+            multipart.addBodyPart(attachmentPart);
+
+            // Set the multipart content for the email message
+            message.setContent(multipart);
+
+            // Send the email
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
