@@ -28,6 +28,10 @@ def extract_name_and_surname(encoded_image):
     # Decode the Base64-encoded image data
     image_data = base64.b64decode(encoded_image)
 
+
+    mime_type, _ = mimetypes.guess_type(image_path)
+    
+
     numpy_array = np.frombuffer(image_data, np.uint8)
     img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
 
