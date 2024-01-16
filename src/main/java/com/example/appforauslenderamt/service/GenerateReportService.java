@@ -4,6 +4,7 @@ import com.example.appforauslenderamt.config.OCRConfig;
 import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
+import com.google.common.collect.Sets;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -29,6 +30,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,8 +93,10 @@ public class GenerateReportService {
         String[] userData = line.split(",");
 
         return HealthInsuranceCertificateDataResponseDto.builder()
-                .insurer(userData[0])
-                .dateOfExpire(userData[1])
+                .firstName(userData[0])
+                .familyName(userData[1])
+                .insurer(userData[2])
+                .dateOfStart(userData[3])
                 .build();
 
     }
@@ -268,8 +272,8 @@ public class GenerateReportService {
                 } else {
                     context.setVariable(String.format("child%d_family_name", i + 1),
                             userDataRequestDto.getChildrenPersonalData().get(i).getFamilyName() + " " +
-                            String.join(", ",
-                                    userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames()));
+                                    String.join(", ",
+                                            userDataRequestDto.getChildrenPersonalData().get(i).getPreviousNames()));
                 }
                 context.setVariable(String.format("child%d_first_name", i + 1),
                         userDataRequestDto.getChildrenPersonalData().get(i).getFirstName());
@@ -611,7 +615,7 @@ public class GenerateReportService {
         process.waitFor();
 
         InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new  InputStreamReader(inputStream));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
 
         if (line.startsWith("Traceback")) {
@@ -632,36 +636,44 @@ public class GenerateReportService {
         }
     }
 
-    private void addImageToEndOfPDF(ByteArrayOutputStream outputStream, MultipartFile[] documents, String outputFilePath)
+    private void addImageToEndOfPDF(ByteArrayOutputStream outputStream, MultipartFile[] documents,
+                                    String outputFilePath)
             throws IOException {
+        Set<PDDocument> openDocuments = Sets.newHashSet();
         try (PDDocument document = PDDocument.load(outputStream.toByteArray())) {
             for (MultipartFile d : documents) {
-                PDPage page = new PDPage();
-                document.addPage(page);
+                // Check the file type
+                String contentType = d.getContentType();
+                if (contentType != null && contentType.equals("application/pdf")) {
+                    // If the file is a PDF, merge its content with the current document
+                    PDDocument pdfDocument = PDDocument.load(d.getInputStream());
+                    openDocuments.add(pdfDocument);
+                    for (PDPage pdfPage : pdfDocument.getPages()) {
+                        document.addPage(pdfPage);
+                    }
+                } else {
+                    PDPage page = new PDPage();
+                    document.addPage(page);
+                    // If the file is an image, add it to the current page
+                    PDImageXObject imageXObject = LosslessFactory.createFromImage(document,
+                            ImageIO.read(d.getInputStream()));
 
-                // Load the image
-                PDImageXObject imageXObject = LosslessFactory.createFromImage(document,
-                        ImageIO.read(d.getInputStream()));
+                    PDRectangle pageSize = page.getMediaBox();
+                    try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
+                            PDPageContentStream.AppendMode.APPEND, true)) {
+                        float x = 100; // X-coordinate
+                        float y = 100; // Y-coordinate
+                        float width = pageSize.getWidth() - 200; // Width
+                        float height = 200; // Height
 
-                // Get the page dimensions
-                PDRectangle pageSize = page.getMediaBox();
-
-                // Create content stream
-                try (PDPageContentStream contentStream = new PDPageContentStream(document, page,
-                        PDPageContentStream.AppendMode.APPEND, true)) {
-                    // Calculate the position for the image (adjust as needed)
-                    float x = 100; // X-coordinate
-                    float y = 100; // Y-coordinate
-                    float width = pageSize.getWidth() - 200; // Width
-                    float height = 200; // Height
-
-                    // Draw the image on the page
-                    contentStream.drawImage(imageXObject, x, y, width, height);
+                        contentStream.drawImage(imageXObject, x, y, width, height);
+                    }
                 }
             }
-
-            // Save the document with the added image
             document.save(outputFilePath);
+        }
+        for (PDDocument openDocument : openDocuments) {
+            openDocument.close();
         }
     }
 
@@ -707,7 +719,7 @@ public class GenerateReportService {
                 Color pixelColor = new Color(inputImage.getRGB(x, y), true);
 
                 // Check if the pixel color is close to the background color
-                if (isSimilarColor(pixelColor, backgroundColor, 30)) {
+                if (isSimilarColor(pixelColor, backgroundColor)) {
                     // Set the alpha value to 0 (transparent) for background pixels
                     resultImage.setRGB(x, y, new Color(0, 0, 0, 0).getRGB());
                 } else {
@@ -720,12 +732,12 @@ public class GenerateReportService {
         return resultImage;
     }
 
-    private static boolean isSimilarColor(Color color1, Color color2, int tolerance) {
+    private static boolean isSimilarColor(Color color1, Color color2) {
         int redDiff = Math.abs(color1.getRed() - color2.getRed());
         int greenDiff = Math.abs(color1.getGreen() - color2.getGreen());
         int blueDiff = Math.abs(color1.getBlue() - color2.getBlue());
 
-        return redDiff <= tolerance && greenDiff <= tolerance && blueDiff <= tolerance;
+        return redDiff <= 30 && greenDiff <= 30 && blueDiff <= 30;
     }
 
 }

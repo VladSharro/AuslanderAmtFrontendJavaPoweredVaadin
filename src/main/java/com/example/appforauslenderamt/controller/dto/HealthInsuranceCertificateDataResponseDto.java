@@ -12,9 +12,13 @@ import lombok.Value;
 @AllArgsConstructor
 public class HealthInsuranceCertificateDataResponseDto {
 
+    @JsonProperty("first_name")
+    String firstName;
+    @JsonProperty("family_name")
+    String familyName;
     @JsonProperty("insurer")
     String insurer;
-    @JsonProperty("date_of_expire")
-    String dateOfExpire;
+    @JsonProperty("date_of_start")
+    String dateOfStart;
 
 }
