@@ -26,14 +26,26 @@ def process_string(input_string):
 
 def extract_name_and_surname(encoded_image):
     # Decode the Base64-encoded image data
-    image_data = base64.b64decode(encoded_image)
+    #image_data = base64.b64decode(encoded_image)
 
 
     mime_type, _ = mimetypes.guess_type(image_path)
-    
 
-    numpy_array = np.frombuffer(image_data, np.uint8)
-    img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+
+    if mime_type == 'application/pdf':
+        doc = fitz.open(image_path)
+        page = doc[0]
+        pix = page.get_pixmap()
+        img_data = pix.tobytes("png")
+        img = Image.open(BytesIO(img_data))
+        img = np.array(img)
+
+    elif mime_type in ['image/png', 'image/jpeg']:
+        img = cv2.imread(image_path)    
+
+
+    #numpy_array = np.frombuffer(image_data, np.uint8)
+    #img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
 
     country_dict = {country.alpha_3: country.name for country in pycountry.countries}
 
