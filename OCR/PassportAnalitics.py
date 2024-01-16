@@ -1,15 +1,19 @@
+from io import BytesIO
+
 import cv2
 import pytesseract
-import numpy as np
-import sys
-import os
-import base64
 import re
-from io import BytesIO
-from passporteye import read_mrz
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image, ImageTk
+import fitz  # PyMuPDF
+import numpy as np
 from datetime import datetime, timedelta
+import mimetypes
+
+
 from dateutil.relativedelta import relativedelta
-import pycountry
+from passporteye import read_mrz, mrz
 
 
 def process_string(input_string):
