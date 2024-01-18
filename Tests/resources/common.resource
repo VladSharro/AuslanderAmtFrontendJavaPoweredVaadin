@@ -4,21 +4,16 @@ Documentation   Resource file with setup keywords and base variables
 Library         SeleniumLibrary   run_on_failure=None
 
 *** Variables ***
-${BROSWER}            headlesschrome
-${DOMAIN}             132.231.1.189
+${BROWSER}            %{BROWSER}
+${DOMAIN}             %{DOMAIN}
 ${HOME_URL}           http://${DOMAIN}/
 ${WIDTH}              1400
-${HEIGHT}             900
+${HEIGHT}             1000
 
 ${APPLICATION_URL}    http://${DOMAIN}/nonEuFirstTimeApp
 
 *** Keywords ***
 Open Browser On Home Page
-    Open Browser                   ${HOME_URL}           ${BROSWER}
-    Set Window Size                ${WIDTH}              ${HEIGHT}
-    Set Selenium Implicit Wait     10
-
-Open Browser On Application
-    Open Browser                   ${APPLICATION_URL}    ${BROSWER}
+    Open Browser                   ${HOME_URL}           ${BROWSER}
     Set Window Size                ${WIDTH}              ${HEIGHT}
     Set Selenium Implicit Wait     10
