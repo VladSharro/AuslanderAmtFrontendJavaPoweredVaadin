@@ -10,7 +10,8 @@ export class stepperLabels{
     readonly photo_label = "Photo";
     readonly done_label = "Done";
     readonly additional_documents_label = "Extra";
-
+    readonly stay_renewal_label = "Renewal"
+    readonly download_application = "Download"
 
 
 

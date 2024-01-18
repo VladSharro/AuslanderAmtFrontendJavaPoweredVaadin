@@ -1,10 +1,21 @@
-<div>
+<form style="align-items: center; text-align: center; justify-content: center;" (submit)="false">
+
+
+<div *ngIf="isLoading" class="spinner-overlay" [ngClass]="{'custom-spinner-color': isLoading}">
+        <mat-spinner color="white" ></mat-spinner>
+      
+</div>    
+
+<div *ngIf="isLoading == false">
+    <br>
     <h1 style="color: #b42e29;">{{doneLabels.doneString}}</h1>
     <h3 style="color: grey;">{{doneLabels.goToPreview}}</h3>
 </div>
-<div  style="display: flex; justify-content: right; margin-top: 15px;">
-    <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;">{{doneLabels.backButtonText}}</button>
-    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="preview()">{{doneLabels.previewButtonText}}</button>
 
-    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" (click)="doneApplication()">{{doneLabels.submitButtonText}}</button>
-</div>
+<div style="display: flex; justify-content: center; margin-top: 1%;" *ngIf="isLoading == false">
+    <button mat-stroked-button matStepperPrevious style=" margin: 1%;  background-color: rgb(212, 212, 212); color: #b42e29;">{{doneLabels.backButtonText}}</button>
+    <button mat-stroked-button style="background-color: #a47371; color: white;   margin: 1%;"  (click)="preview()" >{{doneLabels.previewButtonText}}</button>
+    <button mat-stroked-button style="background-color: #b42e29; color: white;    margin: 1%;" (click)="doneApplication()" >{{doneLabels.submitButtonText}}</button>        
+  </div>
+  
+</form>

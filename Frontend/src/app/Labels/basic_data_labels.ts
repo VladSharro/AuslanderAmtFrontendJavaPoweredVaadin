@@ -34,7 +34,7 @@ export class BasicDataLabels{
     readonly sex_options_f= "F";
     readonly sex_options_d= "D";
 
-    readonly martial_options_single = "Signle";
+    readonly martial_options_single = "single";
     readonly martial_options_married = "Married";
     readonly martial_options_registered = "Living in registered partenership";
     readonly martial_options_divorced = "Divorced";

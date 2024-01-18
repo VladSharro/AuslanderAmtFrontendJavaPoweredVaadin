@@ -1,0 +1,93 @@
+.card-container {
+    width: 50%; 
+    margin: auto;
+    margin-top: 50px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    height: 80%;
+    background-color: rgba(255, 255, 255, 0.7);
+        }
+  
+        .main_div{
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center; /* Align children vertically at the center */
+            background-color: rgba(0, 0, 0, 0);
+            
+          }
+
+
+
+
+.main_div h1 {
+    margin-top: 10px; /* Adjust the top margin between each text element based on your preference */
+    font-family: 'Open Sans', sans-serif;
+    color: rgba(0, 0, 0, 0.87);
+   }    
+          
+   .spinner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Ensure the spinner is above the card */
+  }
+
+  .mat-spinner{
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+
+  .document-name {
+    cursor: pointer;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0);
+
+    border-radius: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .name-text {
+    flex-grow: 1;
+    font-weight: bold;
+  }
+  
+
+  
+  .document-description {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid #b42e29;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .description-text {
+    margin: 0;
+  }
+  
+  .custom-divider {
+    margin: 10px 0;
+  }
+
+  .document-item{
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+
+  }
+  

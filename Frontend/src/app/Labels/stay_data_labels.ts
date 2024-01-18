@@ -27,6 +27,9 @@ export class StayDataLabels{
     readonly visa_valid_to_label = "Valid to";
     readonly visa_length_of_stay = "Length of stay";
 
+    readonly purpose_of_stay_germany = "Purpose of stay in Germany";
+    readonly purpose_changed_explaination = "Since the last time a residence permit was granted, the purpose of my stay in Germany"
 
-
+    readonly option_yes = "Yes";
+    readonly option_No = "No";
 }

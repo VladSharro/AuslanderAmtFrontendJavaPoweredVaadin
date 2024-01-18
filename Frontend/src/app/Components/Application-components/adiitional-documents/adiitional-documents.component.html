@@ -1,15 +1,16 @@
-<form *ngIf="!isDataLoading; else spinner">
-    <div *ngFor="let doc of additionalDocs" style="display: flex; align-items: center;">
+<form style="align-items: center; text-align: center; justify-content: center;" (submit)="false" *ngIf="!isDataLoading; else spinner">
+    <br>
+    <div *ngFor="let doc of additionalDocs">
       <button mat-raised-button type="button" class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openDocumentInput(doc.name)">upload {{doc.name}}</button>
     <input #fileInput [id]="'input-' + doc.name" hidden type="file" accept=".pdf, .jpeg, .png" (change)="inputUploaded($event, doc.name)" >
     <span *ngIf="additionalDocsMap.get(doc.name)" style="margin-left: 10px;">{{ additionalDocsMap.get(doc.name)?.name }}</span>
     </div>
+    <div style="display: flex; justify-content: center; margin-top: 1%;">
+      <button mat-stroked-button matStepperPrevious style="width: 15%;  margin: 1%;  background-color: rgb(212, 212, 212); color: #b42e29;">{{additionalDocumentsLabels.back_button_label}}</button>
+      <button mat-stroked-button type="button" style="background-color: #a47371; color: white; width: 15%;  margin: 1%;"  (click)="saveData()" >Save</button>
+      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" [disabled]="isNextDisabled" matStepperNext >{{additionalDocumentsLabels.next_button_label}}</button>        
+    </div>
 </form>
-
-<div  style="display: flex; justify-content: right; margin-top: 15px;">
-    <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;" >{{additionalDocumentsLabels.back_button_label}}</button>
-    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="adiitionaDocumentsNextClicked()">{{additionalDocumentsLabels.next_button_label}}</button>
-</div>
 
 <ng-template #spinner>
     <!-- Spinner overlay -->

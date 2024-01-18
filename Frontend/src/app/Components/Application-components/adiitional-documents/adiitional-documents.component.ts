@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AdditionalDocumentsLabels } from '../../../Labels/additional-documents-labels';
 import { ApplicationService } from '../../../Services/application.service';
+import { SnackBarService } from '../../../Services/snack-bar.service';
+import { WarningTypes } from '../../../Models/enums/warningEnum';
 
 @Component({
   selector: 'app-adiitional-documents',
@@ -17,15 +19,25 @@ import { ApplicationService } from '../../../Services/application.service';
 })
 export class AdiitionalDocumentsComponent implements AfterViewInit{
 
-  
+  isDataLoading = false;
+  isNextDisabled = true;
+
   additionalDocumentsLabels = new AdditionalDocumentsLabels
-  constructor(private additionalDocumentsService: AdditionalDocumentsService, private applicationService: ApplicationService){     this.isDataLoading = true;  }
+  constructor(private additionalDocumentsService: AdditionalDocumentsService, private applicationService: ApplicationService, private snackBarService: SnackBarService){     
+    this.isDataLoading = true;  }
   ngAfterViewInit(): void {
     this.getAdditionalDocumentsData();
 
   }
 
-  isDataLoading = false;
+  extractedDataChanged(){
+    this.isNextDisabled = true
+    this.snackBarService.openNotSavedYetReminder();
+  
+   }
+  
+  
+
   additionalDocs: DocumentModel[] = [];
   additionalDocsMap = new Map<string, File>();
   
@@ -43,6 +55,8 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
 
   _handleFileUpload(file: File, variableName: string){
     this.additionalDocsMap.set(variableName, file)
+    this.extractedDataChanged()
+
     console.log(this.additionalDocsMap)
   }
 
@@ -53,5 +67,12 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
 
   adiitionaDocumentsNextClicked(){
     this.applicationService.setAdditionalDocuments(this.additionalDocsMap)
+  }
+
+  saveData(){
+
+    this.applicationService.setAdditionalDocuments(this.additionalDocsMap)
+    this.snackBarService.openFor(WarningTypes.dataSaved)
+    this.isNextDisabled = false;
   }
 }

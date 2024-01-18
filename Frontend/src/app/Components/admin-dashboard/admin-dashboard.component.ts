@@ -9,6 +9,7 @@ import { DocumentsComponent } from '../Dashboard-components/documents/documents.
 import { ContactsComponent } from '../Dashboard-components/contacts/contacts.component';
 import { UsersComponent } from '../Dashboard-components/users/users.component';
 import { AdditionalDocumentsComponent } from '../Dashboard-components/additional-documents/additional-documents.component';
+import { FinancialValueComponent } from '../Dashboard-components/financial-value/financial-value.component';
 
 
 
@@ -16,7 +17,7 @@ import { AdditionalDocumentsComponent } from '../Dashboard-components/additional
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent, UsersComponent, AdditionalDocumentsComponent],
+  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent, UsersComponent, AdditionalDocumentsComponent, FinancialValueComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })
@@ -48,6 +49,7 @@ export class AdminDashboardComponent {
     {name: 'Documents'},
     {name: 'Contact'},
     {name: 'Users'},
-    {name: 'Application-Documents'}
+    {name: 'Application-Documents'},
+    {name: 'Minimum-Value'}
   ];
 }

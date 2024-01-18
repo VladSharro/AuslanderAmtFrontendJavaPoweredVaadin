@@ -1,0 +1,44 @@
+<div class="main_div">
+    <mat-card class="card-container">
+        
+        <mat-stepper [linear]="true"  #stepper>
+    
+            <mat-step [completed]="checkFirstStepperChange()" label="{{stepperLabels.basic_data_label}}">
+              <app-basic-data (firstStepperValidityChange)="onCheckFirstStepperChange($event)"></app-basic-data>
+            </mat-step>
+    
+            <mat-step label={{stepperLabels.family_label}}>
+              <app-family-data></app-family-data>
+            </mat-step> 
+    
+            <mat-step [completed]="checkThirdStepperChange()" label={{stepperLabels.residence_Label}}>
+              <app-residence-data (thirdStepperValidityChange)="onCheckThirdStepperChange($event)" ></app-residence-data>
+            </mat-step>
+    
+            <mat-step label={{stepperLabels.stay_renewal_label}}>
+              <app-stay-renewal-data></app-stay-renewal-data> 
+            </mat-step>
+    
+            <mat-step [completed]="checkFifthStepperChange()" label={{stepperLabels.support_label}}>
+              <app-financial-support-data (fifthStepperValidityChange)="onCheckFifthStepperChange($event)" ></app-financial-support-data>
+            </mat-step>
+    
+            <mat-step label={{stepperLabels.offence_label}}>
+              <app-offence-data></app-offence-data>
+            </mat-step>
+    
+            <mat-step label={{stepperLabels.photo_label}}>
+              <app-photo-data></app-photo-data>  
+            </mat-step>
+    
+            <mat-step label={{stepperLabels.additional_documents_label}}>
+              <app-adiitional-documents></app-adiitional-documents>
+            </mat-step>    
+    
+            <mat-step label="{{stepperLabels.done_label}}">
+              <app-done></app-done>
+            </mat-step>
+        </mat-stepper>
+    </mat-card>
+    </div>
+      

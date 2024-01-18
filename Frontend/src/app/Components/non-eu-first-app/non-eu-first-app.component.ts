@@ -20,6 +20,8 @@ import { DoneComponent } from '../Application-components/done/done.component';
 import { AdiitionalDocumentsComponent } from '../Application-components/adiitional-documents/adiitional-documents.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { FamilyDataComponent } from '../Application-components/family-data/family-data.component';
+import { SnackBarService } from '../../Services/snack-bar.service';
+import { DownloadApplicationComponent } from '../../Fixed_components/download-application/download-application.component';
 
 
 
@@ -48,7 +50,8 @@ import { FamilyDataComponent } from '../Application-components/family-data/famil
     OffenceDataComponent,
     PhotoDataComponent,
     AdiitionalDocumentsComponent,
-    DoneComponent
+    DoneComponent,
+    DownloadApplicationComponent
   ],
   templateUrl: './non-eu-first-app.component.html',
   styleUrl: './non-eu-first-app.component.css'
@@ -57,10 +60,50 @@ import { FamilyDataComponent } from '../Application-components/family-data/famil
 
 export class NonEuFirstAppComponent {
 
+  labels = new stepperLabels()
 
-  constructor() {}
+  downloadAppLinkClicked(linkName: string){
+    if (linkName == this.labels.download_application){
+      return ;
+    }
+  }
+
+
+  constructor(private snackBarService: SnackBarService) {}
 
   stepperLabels = new stepperLabels();
+
+  isBasicDataValid = false;
+
+  checkFirstStepperChange() {
+    return this.isBasicDataValid;
+  }
+
+  onCheckFirstStepperChange(isValid: boolean) {
+    this.isBasicDataValid = isValid;
+  }
+
+
+  isResidenceDataValid = false;
+
+  checkThirdStepperChange() {
+    return this.isResidenceDataValid;
+  }
+
+  onCheckThirdStepperChange(isValid: boolean) {
+    this.isResidenceDataValid = isValid;
+  }
+  
+
+  isSupportDataValid = false;
+
+  checkFifthStepperChange() {
+    return this.isSupportDataValid;
+  }
+
+  onCheckFifthStepperChange(isValid: boolean) {
+    this.isSupportDataValid = isValid;
+  }
   
   //////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////// passport section ////////////////////////////

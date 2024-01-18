@@ -10,6 +10,7 @@ export class SupportLabels{
 
     readonly insurance_question = "Do you have health insurance during your stay in Germany?";
     readonly insurance_company_label = "Insurer";
+    readonly insurance_expiry_date_label = "Expiry date"
 
     readonly upload_insurace_document = "Upload Insurance Document";
 
@@ -21,7 +22,9 @@ export class SupportLabels{
     readonly financial_support_option_blocked_account = "Blocked Account Confirmation";
     readonly financial_support_option_scholarship = "Scholarship confirmation";
 
-    readonly upload_financial_support_document_button_label = "Upload Financial_support_Document";
+    readonly noOfMonthsLabel = "Over how many months are your documents sufficient?";
+
+    readonly upload_financial_support_document_button_label = "Upload Financial Support Document";
 
 
     readonly add_new_financial_support_document_button_label = "Add financial support document";

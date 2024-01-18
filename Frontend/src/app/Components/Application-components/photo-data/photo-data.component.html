@@ -1,10 +1,28 @@
-<div style="display: flex; align-items: center;">
-    <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPhotoInput()">{{photoLabels.photo_button_label}} </button>
-    <input id="photoFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="photoUpload($event)">
-    <span *ngIf="photoFile" style="margin-left: 10px;">{{ photoFile.name }}</span>
-  </div>
-
-  <div  style="display: flex; justify-content: right; margin-top: 15px;">
-    <button mat-stroked-button matStepperPrevious style="margin-right: 10px; width: 20%; background-color: white ;color: #b42e29;" >{{photoLabels.back_button_label}}</button>
-    <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="photoNextClicked()">{{photoLabels.next_button_label}}</button>
-  </div>
+<form style="align-items: center; text-align: center; justify-content: center;">
+  
+  <label >
+    In here, you should upload your Biometric photo
+  </label>
+  
+   <div>
+      <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPhotoInput()">{{photoLabels.photo_button_label}} </button>
+      <input id="photoFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="photoUpload($event)">
+      <span *ngIf="photoFile" style="margin-left: 10px;">{{ photoFile.name }}</span>
+    </div>
+    <hr>
+  
+    <label >
+      In here, you should upload your Signature as a photo
+    </label>
+    
+     <div>
+        <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openSignInput()">{{photoLabels.sign_button_label}} </button>
+        <input id="signFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="signUpload($event)">
+        <span *ngIf="signFile" style="margin-left: 10px;">{{ signFile.name }}</span>
+      </div>
+    <div style="display: flex; justify-content: center; margin-top: 1%;">
+      <button mat-stroked-button matStepperPrevious style="width: 15%;  margin: 1%;  background-color: rgb(212, 212, 212); color: #b42e29;">{{photoLabels.back_button_label}}</button>
+      <button mat-stroked-button style="background-color: #a47371; color: white; width: 15%;  margin: 1%;"  (click)="saveData()" >Save</button>
+      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" [disabled]="isNextDisabled" matStepperNext >{{photoLabels.next_button_label}}</button>        
+    </div>
+</form>
