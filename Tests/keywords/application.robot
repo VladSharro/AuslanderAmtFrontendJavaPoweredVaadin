@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     Keywords and base variables for application process testing
 Library           SeleniumLibrary   run_on_failure=None
+Resource          ../resources/common.resource
 Resource          ../resources/application.resource
 
 *** Variables ***
@@ -13,12 +14,16 @@ ${TYPE_SELECT_BUTTON}           xpath://span[contains(text(), "Continue")]
 ${PROGRESS_BAR}                 class:mat-horizontal-stepper-header-container
 
 *** Keywords ***
+Open Browser On Application
+    Open Browser On Home Page
+    Wait Until Element Is Visible        ${START_BUTTON}
+    Click Element                        ${START_BUTTON}
+    Click Element                        ${FIRST_TIME_OPTION}
+    Click Element                        ${TYPE_SELECT_BUTTON}
+
 Select First Time Application
     Wait Until Element Is Visible        ${APPL_TYPE_HEADER}
     Click Element                        ${FIRST_TIME_OPTION}
-    ### DEPRECATED
-    Select NonEU
-    ###
     Click Element                        ${TYPE_SELECT_BUTTON}
     Wait Until Element Is Visible        ${PROGRESS_BAR}
 

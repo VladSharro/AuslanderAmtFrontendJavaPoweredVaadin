@@ -33,6 +33,7 @@ build/
 .vscode/
 
 ### Robot ###
+__pycache__/
 log.html
 report.html
 output.xml

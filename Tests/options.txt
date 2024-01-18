@@ -1,0 +1,6 @@
+--name ASPD23 End-To-End Tests
+--output none
+--report none
+--log none
+ui/home.robot
+ui/basic_info.robot
