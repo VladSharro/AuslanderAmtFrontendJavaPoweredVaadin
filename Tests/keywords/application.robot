@@ -18,8 +18,9 @@ Open Browser On Application
     Open Browser On Home Page
     Wait Until Element Is Visible        ${START_BUTTON}
     Click Element                        ${START_BUTTON}
-    Click Element                        ${FIRST_TIME_OPTION}
-    Click Element                        ${TYPE_SELECT_BUTTON}
+    # Click Element                        ${FIRST_TIME_OPTION}
+    # Click Element                        ${TYPE_SELECT_BUTTON}
+    Select First Time Application
 
 Select First Time Application
     Wait Until Element Is Visible        ${APPL_TYPE_HEADER}
@@ -33,5 +34,19 @@ Select Renewal Application
     Click Element                        ${TYPE_SELECT_BUTTON}
     Wait Until Element Is Visible        ${PROGRESS_BAR}
 
-Select NonEU
-    Click Element                        ${NONEU_OPTION}
+Toggle Override
+    Click Element                ${OVERRIDE_SWITCH}
+
+Override And Go To Next Application Step
+    Scroll Element Into View     ${SAVE_BUTTON}
+    Execute Javascript           window.scrollBy(0, 100)
+    Toggle Override
+    Click Element                ${SAVE_BUTTON}
+    Click Element                ${DISMISS_BUTTON}
+    Click Element                ${NEXT_BUTTON}
+
+Go To Next Application Step
+    Scroll Element Into View     ${SAVE_BUTTON}
+    Click Element                ${SAVE_BUTTON}
+    Click Element                ${DISMISS_BUTTON}
+    Click Element                ${NEXT_BUTTON}

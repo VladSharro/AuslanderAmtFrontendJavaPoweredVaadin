@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation      Info fillout tests
+Documentation      Basic info step tests
 Library            SeleniumLibrary        run_on_failure=None
 Library            ../resources/ApplicationLibrary.py
 Resource           ../resources/common.resource
