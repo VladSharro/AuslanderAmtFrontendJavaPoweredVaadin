@@ -11,6 +11,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ApplicationService } from '../../../Services/application.service';
+import { SnackBarService } from '../../../Services/snack-bar.service';
+import { WarningTypes } from '../../../Models/enums/warningEnum';
 
 @Component({
   selector: 'app-offence-data',
@@ -29,7 +31,11 @@ import { ApplicationService } from '../../../Services/application.service';
 })
 export class OffenceDataComponent {
 
-  constructor(private applicationService: ApplicationService){}
+  isDataLoading = false;
+  isNextDisabled = true;
+
+
+  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
 
   offencesLabel = new offenciesLabels();
 
@@ -58,10 +64,22 @@ yesNoOptions = [this.offencesLabel.yes_option, this.offencesLabel.no_option];
 
 
 nextOffencesClicked(){
-  console.log("Hiii");
   
-  this.applicationService.setOffenceData(this.offencesData.isConvicted, this.offencesData.convictionPlace, this.offencesData.convictionReason, this.offencesData.convictionTypeAndamount, this.offencesData.isUnderInvestigation, this.offencesData.investigationPlace, this.offencesData.investigationAuthority, this.offencesData.isExpelledOrDeported, this.offencesData.expelledFrom, this.offencesData.expelledOn, this.offencesData.isEntryApplicationRejected, this.offencesData.entryRejectedFrom, this.offencesData.entyRejectedOn, this.offencesData.isResidenceApplicationRejected, this.offencesData.residenceRejectedFrom, this.offencesData.residenceRejectedOn)
 }
+
+saveData(){
+
+  this.applicationService.setOffenceData(this.offencesData.isConvicted, this.offencesData.convictionPlace, this.offencesData.convictionReason, this.offencesData.convictionTypeAndamount, this.offencesData.isUnderInvestigation, this.offencesData.investigationPlace, this.offencesData.investigationAuthority, this.offencesData.isExpelledOrDeported, this.offencesData.expelledFrom, this.offencesData.expelledOn, this.offencesData.isEntryApplicationRejected, this.offencesData.entryRejectedFrom, this.offencesData.entyRejectedOn, this.offencesData.isResidenceApplicationRejected, this.offencesData.residenceRejectedFrom, this.offencesData.residenceRejectedOn)
+  this.snackBarService.openFor(WarningTypes.dataSaved)
+  this.isNextDisabled = false;
+}
+
+
+extractedDataChanged(){
+  this.isNextDisabled = true
+  this.snackBarService.openNotSavedYetReminder();
+
+ }
 
 
 

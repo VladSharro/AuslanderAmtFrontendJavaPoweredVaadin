@@ -1,108 +1,124 @@
-<form >
-    <div style="display: flex; align-items: center;">
-      <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPassportInput()">{{basicDataLabels.upload_passport_button_label}} </button>
-    <input id="passportInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="passportUploaded($event)" >
-    <span *ngIf="passportFile" style="margin-left: 10px;">{{ passportFile.name }}</span>
+<form style="align-items: center; text-align: center; justify-content: center;" *ngIf="!isDataLoading; else spinner">
+    <div>
+      <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 2%; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPassportInput()">{{basicDataLabels.upload_passport_button_label}} </button>
+      <input id="passportInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="passportUploaded($event)" ><br>
+      <span *ngIf="passportFile" style="margin-left: 10px;">{{ passportFile.name }}</span>
     </div>
-
-
+    <br>
+    <label>{{basicDataLabels.first_name_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.first_name" >
-      <input class="rounded-input" type="text" name="first_name_field" id="first_name_field" [(ngModel)]="basicData.first_name" placeholder="{{basicDataLabels.first_name_label}}">
-      <label class="placeholder-label">{{basicDataLabels.first_name_label}}</label>
+      <input class="rounded-input" type="text" (change)="extractedDataChanged()" name="first_name_field" id="first_name_field" [(ngModel)]="basicData.first_name" placeholder="{{basicDataLabels.first_name_label}}">
     </div>
 
+    <label class="placeholder-label">{{basicDataLabels.last_name_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.last_name" >
-      <input class="rounded-input" type="text" name="last_name_field" id="last_name_field" [(ngModel)]="basicData.last_name" placeholder="{{basicDataLabels.last_name_label}}">
-      <label class="placeholder-label">{{basicDataLabels.last_name_label}}</label>
+      <input class="rounded-input" type="text" (change)="extractedDataChanged()" name="last_name_field" id="last_name_field" [(ngModel)]="basicData.last_name" placeholder="{{basicDataLabels.last_name_label}}">
     </div>
 
+    <label>{{basicDataLabels.birth_date_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.birth_date" >
-      <input class="rounded-input"  type="date" name="birth_date_field" id="birth_date_field" [(ngModel)]="basicData.birth_date" placeholder="{{basicDataLabels.birth_date_label}}">
-      <label class="placeholder-label">{{basicDataLabels.birth_date_label}}</label>
+      <input class="rounded-input"  type="date" (change)="extractedDataChanged()" name="birth_date_field" id="birth_date_field" [(ngModel)]="basicData.birth_date" placeholder="{{basicDataLabels.birth_date_label}}">
     </div>
 
+    <label>{{basicDataLabels.place_birth_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.place_country" >
-      <input class="rounded-input" type="text" name="place_birth_field" id="place_birth_field" [(ngModel)]="basicData.place_country" placeholder="{{basicDataLabels.place_birth_label}}">
-      <label class="placeholder-label">{{basicDataLabels.place_birth_label}}</label>
+      <input class="rounded-input" type="text" (change)="extractedDataChanged()" name="place_birth_field" id="place_birth_field" [(ngModel)]="basicData.place_country" placeholder="{{basicDataLabels.place_birth_label}}">
     </div>
 
+    <label>{{basicDataLabels.nationality_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.nationality" >
-      <input class="rounded-input" type="text" name="nationality_field" id="nationality_field" [(ngModel)]="basicData.nationality" placeholder="{{basicDataLabels.nationality_label}}">
-      <label class="placeholder-label">{{basicDataLabels.nationality_label}}</label>
+      <input class="rounded-input" type="text" (change)="extractedDataChanged()" name="nationality_field" id="nationality_field" [(ngModel)]="basicData.nationality" placeholder="{{basicDataLabels.nationality_label}}">
     </div>
 
+    <label>{{basicDataLabels.sex_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.sex_type" >
-      <select id="sex_selection" name="set_type" [(ngModel)]="basicData.sex_type" class="custom-select"  [ngClass]="{'palceholder_selector': basicData.sex_type === ''}">
+      <select id="sex_selection" (change)="extractedDataChanged()" name="set_type" [(ngModel)]="basicData.sex_type" class="custom-select"  [ngClass]="{'palceholder_selector': basicData.sex_type === ''}">
         <option value="" disabled selected>{{basicDataLabels.sex_label}}</option>
         <option *ngFor="let sex_option of sexOptions" [value]="sex_option">{{ sex_option }}</option>
       </select>
-      <label class="placeholder-label">{{basicDataLabels.sex_label}}</label>
     </div>
 
+    <label>{{basicDataLabels.martial_status_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.martial_type" >
-      <select id="martial_selection" name="martial_type" [(ngModel)]="basicData.martial_type" class="custom-select"  [ngClass]="{'palceholder_selector': basicData.martial_type === ''}">
+      <select id="martial_selection" name="martial_type" (change)="extractedDataChanged()" [(ngModel)]="basicData.martial_type" class="custom-select"  [ngClass]="{'palceholder_selector': basicData.martial_type === ''}">
         <option value="" disabled selected>{{basicDataLabels.martial_status_label}}</option>
         <option *ngFor="let martial_type_option of martialOptions" [value]="martial_type_option">{{ martial_type_option }}</option>
       </select>
-      <label class="placeholder-label">{{basicDataLabels.eyes_color_label}}</label>
+    </div>
+
+    <label *ngIf="isSinceNeededForMartialStatue()">{{basicDataLabels.since_label}}</label>
+    <div class="rounded-input-container"  *ngIf="isSinceNeededForMartialStatue()" [class.filled]="basicData.since" >
+      <input class="rounded-input" (change)="extractedDataChanged()" type="date" name="since_field" id="since_field" [(ngModel)]="basicData.since" placeholder="{{basicDataLabels.since_label}}">
     </div>
     
-    <div class="rounded-input-container" *ngIf="isSinceNeededForMartialStatue()" [class.filled]="basicData.since" >
-      <input class="rounded-input" type="date" name="since_field" id="since_field" [(ngModel)]="basicData.since" placeholder="{{basicDataLabels.since_label}}">
-      <label class="placeholder-label">{{basicDataLabels.since_label}}</label>
-    </div>
-    
-    
+    <label>{{basicDataLabels.eyes_color_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.eyes_color" >
-      <select id="eyes_selection" name="eye_color" [(ngModel)]="basicData.eyes_color" class="custom-select"  [ngClass]="{'palceholder_selector': basicData.eyes_color === ''}">
+      <select class="custom-select" (change)="extractedDataChanged()" id="eyes_selection" name="eye_color" [(ngModel)]="basicData.eyes_color"   [ngClass]="{'palceholder_selector': basicData.eyes_color === ''}">
         <option value="" disabled selected>{{basicDataLabels.eyes_color_label}}</option>
         <option *ngFor="let eye_color of eyesOptions" [value]="eye_color">{{ eye_color }}</option>
       </select>
-      <label class="placeholder-label">{{basicDataLabels.eyes_color_label}}</label>
     </div>
 
+    <label>{{basicDataLabels.height_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.height" >
-      <input class="rounded-input" type="number" [ngClass]="{'palceholder_selector': basicData.height === 0}" name="height_field" id="height_field" [(ngModel)]="basicData.height" placeholder="{{basicDataLabels.height_label}} ">
-      <label class="placeholder-label">{{basicDataLabels.height_label}}</label>
+      <input class="rounded-input" (change)="extractedDataChanged()" type="number" [ngClass]="{'palceholder_selector': basicData.height === 0}" name="height_field" id="height_field" [(ngModel)]="basicData.height" placeholder="{{basicDataLabels.height_label}} ">
     </div>
 
+    <label>{{basicDataLabels.mobile_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.mobile" >
-      <input class="rounded-input" type="number" name="mobile_field" id="mobile" [(ngModel)]="basicData.mobile" placeholder="{{basicDataLabels.mobile_label}}">
-      <label class="placeholder-label">{{basicDataLabels.mobile_label}}</label>
+      <input class="rounded-input" (change)="extractedDataChanged()" type="number" name="mobile_field" id="mobile" [(ngModel)]="basicData.mobile" placeholder="{{basicDataLabels.mobile_label}}">
     </div>
 
+    <label>{{basicDataLabels.mail_label}}</label>
     <div class="rounded-input-container" [class.filled]="basicData.email" >
-      <input class="rounded-input" type="email" name="email_field" id="email_field" [(ngModel)]="basicData['email']" placeholder="{{basicDataLabels.mail_label}}" email #emailInput="ngModel">
-      <label class="placeholder-label">{{basicDataLabels.mail_label}}</label>
+      <input class="rounded-input" (change)="extractedDataChanged()" type="email" name="email_field" id="email_field" [(ngModel)]="basicData['email']" placeholder="{{basicDataLabels.mail_label}}" email #emailInput="ngModel">
       <span *ngIf="emailInput.invalid" style="margin-left: 25px; color: red;">{{basicDataLabels.inValid_mail_label}}</span>
 
     </div>
 
+    <label>{{basicDataLabels.passoport_number}}</label>
     <div class="rounded-input-container" [class.filled]="passportData.passportNr" >
-        <input class="rounded-input" type="text" name="passport_number_field" id="passport_number_field" [(ngModel)]="passportData.passportNr" placeholder="{{basicDataLabels.passoport_number}}">
-        <label class="placeholder-label">{{basicDataLabels.passoport_number}}</label>
-      </div>
-      <div class="rounded-input-container" [class.filled]="passportData.valid_from" >
-        <input class="rounded-input" type="date" name="passport_valid_from_field" id="passport_valid_from_field" [(ngModel)]="passportData.valid_from" placeholder="{{basicDataLabels.valid_from}}">
-        <label class="placeholder-label">{{basicDataLabels.valid_from}}</label>
-      </div>
-      <div class="rounded-input-container" [class.filled]="passportData.valid_to" >
-        <input class="rounded-input" type="date" name="passport_valid_to_field" id="passport_valid_to_field" [(ngModel)]="passportData.valid_to" placeholder="{{basicDataLabels.valid_to}}">
-        <label class="placeholder-label">{{basicDataLabels.valid_to}}</label>
-      </div>
+        <input class="rounded-input" (change)="extractedDataChanged()" type="text" name="passport_number_field" id="passport_number_field" [(ngModel)]="passportData.passportNr" placeholder="{{basicDataLabels.passoport_number}}">
+    </div>
 
-      <div class="rounded-input-container" [class.filled]="passportData.issued_by" >
-        <input class="rounded-input" type="text" name="passport_issued_by_field" id="passport_issued_by_field" [(ngModel)]="passportData.issued_by" placeholder="{{basicDataLabels.issued_by}}">
-        <label class="placeholder-label">{{basicDataLabels.valid_to}}</label>
-      </div>
-      <div class="rounded-input-container" [class.filled]="passportData.issued_on" >
-        <input class="rounded-input" type="text" name="passport_issued_on_field" id="passport_issued_by_field" [(ngModel)]="passportData.issued_on" placeholder="{{basicDataLabels.issued_on}}">
-        <label class="placeholder-label">{{basicDataLabels.issued_on}}</label>
-      </div>
-        <div  style="display: flex; justify-content: right; margin-top: 15px;">
-            <div  style="display: flex; justify-content: right; margin-top: 5px;">
-                <button mat-stroked-button style="background-color: #b42e29; color: white; width: 20%;" matStepperNext (click)="basicDataNextButtonClicked()" >{{basicDataLabels.next_button_label}}</button>
-            </div>
-        </div>
+    <label>{{basicDataLabels.valid_from}}</label>
+    <div class="rounded-input-container" [class.filled]="passportData.valid_from" >
+        <input class="rounded-input" (change)="extractedDataChanged()" type="date" name="passport_valid_from_field" id="passport_valid_from_field" [(ngModel)]="passportData.valid_from" placeholder="{{basicDataLabels.valid_from}}">
+    </div>
+    <label>{{basicDataLabels.valid_to}}</label>
+    <div class="rounded-input-container" [class.filled]="passportData.valid_to" >
+      <input class="rounded-input" (change)="extractedDataChanged()" type="date" name="passport_valid_to_field" id="passport_valid_to_field" [(ngModel)]="passportData.valid_to" placeholder="{{basicDataLabels.valid_to}}">
+    </div>
+
+    <label>{{basicDataLabels.issued_by}}</label>
+    <div class="rounded-input-container" [class.filled]="passportData.issued_by" >
+      <input class="rounded-input"  (change)="extractedDataChanged()" type="text" name="passport_issued_by_field" id="passport_issued_by_field" [(ngModel)]="passportData.issued_by" placeholder="{{basicDataLabels.issued_by}}">
+    </div>
+
+    <label>{{basicDataLabels.issued_on}}</label>
+    <div class="rounded-input-container" [class.filled]="passportData.issued_on" >
+      <input class="rounded-input" (change)="extractedDataChanged()" type="text" name="passport_issued_on_field" id="passport_issued_on_field" [(ngModel)]="passportData.issued_on" placeholder="{{basicDataLabels.issued_on}}">
+    </div>
+    <div  style="display: flex; justify-content: center; margin-top: 2%">
+      <mat-slide-toggle
+        class="example-margin"
+        color="warn"
+        [checked]="isOverwriteSlideOn == true ? true : false"
+        (change)="overWriteChanged( $event )"
+      >
+        Override
+      </mat-slide-toggle>
+    </div>
+    <div style="display: flex; justify-content: center; margin-top: 1%;">
+      <button mat-stroked-button style="background-color: #a47371; color: white; width: 15%;  margin: 1%;"  (click)="saveData()" >Save</button>
+      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" [disabled]="isNextDiabled" matStepperNext (click)="basicDataNextButtonClicked()" >{{basicDataLabels.next_button_label}}</button>        
+    </div>
 
   </form>
+
+<ng-template #spinner>
+    <!-- Spinner overlay -->
+  <div class="spinner-overlay" [ngClass]="{'custom-spinner-color': isDataLoading}">
+    <mat-spinner color="white" ></mat-spinner>
+  </div>
+</ng-template>

@@ -11,6 +11,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PhotoLabels } from '../../../Labels/Photo_labels';
 import { ApplicationService } from '../../../Services/application.service';
+import { SnackBarService } from '../../../Services/snack-bar.service';
+import { WarningTypes } from '../../../Models/enums/warningEnum';
 
 @Component({
   selector: 'app-photo-data',
@@ -30,11 +32,14 @@ import { ApplicationService } from '../../../Services/application.service';
 })
 export class PhotoDataComponent {
 
-constructor(private applicationService: ApplicationService){}
+  isDataLoading = false;
+  isNextDisabled = true;
+constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
 
 photoLabels = new PhotoLabels();
 
 photoFile: File |  null = null;
+signFile: File | null = null;
 
 
 
@@ -52,18 +57,54 @@ openPhotoInput(){
 
 
 
+signUpload(event: any) {
+  const files: FileList = event.target.files;
+  if (files && files.length > 0) {
+    this.signFile = files[0];
+    console.log(this.signFile.name);
+    this.extractedDataChanged()
+
+  }
+}
+
+openSignInput(){ 
+  // your can use ElementRef for this later
+  const signInput = document.getElementById("signFileInput");
+
+  if (signInput) {
+    signInput.click();
+  } else {
+    console.error("File input element not found");
+    }
+}
+
+
+
+
 photoUpload(event: any) {
   const files: FileList = event.target.files;
   if (files && files.length > 0) {
     this.photoFile = files[0];
     console.log(this.photoFile.name);
-    console.log(2)
+    this.extractedDataChanged()
 
   }
 }
 
 photoNextClicked(){
-  this.applicationService.setPhotoData(this.photoFile);
 }
+
+saveData(){
+
+  this.applicationService.setPhotoData(this.photoFile, this.signFile);
+  this.snackBarService.openFor(WarningTypes.dataSaved)
+  this.isNextDisabled = false;
+}
+
+extractedDataChanged(){
+  this.isNextDisabled = true
+  this.snackBarService.openNotSavedYetReminder();
+
+ }
 
 }

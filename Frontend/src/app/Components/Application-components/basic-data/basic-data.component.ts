@@ -1,28 +1,48 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatStepperModule} from '@angular/material/stepper';
+import {MatStepper, MatStepperModule} from '@angular/material/stepper';
 import { BasicDataLabels } from '../../../Labels/basic_data_labels';
 import { ApplicationService } from '../../../Services/application.service';
-import { OcrService } from '../../../Services/ocr.service';
 import { passportResponse } from '../../../Models/apiResponseModels/Passport';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { WarningTypes } from '../../../Models/enums/warningEnum';
+import { SnackBarService } from '../../../Services/snack-bar.service';
+import { OcrService } from '../../../Services/ocr.service';
+
 
 @Component({
   selector: 'app-basic-data',
   standalone: true,
-  imports: [CommonModule,  FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatStepperModule],
+  imports: [CommonModule, MatProgressSpinnerModule , FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatStepperModule, MatSlideToggleModule],
   templateUrl: './basic-data.component.html',
   styleUrl: './basic-data.component.css'
 })
 export class BasicDataComponent {
 
-  constructor(private _formBuilder: FormBuilder, private applicationService: ApplicationService, private ocrService: OcrService) {}
-  passportFile: File | null = null;
+  @Output() firstStepperValidityChange = new EventEmitter<boolean>();
 
-  isLoading = false
+
+  constructor(private _formBuilder: FormBuilder,private snackBarService: SnackBarService ,private applicationService: ApplicationService, private ocrService: OcrService, private _snackBar: MatSnackBar) {}
+  passportFile: File | null = null;
+  isDataLoading = false;
+
+
+  isNextDiabled = true
+
+  isOverWritten = false;
+  isNextAllowed = false;
+  nextAccepted = false;
+
+
+  isOverwriteSlideOn = false;
+
+  passportExtractedData: passportResponse | undefined;
 
   basicData = {
     first_name: '',
@@ -58,11 +78,11 @@ export class BasicDataComponent {
     // your can use ElementRef for this later
     const passportInput = document.getElementById("passportInput");
 
-if (passportInput) {
-  passportInput.click();
-} else {
-  console.error("File input element not found");
-}
+    if (passportInput) {
+      passportInput.click();
+    } else {
+      console.error("File input element not found");
+    }
 
   }
 
@@ -76,32 +96,54 @@ if (passportInput) {
   }
 
   private async extractData(){
-    this.isLoading = true
+    this.isDataLoading = true
     const extractedData = await this.ocrService.extractPassportData(this.passportFile!);
+    this.isDataLoading = false
     this.updateData(extractedData)
   }
 
   private updateData(extractedData: passportResponse | never[]){
-    this.isLoading = false;
+
     if (extractedData instanceof Array && extractedData.length === 0) {
       // Handle the case where it's an empty array (never[])
-      console.error('Empty passport response array.');
+      this.snackBarService.openFor(WarningTypes.fileError)
       return;
     }else{
       const passportData = extractedData as passportResponse
       this.basicData.last_name = passportData.family_name
       this.basicData.first_name = passportData.first_name
-      this.basicData.birth_date = passportData.date_of_birth
+      this.basicData.birth_date = this.get_date(passportData.date_of_birth)
       this.basicData.nationality = passportData.nationality
       this.basicData.sex_type = passportData.sex
+
+
+      this.passportExtractedData =passportData
+      this.passportExtractedData.date_of_birth = this.get_date(passportData.date_of_birth)
+      console.log(this.passportExtractedData)
+      this.snackBarService.openNotSavedYetReminder();
+
+
+      
     }
     
   }
 
-  basicDataNextButtonClicked(){
-    console.log(this.basicData)
-    this.applicationService.setBasicdata(this.basicData.first_name, this.basicData.last_name, this.basicData.birth_date, this.basicData.sex_type, this.basicData.place_country, this.basicData.nationality, this.basicData.martial_type, this.basicData.since, this.basicData.eyes_color, this.basicData.height, this.basicData.mobile, this.basicData.email)
-    this.applicationService.setPassportData(this.passportData.passportNr, this.passportData.valid_from, this.passportData.valid_to, this.passportData.issued_by, this.passportData.issued_on, this.passportFile)
+  get_date(datebirth: string):string{
+    
+    return new Date(datebirth).toISOString().slice(0, 10)
+  }
+
+  basicDataNextButtonClicked(stepper?: MatStepperModule){
+    if(!this.nextAccepted){
+      if(!this.isNextAllowed){
+        this.snackBarService.openFor(WarningTypes.confirmNeeded);
+      }
+    }
+    // this.nextAccepted = false;
+    this.isNextDiabled = true;
+    // this.firstStepperValidityChange.emit(false);
+
+
   }
 
   isPartnerDataNeeded(): boolean{
@@ -121,5 +163,91 @@ if (passportInput) {
   }
 
 
+  overWriteChanged(event: any){
+    if(event.checked){
+      this.isOverwriteSlideOn = true
+      this.isOverWritten = true
+      this.isNextAllowed = true
+      this.firstStepperValidityChange.emit(true);
+
+    }else{
+      this.isOverwriteSlideOn = false;
+      this.isOverWritten = false
+      this.isNextAllowed = false
+    }
+  }
+  
+  checkIfDataOverwritten(){
+    if(this.passportExtractedData != undefined){
+    if(this.basicData.last_name == this.passportExtractedData?.family_name){
+      if(this.basicData.first_name == this.passportExtractedData?.first_name){
+        if(this.basicData.nationality == this.passportExtractedData?.nationality){
+          if(this.basicData.sex_type == this.passportExtractedData?.sex){
+            if(this.basicData.birth_date == this.passportExtractedData.date_of_birth){
+              return false;
+            }
+          }
+        }
+      }
+    }
+    }
+    return true;
+  }
+
+
+   checkIfNext(){
+    if(this.isNextAllowed){
+
+      this.firstStepperValidityChange.emit(true);
+      return
+    }
+
+    this.isOverWritten = this.checkIfDataOverwritten();
+    console.log(this.isOverWritten)
+      if(this.isOverWritten == false){
+        this.nextAccepted = true;
+      }else{
+        if(this.isNextAllowed){
+        this.nextAccepted = true
+        }
+      } 
+    if(!this.nextAccepted){
+      console.log(1)
+
+      console.log(this.nextAccepted)
+      this.firstStepperValidityChange.emit(this.nextAccepted);
+
+    }else{
+      console.log(2)
+
+      console.log(this.nextAccepted)
+
+      this.firstStepperValidityChange.emit(this.nextAccepted);
+    }
+   }
+
+
+   extractedDataChanged(){
+    this.firstStepperValidityChange.emit(false);
+    this.isNextDiabled = true
+    this.snackBarService.openNotSavedYetReminder();
+
+   }
  
+
+
+   
+
+  saveData(){
+    console.log(this.basicData)
+    this.isOverWritten= false
+    this.nextAccepted = false
+    // this.isNextAllowed = false
+
+    this.applicationService.setBasicdata(this.basicData.first_name, this.basicData.last_name, this.basicData.birth_date, this.basicData.sex_type, this.basicData.place_country, this.basicData.nationality, this.basicData.martial_type, this.basicData.since, this.basicData.eyes_color, this.basicData.height, this.basicData.mobile, this.basicData.email)
+    this.applicationService.setPassportData(this.passportData.passportNr, this.passportData.valid_from, this.passportData.valid_to, this.passportData.issued_by, this.passportData.issued_on, this.passportFile)
+    this.checkIfNext();
+    this.snackBarService.openFor(WarningTypes.dataSaved)
+    this.isNextDiabled = false
+  }
 }

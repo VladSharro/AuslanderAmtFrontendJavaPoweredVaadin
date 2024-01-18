@@ -3,6 +3,30 @@ import { Application } from '../Models/Application';
 import { Child } from '../Models/Child';
 import { BasicDataLabels } from '../Labels/basic_data_labels';
 import { FinancialDocument } from '../Models/FinancialDocument';
+import { Sex } from '../Models/BackendModels/Sex';
+import { PlaceOfResidence } from '../Models/BackendModels/PlaceOfResidence';
+import { UserPersonalData } from '../Models/BackendModels/UserPersonalData';
+import { MaritalStatus } from '../Models/BackendModels/MaritalStatus';
+import { ColourOfEyes } from '../Models/BackendModels/ColourOfEyes';
+import { PassportType } from '../Models/BackendModels/PassportType';
+import { PreviousStaysInGermany } from '../Models/BackendModels/PreviousStaysInGermany';
+import { PlaceOfResidenceAbroad } from '../Models/BackendModels/PlaceOfResidenceAbroad';
+// import { file, forEach } from 'jszip';
+import { PurposeOfStayInGermany } from '../Models/BackendModels/PurposeOfStayInGermany';
+import { TrainingTypes } from '../Models/BackendModels/TrainingTypes';
+import { JobSeekingType } from '../Models/BackendModels/JobSeekingType';
+import { GainfulEmploymentType } from '../Models/BackendModels/GainfulEmploymentType';
+import { ReasonsDefinedUnderInternationalLaw } from '../Models/BackendModels/ReasonsDefinedUnderInternationalLaw';
+import { ApplicationForExhibitionType } from '../Models/BackendModels/ApplicationForExhibitionType';
+import { FamilyReasonType } from '../Models/BackendModels/FamilyReasonType';
+import { SpecialResidenceRightsType } from '../Models/BackendModels/SpecialResidenceRightsType';
+import { BenefitsUnderSocialLaw } from '../Models/BackendModels/BenefitsUnderSocialLaw';
+import { HealthInsuranceInfo } from '../Models/BackendModels/HealthInsuranceInfo';
+import { OffencesInfo } from '../Models/BackendModels/OffencesInfo';
+import { Location } from '../Models/BackendModels/Location';
+import { idToken } from '@angular/fire/auth';
+import { ResidencePermitValidity } from '../Models/BackendModels/ResidencePermitValidity';
+import { FinalForm } from '../Models/BackendModels/FinalForm';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +34,14 @@ import { FinancialDocument } from '../Models/FinancialDocument';
 export class ApplicationService {
 
   constructor() { }
-
+  
   private applicationData = new Application()
   private basicDataLabels = new BasicDataLabels()
+
+  getApplicationData(){
+    console.log(this.applicationData)
+    return this.applicationData;
+  }
 
   setBasicdata(first_name: string, last_name: string, birth_date: string, sex_type: string, place_country: string, nationality: string, martial_type: string, since: string, eyes_color: string, height: number, mobile: string, email: string){
 
@@ -138,16 +167,26 @@ export class ApplicationService {
 
   }
 
-  setFinancialDocumentsData(meansOfSupport: string, isSecondOrTwelfth: string, supportTyeIfYes: string, isInsuranceAvailable: string, insuranceCompany: string, finalValueOfFinancialSupport: number, financialSupportFiles: FinancialDocument[], insuranceFile: File | null){
+  setStayRenewalData(purposeOfStay: string, PurposeChanged: string){
+    
+    this.applicationData.purposeOfStay = purposeOfStay;
+    this.applicationData.PurposeChanged = PurposeChanged;
+
+  }
+
+  setFinancialDocumentsData(meansOfSupport: string, isSecondOrTwelfth: string, supportTyeIfYes: string, isInsuranceAvailable: string, insuranceCompany: string, insuranceExpiryDate:string,finalValueOfFinancialSupport: number, financialSupportFiles: FinancialDocument[],noOfMonths: number , insuranceFile: File | null){
 
     this.applicationData.meansOfSupport = meansOfSupport
     this.applicationData.isSecondOrTwelfth = isSecondOrTwelfth
     this.applicationData.supportTyeIfYes = supportTyeIfYes
     this.applicationData.isInsuranceAvailable = isInsuranceAvailable
     this.applicationData.insuranceCompany = insuranceCompany
+    this.applicationData.insuranceExpiryDate = insuranceExpiryDate
     this.applicationData.finalValueOfFinancialSupport = finalValueOfFinancialSupport
     this.applicationData.financialSupportFiles = financialSupportFiles
+    this.applicationData.noOfMonths = noOfMonths;
     this.applicationData.insuranceFile = insuranceFile
+    
 
   }
 
@@ -172,11 +211,199 @@ export class ApplicationService {
 
   }
 
-  setPhotoData(photoFile: File | null){
+  setPhotoData(photoFile: File | null, signatureFile: File | null){
     this.applicationData.photoFile = photoFile;
+    this.applicationData.signatureFile = signatureFile;
   }
 
   setAdditionalDocuments(additionalDocuments: Map<string, File>){
     this.applicationData.additionalDocs = additionalDocuments
   }
+
+  generateDocumentsFrom(){
+    if(this.applicationData.passportFile !=null){
+      this.applicationData.additionalDocs.set("Passport", this.applicationData.passportFile)
+    }
+    if(this.applicationData.insuranceFile != null){
+      this.applicationData.additionalDocs.set("insurance", this.applicationData.insuranceFile)
+
+    }
+    if(this.applicationData.visaFile != null){
+      this.applicationData.additionalDocs.set("visa", this.applicationData.visaFile)
+    }
+
+    if(this.applicationData.photoFile != null){
+      this.applicationData.additionalDocs.set("photo", this.applicationData.photoFile)
+    }
+    if(this.applicationData.enrollmentCertificateFile != null){
+      this.applicationData.additionalDocs.set("enrollment", this.applicationData.enrollmentCertificateFile)
+    }
+    if(this.applicationData.registrationFile != null){
+      this.applicationData.additionalDocs.set("registration", this.applicationData.registrationFile)
+    }
+
+    if(this.applicationData.financialSupportFiles.length > 0){
+      let index = 1
+      this.applicationData.financialSupportFiles.forEach( (doc) =>{
+        if(doc.file != null){
+          this.applicationData.additionalDocs.set(doc.fileType+index, doc.file)
+          index ++
+        }
+
+      });
+    }
+
+    return this.applicationData.additionalDocs
+  }
+
+  generateFinalForm(){
+
+    const firstName = this.applicationData.first_name
+    const familyName = this.applicationData.last_name
+    const birthDate = this.applicationData.birth_date
+    const placeOfBirth = this.applicationData.place_country
+    const nationalities = this.applicationData.nationality.split(" ")
+    const sex = this.getSexEnum(this.applicationData.sex_type)
+    
+    const postalCode = ""
+    const place= ""
+    const street = this.applicationData.placeOfResidence
+    const houseNumber = ""
+
+    const placeOfResidenceInGermany = new PlaceOfResidence(postalCode, place, street, houseNumber)
+    const userPersonalData = new UserPersonalData(firstName, [], familyName, birthDate, placeOfBirth, nationalities, sex, placeOfResidenceInGermany)
+    const martialStatus = this.getMartialTypeEnum(this.applicationData.martial_type)
+    const martialStatusSince = this.applicationData.since
+    const eyesColor = this.getEyesColorEnum(this.applicationData.eyes_color).toString()
+    const height = String(this.applicationData.height)
+    const mobileNumber = this.applicationData.mobile
+    const email = this.applicationData.email
+    const passportType = PassportType.PASSPORT
+    const customPassportType = ""
+    const passportNumber = this.applicationData.passportNr
+    const passportValidFrom = this.applicationData.valid_from
+    const passpoerValidTo = this.applicationData.valid_to
+    const issuedBy = this.applicationData.issued_by
+    const issuedOn = this.applicationData.issued_on
+    const isPreviousStaysInGermany = this.applicationData.isPreviousStays == "Yes" ? true : false
+    const previousStayInGermany = new PreviousStaysInGermany(this.applicationData.dateFrom, this.applicationData.dateTo ,"","", this.applicationData.previousStayAddress, "")
+    const isPlaceOfResidenceAbroadRetains = this.applicationData.isResidenceAbroadRetained == "Yes" ? true: false
+    const placeOfResidenceAbroad = new PlaceOfResidenceAbroad(this.applicationData.residenceAbroadIfRetained, "", "", "", "")
+    const partnerPersonalData = new UserPersonalData(this.applicationData.partnerLastName, [],  this.applicationData.partnerFirstName, this.applicationData.partnerDateOfBirth, this.applicationData.partnerPlaceOfBirth, this.applicationData.partnerNationality.split(" "), this.getSexEnum(this.applicationData.partnerSex), new PlaceOfResidence("", "", this.applicationData.partnerCurrentResidenceInGermany, ""))
+    const childrenPersonalData: UserPersonalData[] = []
+
+    this.applicationData.childern.forEach((child) => {
+      const childPersonalData = new UserPersonalData(child.lastName, [], child.firstName, child.dateOfBirth, child.placeOfBirth, child.nationality.split(" "), this.getSexEnum(child.sex), new PlaceOfResidence("", "", child.currentPlaceOfResidence, ""))
+      childrenPersonalData.push(childPersonalData)
+    });
+    const motherPersonalData = new UserPersonalData(this.applicationData.motherLastName, [], this.applicationData.motherFisrtName, this.applicationData.motherDateOfBirthForMinors, this.applicationData.motherPlaceOfBirthForMinors, this.applicationData.motherNationality.split(" "), this.getSexEnum("F"), new PlaceOfResidence("", "", this.applicationData.motherCurrentResidenceForMinors, ""))
+    const fatherPersonalData = new UserPersonalData(this.applicationData.fatherLastName, [], this.applicationData.fatherFisrtName, this.applicationData.fatherDateOfBirthForMinors, this.applicationData.fatherPlaceOfBirthForMinors, this.applicationData.fatherNationality.split(" "), this.getSexEnum("F"), new PlaceOfResidence("", "", this.applicationData.fatherCurrentResidenceForMinors, ""))
+    const purposeOfStayInGermany = new PurposeOfStayInGermany(true, this.applicationData.PurposeChanged)
+    const trainingTypes = TrainingTypes.STUDIES
+    const jobSeekingType = JobSeekingType.AFTER_COMPLETING_STUDIES
+    const employer = ""
+    const gainfulEmploymentType = GainfulEmploymentType.HIGHLY_QUALIFIED_PERSON
+    const reasonsDefinedUnderInternationalLaw = ReasonsDefinedUnderInternationalLaw.ADMISSION_FROM_FOREIGN_COUNTRY
+    const applicationForExhibitionType = ApplicationForExhibitionType.ID_CARD_REPLACEMENT
+    const applicationForExhibitionsReason = ""
+    const familyReasonType = FamilyReasonType.TO_JOIN_GERMAN_PARENTS
+    const specialResidenceRightsType = SpecialResidenceRightsType.RESIDENCE_TITLE_FOR_FORMER_GERMANS
+    const meansOfSupport = ""
+    let needsBenefitsUnderSocialLaw = false
+    const benefitsUnderSocialLaw = this.getBenefitsUnderSocialLawEnum(this.applicationData.isSecondOrTwelfth)
+    
+    const healthInsuranceInfo = new HealthInsuranceInfo(this.applicationData.isInsuranceAvailable == "Yes" ? true : false, this.applicationData.insuranceCompany)
+    let convictedType =""
+    let convicedAmount = ""
+    if(this.applicationData.convictionTypeAndamount != ""){
+      if(this.applicationData.convictionTypeAndamount.split(" ").length > 1){
+        convicedAmount = this.applicationData.convictionTypeAndamount.split(" ")[1]
+      }
+      convictedType = this.applicationData.convictionTypeAndamount.split(" ")[0]
+    }
+    const offencesInfo = new OffencesInfo(this.applicationData.isConvicted == "Yes" ? true : false , this.getLocationEnum(this.applicationData.convictionReason).toString(), convictedType, convicedAmount, this.applicationData.isUnderInvestigation == "Yes" ? true : false, this.getLocationEnum(this.applicationData.investigationPlace).toString(), this.applicationData.investigationAuthority, this.applicationData.isExpelledOrDeported == "Yes" ? true : false, this.applicationData.expelledFrom, this.applicationData.expelledOn, this.applicationData.isEntryApplicationRejected == "Yes" ? true: false, this.applicationData.entryRejectedFrom, this.applicationData.entyRejectedOn, this.applicationData.isResidenceApplicationRejected == "Yes"? true : false, this.applicationData.residenceRejectedFrom, this.applicationData.residenceRejectedOn)
+    const residencePermitValidity = new ResidencePermitValidity(0,0,0);
+    const applicationPlace = "Passau"
+
+    return new FinalForm(userPersonalData,martialStatus, martialStatusSince, eyesColor, height, mobileNumber, email,passportType, customPassportType, passportNumber, passportValidFrom, passpoerValidTo, issuedBy, issuedOn, isPreviousStaysInGermany, previousStayInGermany, isPlaceOfResidenceAbroadRetains, placeOfResidenceAbroad, partnerPersonalData, childrenPersonalData, motherPersonalData, fatherPersonalData, purposeOfStayInGermany, trainingTypes, jobSeekingType, employer, gainfulEmploymentType, reasonsDefinedUnderInternationalLaw, applicationForExhibitionType, applicationForExhibitionsReason, familyReasonType, specialResidenceRightsType, meansOfSupport, needsBenefitsUnderSocialLaw, benefitsUnderSocialLaw, healthInsuranceInfo, offencesInfo, residencePermitValidity, applicationPlace )
+  }
+
+  getSignature(){
+    return this.applicationData.signatureFile
+  }
+
+  getLocationEnum(place: string){
+    switch (place){
+      case "In Germany":
+        return Location.IN_GERMANY
+      case "Abroad":
+        return Location.ABROAD
+
+      default:
+        return Location.IN_GERMANY
+    }
+  }
+
+  getBenefitsUnderSocialLawEnum(benefit: string){
+    switch(benefit){
+      case "Social welfare benefits":
+        return BenefitsUnderSocialLaw.SOCIAL_WELFARE_BENEFIT
+      case "Basic support for employment seekers (Unemployment Benefit Scheme II":
+        return BenefitsUnderSocialLaw.BASIC_SUPPORT_FOR_EMPLOYMENT_SEEKERS
+      default:
+        return BenefitsUnderSocialLaw.SOCIAL_WELFARE_BENEFIT
+    }
+  }
+
+
+  getEyesColorEnum(color: string){
+    switch(color){
+      case "blue":
+        return ColourOfEyes.BLUE
+      case "green":
+        return ColourOfEyes.GREEN
+      case "brown":
+        return ColourOfEyes.BROWN
+      case "grey":
+        return ColourOfEyes.GREY
+     
+      default:
+        return ColourOfEyes.BLUE
+    }
+  }
+
+  getMartialTypeEnum(martialType: String){
+    switch(martialType){
+      case "single":
+        return MaritalStatus.SINGLE
+      case "Married":
+        return MaritalStatus.MARRIED
+      case "Living in registered partenership":
+        return MaritalStatus.LIVING_IN_REGISTERED_PARTNERSHIP
+      case "Divorced":
+        return MaritalStatus.DIVORCED
+      case "Widowed":
+        return MaritalStatus.WIDOWED
+      case "Separated":
+        return MaritalStatus.SEPARATED
+      default:
+        return MaritalStatus.SINGLE
+    }
+  }
+
+  getSexEnum(sex: string){
+    switch (sex) {
+      case "M":
+        return Sex.MALE
+      case "F":
+          return Sex.FEMALE
+      case "D":
+        return Sex.DIVERSITY
+      default:
+        return Sex.DIVERSITY
+
+    }
+  }
+
+
 }

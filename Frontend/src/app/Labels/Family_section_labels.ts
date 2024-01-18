@@ -1,4 +1,4 @@
-export class familyLabels{
+        export class familyLabels{
 
     readonly isHusbandOrWifeRegistered="Do you have Husband/wife registered partner pursuant to LPartG (Partnership Act)?";
     readonly partnerOrKidLastNames = "Family name, previous name(s)";

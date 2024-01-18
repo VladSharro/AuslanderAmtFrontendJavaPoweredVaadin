@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { MissingDataDialogueComponent } from '../../Dialogues/missing-data-dialogue/missing-data-dialogue.component';
+import { SnackBarService } from '../../Services/snack-bar.service';
+import { WarningTypes } from '../../Models/enums/warningEnum';
 
 
 
@@ -25,10 +25,10 @@ import { MissingDataDialogueComponent } from '../../Dialogues/missing-data-dialo
 
 export class StartApplicationComponent {
 
-  constructor(private router: Router, public dialog: MatDialog){}
+  constructor(private router: Router, private snackBarService: SnackBarService){}
   
-    isFirstTime = new Boolean
-    isEuCitizen = new Boolean
+    isFirstTime = false
+    isRenew = false;
   
   applicationLabels = new ApplicationTypeLabels()
 
@@ -42,16 +42,12 @@ export class StartApplicationComponent {
 
   onSubmit() {
   if (this.validateInput()) {
-    this.navigateToProperApplication(this.isFirstTime)
+  
+    this.navigateToProperApplication()
   }
   else{
-    if (this.applicationType == ''){
-      this.openMissingDataDialogue('application', '2000ms', '1500ms')
-    }
-      else{
-        this.openMissingDataDialogue('ERROR',  '2000ms', '1500ms')
-      }
     
+    this.snackBarService.openFor(WarningTypes.missingApplicationType);
 
   }
 
@@ -64,7 +60,7 @@ export class StartApplicationComponent {
         this.isFirstTime = true;
         break;
       case this.applicationLabels.application_type_extension_option:
-        this.isFirstTime = false;
+        this.isRenew = true              
         break;
 
       default:
@@ -76,20 +72,14 @@ export class StartApplicationComponent {
   }
 
 
-  openMissingDataDialogue(missinData: string, enterAnimationDuration: string, exitAnimationDuration: string){
-    this.dialog.open(MissingDataDialogueComponent, {
-      data: {
-        problem: missinData
-      },
-      enterAnimationDuration,
-      exitAnimationDuration
-    });
-  }
+  
 
-
-  navigateToProperApplication(isFirstTime: Boolean){
-      if(isFirstTime){
+  navigateToProperApplication(){
+      if(this.isFirstTime){
         this.router.navigateByUrl('nonEuFirstTimeApp')
+      }
+      if(this.isRenew){
+        this.router.navigateByUrl('nonEuRenewApp')
       }
   }
 

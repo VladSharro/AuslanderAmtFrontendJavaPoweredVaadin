@@ -76,6 +76,7 @@ export class Application{
     visaValidTo = ''
     lengthOfStay = ''
     purposeOfStay = ''
+    PurposeChanged = ''
 
     ////////////////////////
 
@@ -84,7 +85,9 @@ export class Application{
     supportTyeIfYes = ''
     isInsuranceAvailable = ''
     insuranceCompany = ''
+    insuranceExpiryDate = ''
     finalValueOfFinancialSupport = 0
+    noOfMonths = 0
 
 
     financialSupportFiles: FinancialDocument[] = [];
@@ -115,6 +118,7 @@ export class Application{
 
 
     photoFile: File |  null = null;
+    signatureFile: File | null = null;
 
 
     ///////////////////////////////////

@@ -3,24 +3,24 @@
     
     <mat-stepper [linear]="true"  #stepper>
 
-        <mat-step label="{{stepperLabels.basic_data_label}}">
-          <app-basic-data></app-basic-data>
+        <mat-step [completed]="checkFirstStepperChange()" label="{{stepperLabels.basic_data_label}}">
+          <app-basic-data (firstStepperValidityChange)="onCheckFirstStepperChange($event)"></app-basic-data>
         </mat-step>
 
         <mat-step label={{stepperLabels.family_label}}>
           <app-family-data></app-family-data>
         </mat-step> 
 
-        <mat-step label={{stepperLabels.residence_Label}}>
-          <app-residence-data></app-residence-data>
+        <mat-step [completed]="checkThirdStepperChange()" label={{stepperLabels.residence_Label}}>
+          <app-residence-data (thirdStepperValidityChange)="onCheckThirdStepperChange($event)" ></app-residence-data>
         </mat-step>
 
         <mat-step label={{stepperLabels.stay_label}}>
           <app-stay-data></app-stay-data>
         </mat-step>
 
-        <mat-step label={{stepperLabels.support_label}}>
-          <app-financial-support-data></app-financial-support-data>
+        <mat-step [completed]="checkFifthStepperChange()" label={{stepperLabels.support_label}}>
+          <app-financial-support-data (fifthStepperValidityChange)="onCheckFifthStepperChange($event)" ></app-financial-support-data>
         </mat-step>
 
         <mat-step label={{stepperLabels.offence_label}}>
