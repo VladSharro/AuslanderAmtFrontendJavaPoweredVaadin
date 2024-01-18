@@ -4,7 +4,7 @@ mail:
   ssl-enable: true
   auth-enable: true
 
-  sender-mail-address: "test@gmail.com"
+  sender-mail-address: "mail.adress.for.mail.sending@gmail.com"
   sender-password: "test"
   abh-mail-address: "test@ads.uni-passau.de"
 
