@@ -45,7 +45,7 @@ def extract_name_and_surname(encoded_image):
     #    img = cv2.imread(image_path)    
 
 
-    img = cv2.imread(image_path)    
+    img = cv2.imread(encoded_image)    
 
 
     #numpy_array = np.frombuffer(image_data, np.uint8)
