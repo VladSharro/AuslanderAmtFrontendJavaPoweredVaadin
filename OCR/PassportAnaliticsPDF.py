@@ -123,8 +123,6 @@ def extract_name_and_surname(encoded_image):
     if nationality in ['ALB', 'DZA', 'AND', 'RUS', 'UKR']:
         start_date = (issue_date - relativedelta(years=10)).strftime("%d/%m/%y")
 
-        #start_date = start_date.strftime("%d/%m/%y")
-        #print(start_date)
 
     if nationality in ['PRT', 'IRN', 'TUN']:
         start_date = (issue_date - relativedelta(years=5)).strftime("%d/%m/%y")
