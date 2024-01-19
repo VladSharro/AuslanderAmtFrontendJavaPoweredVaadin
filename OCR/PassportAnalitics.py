@@ -1,4 +1,5 @@
 from io import BytesIO
+import os
 
 import cv2
 import pytesseract
