@@ -47,7 +47,7 @@ def extract_name_and_surname(encoded_image):
     img = Image.open(BytesIO(img_data))
     img = np.array(img)
 
-    numpy_array = np.frombuffer(image_data, np.uint8)
+    #numpy_array = np.frombuffer(image_data, np.uint8)
     #img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
 
     country_dict = {country.alpha_3: country.name for country in pycountry.countries}
