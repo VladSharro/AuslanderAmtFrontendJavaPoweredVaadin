@@ -8,6 +8,9 @@ import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.google.common.collect.Sets;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import lombok.extern.log4j.Log4j;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -42,10 +45,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j
 public class GenerateReportService {
 
     private final MailConfig mailConfig;
     private final OCRConfig OCRConfig;
+
+    private static final Logger logger = LogManager.getLogger(GenerateReportService.class);
 
     @Autowired
     public GenerateReportService(MailConfig mailConfig, OCRConfig OCRConfig) {
@@ -55,6 +61,7 @@ public class GenerateReportService {
 
     public PassportDataResponseDto getDataFromPassport(MultipartFile passportImage)
             throws IOException, InterruptedException {
+        logger.info("Attempt to process file {} with OCR", passportImage);
         String line = processWithOCR(passportImage, OCRConfig.getPassportAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
@@ -726,6 +733,8 @@ public class GenerateReportService {
         ProcessBuilder processBuilder = new ProcessBuilder("python3", pathToFile);
         processBuilder.environment().put("IMAGE_DATA", encodedImage);
         processBuilder.redirectErrorStream(true);
+
+        logger.info("Run OCR file {} with parameters {}", pathToFile, processBuilder.environment().keySet());
 
         Process process = processBuilder.start();
         process.waitFor();
