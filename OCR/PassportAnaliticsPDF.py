@@ -27,12 +27,15 @@ def process_string(input_string):
 
 def extract_name_and_surname(encoded_image):
     # Decode the Base64-encoded image data
+
     decoded_pdf = base64.b64decode(encoded_image)
-    pdf_stream = io.BytesIO(decoded_pdf)
+
+
+    doc = fitz.open(stream=pdf_stream, filetype="pdf")
 
 
 
-    doc = fitz.open(pdf_stream)
+    #doc = fitz.open(pdf_stream)
     page = doc[0]
     pix = page.get_pixmap()
     img_data = pix.tobytes("jpg")
