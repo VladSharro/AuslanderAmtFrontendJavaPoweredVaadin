@@ -35,7 +35,7 @@ def extract_name_and_surname(encoded_image):
     doc = fitz.open(pdf_stream)
     page = doc[0]
     pix = page.get_pixmap()
-    img_data = pix.tobytes("png")
+    img_data = pix.tobytes("jpg")
     img = Image.open(BytesIO(img_data))
     img = np.array(img)
 
