@@ -4,7 +4,7 @@ import os
 import cv2
 import pytesseract
 import re
-import tkinter as tk
+#import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import fitz  # PyMuPDF
