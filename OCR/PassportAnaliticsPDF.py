@@ -27,10 +27,20 @@ def process_string(input_string):
 
 def extract_name_and_surname(encoded_image):
     # Decode the Base64-encoded image data
-    image_data = base64.b64decode(encoded_image)
+    decoded_pdf = base64.b64decode(encoded_image)
+    pdf_stream = io.BytesIO(decoded_pdf)
+
+
+
+    doc = fitz.open(pdf_stream)
+    page = doc[0]
+    pix = page.get_pixmap()
+    img_data = pix.tobytes("png")
+    img = Image.open(BytesIO(img_data))
+    img = np.array(img)
 
     numpy_array = np.frombuffer(image_data, np.uint8)
-    img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
+    #img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
 
     country_dict = {country.alpha_3: country.name for country in pycountry.countries}
 
