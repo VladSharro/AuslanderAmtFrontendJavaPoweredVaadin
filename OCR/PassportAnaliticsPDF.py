@@ -77,8 +77,8 @@ def extract_name_and_surname(encoded_image):
 
         #i = i + 1
 
-    image_stream = BytesIO(image_data)
-    mrz = read_mrz(image_stream)
+    #image_stream = BytesIO(image_data)
+    mrz = read_mrz(encoded_image)
 
     mrz_data = mrz.to_dict()
 
