@@ -30,19 +30,22 @@ def extract_name_and_surname(encoded_image):
     #image_data = base64.b64decode(encoded_image)
 
 
-    mime_type, _ = mimetypes.guess_type(image_path)
+     #mime_type, _ = mimetypes.guess_type(image_path)
 
 
-    if mime_type == 'application/pdf':
-        doc = fitz.open(image_path)
-        page = doc[0]
-        pix = page.get_pixmap()
-        img_data = pix.tobytes("png")
-        img = Image.open(BytesIO(img_data))
-        img = np.array(img)
+    #if mime_type == 'application/pdf':
+    #    doc = fitz.open(image_path)
+    #    page = doc[0]
+    #    pix = page.get_pixmap()
+    #    img_data = pix.tobytes("png")
+    #    img = Image.open(BytesIO(img_data))
+    #    img = np.array(img)
 
-    elif mime_type in ['image/png', 'image/jpeg']:
-        img = cv2.imread(image_path)    
+    #elif mime_type in ['image/png', 'image/jpeg']:
+    #    img = cv2.imread(image_path)    
+
+
+    img = cv2.imread(image_path)    
 
 
     #numpy_array = np.frombuffer(image_data, np.uint8)
