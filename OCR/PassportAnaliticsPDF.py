@@ -13,6 +13,9 @@ import fitz  # PyMuPDF
 import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
+import pycountry
+
+
 
 
 def process_string(input_string):
