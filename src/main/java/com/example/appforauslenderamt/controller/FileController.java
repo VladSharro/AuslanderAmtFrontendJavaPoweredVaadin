@@ -80,10 +80,14 @@ public class FileController {
                     "generate application form")
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CrossOrigin
-    public ResponseEntity<byte[]> generateApplicationForm(@RequestPart("documents") MultipartFile[] documents,
-                                                          @RequestPart("signature_image") MultipartFile signatureImage,
-                                                          @RequestPart("user_data") UserDataRequestDto userData)
-            throws IOException, ScriptException, InterruptedException, DocumentException, com.lowagie.text.DocumentException {
+    public ResponseEntity<byte[]> generateApplicationForm(@RequestPart(name = "documents", required = false)
+                                                                      MultipartFile[] documents,
+                                                          @RequestPart(name = "signature_image", required = false)
+                                                                  MultipartFile signatureImage,
+                                                          @RequestPart(name = "user_data", required = false)
+                                                                      UserDataRequestDto userData)
+            throws IOException, ScriptException, InterruptedException, DocumentException,
+            com.lowagie.text.DocumentException {
 
         byte[] pdfContent = generateReportService.generatePdfFromHtml(userData, documents, signatureImage);
 
@@ -98,7 +102,7 @@ public class FileController {
             notes = "Takes user's application form and sends it to Auslenderamt")
     @PostMapping(value = "/send_email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CrossOrigin
-    public ResponseEntity<Void> generateApplicationForm(@RequestPart("documents") MultipartFile document,
+    public ResponseEntity<Void> generateApplicationForm(@RequestPart("document") MultipartFile document,
                                                         @RequestPart(name = "user_email_address", required = false)
                                                                 String userEmailAddress) {
         generateReportService.sendEmail(document, userEmailAddress);
