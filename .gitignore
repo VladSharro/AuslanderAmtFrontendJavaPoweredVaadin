@@ -37,3 +37,6 @@ __pycache__/
 log.html
 report.html
 output.xml
+
+### Protected ###
+application.yaml
