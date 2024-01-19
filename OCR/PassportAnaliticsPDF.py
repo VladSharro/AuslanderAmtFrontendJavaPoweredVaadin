@@ -58,9 +58,11 @@ def extract_name_and_surname(encoded_image):
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 
-    #_, thresh_img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    #extracted_text = pytesseract.image_to_string(thresh_img, config='--psm 6')
+    _, thresh_img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    extracted_text = pytesseract.image_to_string(thresh_img, config='--psm 6')
 
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
