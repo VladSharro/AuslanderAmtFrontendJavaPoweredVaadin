@@ -1,11 +1,21 @@
-spring:
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+mail:
+  mail-host: "smtp.gmail.com"
+  mail-port: 465
+  ssl-enable: true
+  auth-enable: true
+
+  sender-mail-address: "mail.adress.for.mail.sending@gmail.com"
+  sender-password: "test"
+  abh-mail-address: "test@ads.uni-passau.de"
 
 ocr:
   passport-analysis-file-path: "OCR/PassportAnalitics.py"
   certificate-of-enrollment-analysis-file-path: "OCR/ImmatrikulationAnalitics.py"
   health-insurance-certificate-analysis-file-path: "OCR/Health_Analitics.py"
   financial-document-analysis-file-path: "OCR/WorkContract.py"
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB

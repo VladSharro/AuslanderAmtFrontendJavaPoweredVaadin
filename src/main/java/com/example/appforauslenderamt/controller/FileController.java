@@ -6,6 +6,7 @@ import com.example.appforauslenderamt.service.GenerateReportService;
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class FileController {
         this.generateReportService = generateReportService;
     }
 
-    @ExceptionHandler(InvalidDataException.class)
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleCustomException(InvalidDataException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -36,9 +37,9 @@ public class FileController {
     @PostMapping(value = "/get_data_from_passport", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public PassportDataResponseDto getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
+    public ResponseEntity<PassportDataResponseDto> getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
             throws IOException, InterruptedException {
-        return generateReportService.getDataFromPassport(passportImage);
+        return new ResponseEntity<>(generateReportService.getDataFromPassport(passportImage), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for getting user's data from certificate of enrollment",
@@ -46,10 +47,10 @@ public class FileController {
     @PostMapping(value = "/get_data_from_certificate_of_enrollment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
+    public ResponseEntity<CertificateOfEnrollmentDataResponseDto> getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
                                                                               MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
-        return generateReportService.getDataFromCertificateOfEnrollment(certificateOfEnrollment);
+        return new ResponseEntity<>(generateReportService.getDataFromCertificateOfEnrollment(certificateOfEnrollment), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for getting user's data from health insurance certificate",
@@ -57,10 +58,10 @@ public class FileController {
     @PostMapping(value = "/get_data_from_health_insurance_certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
+    public ResponseEntity<HealthInsuranceCertificateDataResponseDto> getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
                                                                                              MultipartFile healthInsuranceCertificate)
             throws IOException, InterruptedException {
-        return generateReportService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate);
+        return new ResponseEntity<>(generateReportService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for getting financial data from financial document",
@@ -68,33 +69,40 @@ public class FileController {
     @PostMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public FinancialDocumentResponseDto getDataFromFinancialDocument(@RequestPart("financial_document")
+    public ResponseEntity<FinancialDocumentResponseDto> getDataFromFinancialDocument(@RequestPart("financial_document")
                                                                                  MultipartFile financialDocument)
             throws IOException, InterruptedException {
-        return generateReportService.getDataFromFinancialDocument(financialDocument);
-    }
-
-    @ApiOperation(value = "Endpoint for extracting user data from filled form",
-            notes = "Takes filled form in pdf format and return user data extracting from it with using OCR")
-    @PostMapping(value = "/extract_data_from_filled_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin
-    public UserDataRequestDto getDataFromFilledForm(@RequestPart("filled_form") MultipartFile filledForm)
-            throws IOException, InterruptedException {
-        return generateReportService.extractDataFromFilledForm(filledForm);
+        return new ResponseEntity<>(generateReportService.getDataFromFinancialDocument(financialDocument), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",
             notes = "Takes user data and passport image, compares entered data with passport and if matches " +
                     "generate application form")
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public void uploadFile(@RequestPart("documents") MultipartFile[] documents,
-                           @RequestPart("signature_image") MultipartFile signatureImage,
-                           @RequestPart("user_data") UserDataRequestDto userData)
+    public ResponseEntity<byte[]> generateApplicationForm(@RequestPart("documents") MultipartFile[] documents,
+                                                          @RequestPart("signature_image") MultipartFile signatureImage,
+                                                          @RequestPart("user_data") UserDataRequestDto userData)
             throws IOException, ScriptException, InterruptedException, DocumentException, com.lowagie.text.DocumentException {
-        generateReportService.generatePdfFromHtml(userData, documents, signatureImage);
+
+        byte[] pdfContent = generateReportService.generatePdfFromHtml(userData, documents, signatureImage);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "application_form.pdf");
+
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Endpoint for sending user's application form to Auslenderamt",
+            notes = "Takes user's application form and sends it to Auslenderamt")
+    @PostMapping(value = "/send_email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CrossOrigin
+    public ResponseEntity<Void> generateApplicationForm(@RequestPart("documents") MultipartFile document,
+                                                        @RequestPart(name = "user_email_address", required = false)
+                                                                String userEmailAddress) {
+        generateReportService.sendEmail(document, userEmailAddress);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
