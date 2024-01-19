@@ -122,7 +122,7 @@ def extract_name_and_surname(encoded_image):
 
 
 # Access the image data from the environment variable
-image_data = os.environ.get("IMAGE_DATA")
-
-name, surname, nationality, birth, sex, start_date = extract_name_and_surname(image_data)
-print(','.join([name, surname, nationality, birth, sex, start_date]))
+if __name__ == "__main__":
+    image_data = os.environ.get("IMAGE_DATA")
+    name, surname, nationality, birth, sex, start_date = extract_name_and_surname(image_data)
+    print(','.join([name, surname, nationality, birth, sex, start_date]))
