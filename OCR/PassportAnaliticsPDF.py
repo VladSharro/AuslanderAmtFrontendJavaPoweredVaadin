@@ -62,20 +62,20 @@ def extract_name_and_surname(encoded_image):
 
     i = 0
 
-    while i < len(lines):
-        if re.search(r'\bNationality\b', lines[i]):
-            nationality = lines[i+1]
+    #while i < len(lines):
+        #if re.search(r'\bNationality\b', lines[i]):
+        #    nationality = lines[i+1]
 
-        if re.search(r'\bDate of birth\b', lines[i]):
-            birth = lines[i+1]
+        #if re.search(r'\bDate of birth\b', lines[i]):
+        #    birth = lines[i+1]
 
-        if re.search(r'\bM\b', lines[i]):
-            sex = "Male"
+        #if re.search(r'\bM\b', lines[i]):
+        #    sex = "Male"
 
-        if re.search(r'\bF\b', lines[i]):
-            sex = "Female"
+        #if re.search(r'\bF\b', lines[i]):
+        #    sex = "Female"
 
-        i = i + 1
+        #i = i + 1
 
     image_stream = BytesIO(image_data)
     mrz = read_mrz(image_stream)
