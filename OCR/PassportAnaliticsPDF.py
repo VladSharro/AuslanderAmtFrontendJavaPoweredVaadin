@@ -30,6 +30,10 @@ def extract_name_and_surname(encoded_image):
 
     decoded_pdf = base64.b64decode(encoded_image)
 
+    pdf_stream = io.BytesIO(decoded_pdf)
+
+
+
 
     doc = fitz.open(stream=pdf_stream, filetype="pdf")
 
