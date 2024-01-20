@@ -32,13 +32,22 @@ def extract_immatrikulation(encoded_pdf):
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
-    name = lines[6]
-    date_birth = lines[10]
-    city = lines[12]
-    address = lines[14] + lines[15]
-    semester_ends = lines[23]
+        for i, line in enumerate(lines):
+        if lines[i] == "Herr" or lines[i] == "Frau":
+            #print(lines[i])
+            name, surname = lines[i + 1].split()
+        print(i, "   ", line)
 
-    return name, date_birth, city, address, semester_ends
+        if lines[i] == "geboren am":
+            date_birth = lines[i + 1]
+
+        if lines[i] == "geboren in":
+            city = lines[i + 1]
+
+        if lines[i] == "wohnhaft in":
+            address = lines[i + 1]
+
+    return name, surname, date_birth, city, address, semester_ends
 
 if __name__ == "__main__":
     # Access the image data from the environment variable
@@ -46,4 +55,4 @@ if __name__ == "__main__":
 
     # Call the function and print the result
     name, date_birth, city, address, semester_ends = extract_immatrikulation(image_data)
-    print(','.join([name, date_birth, city, address, semester_ends]))
+    print(','.join([name, surname, date_birth, city, address, semester_ends]))
