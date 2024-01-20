@@ -13,6 +13,13 @@ import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
 
+
+def find_index_of_phrase(lines, phrase):
+    for i, line in enumerate(lines):
+        if phrase in line:
+            return i
+    return -1
+
 def extract_immatrikulation(encoded_pdf):
     # Decode the base64-encoded PDF
     decoded_pdf = base64.b64decode(encoded_pdf)
