@@ -52,7 +52,12 @@ def extract_immatrikulation(encoded_pdf):
             city = lines[i + 1]
 
         if lines[i] == "wohnhaft in":
+            j = find_index_of_phrase(lines, "ist an der")
             address = lines[i + 1]
+            i = i + 2
+            while i < j:
+                address = address + ", " + lines[i]
+                i = i + 1
         
         if lines[i] == "Vorlesungsende":
             semester_ends = lines[i + 1]
