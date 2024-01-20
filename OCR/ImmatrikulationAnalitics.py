@@ -46,6 +46,9 @@ def extract_immatrikulation(encoded_pdf):
 
         if lines[i] == "wohnhaft in":
             address = lines[i + 1]
+        
+        if lines[i] == "Vorlesungsende":
+            semester_ends = lines[i + 1]
 
     return name, surname, date_birth, city, address, semester_ends
 
