@@ -1,0 +1,6 @@
+pytesseract
+pybase64
+opencv-python
+Pillow
+PassportEye
+PyMuPDF
