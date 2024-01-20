@@ -32,7 +32,7 @@ def extract_immatrikulation(encoded_pdf):
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
-        for i, line in enumerate(lines):
+    for i, line in enumerate(lines):
         if lines[i] == "Herr" or lines[i] == "Frau":
             #print(lines[i])
             name, surname = lines[i + 1].split()

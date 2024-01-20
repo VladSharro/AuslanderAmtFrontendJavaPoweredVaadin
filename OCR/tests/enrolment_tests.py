@@ -46,10 +46,10 @@ class EnrolmentOCRTests(unittest.TestCase):
     def test_enrolment_processed_values(self):
         print("\nVerifying if extracted values are correct...\n")
 
-        expected = ['Kirill Borisov ', '18.09.1997', 'St Petersburg', 'Angerstraße 23, 94034 Passau (Deutschland)']
+        expected = ('Kirill', 'Borisov', '18.09.1997', 'St Petersburg')
         for dataset in self.extracted_data:
             print("Verifying dataset: ", dataset)
-            dataset_reduced = dataset[:3]
+            dataset_reduced = dataset[:4]
             self.assertEqual(dataset_reduced, expected, "One of the datasets is different from the sample: " + str(dataset_reduced))
     
     # Verify the format of dates
@@ -57,8 +57,8 @@ class EnrolmentOCRTests(unittest.TestCase):
         print("\nVerifying format of date fields...\n")
         pattern = re.compile('\d{2}.\d{2}.\d{4}')
         for dataset in self.extracted_data:
-            birthdate = dataset[1]
-            semester_end = dataset[4]
+            birthdate = dataset[2]
+            semester_end = dataset[5]
             self.assertTrue(pattern.match(birthdate), "Date doesn't fit the format. Value under test " + birthdate)
             self.assertTrue(pattern.match(semester_end), "Date doesn't fit the format. Value under test: " + semester_end)
 
