@@ -67,7 +67,7 @@ def extract_name_and_surname(encoded_image):
     mrz_data = mrz.to_dict()
 
     name = re.split(r'\s{2,}', mrz_data['names'])[0]
-    surname = mrz_data['surname']
+    surname = re.split(r'\s{2,}', mrz_data['surname'])[0]
     nationality = mrz_data['nationality']
 
     year_b = int(mrz_data['date_of_birth'][:2])
