@@ -40,9 +40,10 @@ def extract_immatrikulation(encoded_pdf):
 
     return name, date_birth, city, address, semester_ends
 
-# Access the image data from the environment variable
-image_data = os.environ.get("IMAGE_DATA")
+if __name__ == "__main__":
+    # Access the image data from the environment variable
+    image_data = os.environ.get("IMAGE_DATA")
 
-# Call the function and print the result
-name, date_birth, city, address, semester_ends = extract_immatrikulation(image_data)
-print(','.join([name, date_birth, city, address, semester_ends]))
+    # Call the function and print the result
+    name, date_birth, city, address, semester_ends = extract_immatrikulation(image_data)
+    print(','.join([name, date_birth, city, address, semester_ends]))

@@ -40,7 +40,7 @@ class PassportOCRTest(unittest.TestCase):
     def test_pass_image_processing(self):
         print("\nVerifying extracted dataset lengths...\n")
         for dataset in self.extracted_data:
-            print("Verifying length of the first dataset: ", dataset)
+            print("Verifying length of the dataset: ", dataset)
             self.assertGreater(len(dataset), 0, "Extracted data list is empty")
     
     ### Verify processed images contain correct data
