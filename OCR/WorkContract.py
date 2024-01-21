@@ -34,9 +34,12 @@ def convert_pdf_to_images(pdf_path):
         page = doc[i]
         extracted_text = page.get_text()
         lines = extracted_text.split('\n')
-        #hours
-        #money
-        #print("this is page ", i)
+
+
+
+        date_pattern = r'\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b'
+        dates = re.findall(date_pattern, extracted_text)
+
         for j, line in enumerate(lines):
             #print(j, "   ", line)
 
@@ -83,6 +86,7 @@ def convert_pdf_to_images(pdf_path):
     money = float(money.replace(',', '.'))
     final_count = money * hours * week
 
+    date = max(dates)
 
     
 
