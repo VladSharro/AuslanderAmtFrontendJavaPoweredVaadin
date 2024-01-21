@@ -52,7 +52,9 @@ def convert_pdf_to_images(encoded_pdf):
 
 
             if "EUR" in line:
-                pattern = r'(\b\d+,\d+\b(?!,-))?\s*EUR\s*(\b\d+,\d+\b(?!,-))?'
+                pattern = r'(\b\d+([.,]\d+)?\b)[^\d]*EUR|EUR[^\d]*(\b\d+([.,]\d+)?\b)'
+                pattern2 = r'(\b\d+,\d+\b(?!,-))?\s*EUR\s*(\b\d+,\d+\b(?!,-))?'
+                
                 matches = re.findall(pattern, line)
                 for before, after in matches:
                     if before:
