@@ -89,7 +89,16 @@ def convert_pdf_to_images(encoded_pdf):
 
         i = i + 1
 
-    money = float(money.replace(',', '.'))
+    
+
+    if isinstance(money, int):
+        money = money
+    else:
+        money = float(money.replace(',', '.'))
+
+
+
+        
     final_count = money * hours * week
 
     date = max(dates)
