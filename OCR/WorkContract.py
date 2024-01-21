@@ -80,6 +80,9 @@ def convert_pdf_to_images(encoded_pdf):
                         moneys.append(number)
                         #print("Обнаруженная сумма:", money)
 
+                money = max(moneys)
+
+
 
 
             if "Stunden" in line:
