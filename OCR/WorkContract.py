@@ -8,7 +8,7 @@ import pytesseract
 from PIL import Image
 import numpy as np
 import re
-#from difflib import SequenceMatcher
+
 from datetime import datetime
 
 
@@ -41,7 +41,7 @@ def convert_pdf_to_images(pdf_path):
         dates = re.findall(date_pattern, extracted_text)
 
         for j, line in enumerate(lines):
-            #print(j, "   ", line)
+
 
             if "EUR" in line:
                 pattern = r'(\b\d+,\d+\b(?!,-))?\s*EUR\s*(\b\d+,\d+\b(?!,-))?'
@@ -78,7 +78,6 @@ def convert_pdf_to_images(pdf_path):
             if "Stunder pro woche" in line:
                 week = 1
 
-        #print(hours)
 
         i = i + 1
 
@@ -94,14 +93,14 @@ def convert_pdf_to_images(pdf_path):
 
     final_count = money * hours * 4
 
-    #print(final_count)
+
 
     doc.close()
 
     return final_count, date
 
 
-#pdf_path = "C:\\Users\\vlads\\test\\Arbeitsvertrag_Muster_Photo.pdf"
+
 
 if __name__ == "__main__":
     image_data = os.environ.get("IMAGE_DATA")
