@@ -12,6 +12,10 @@ from dateutil.relativedelta import relativedelta
 import pycountry
 
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+
+
 def process_string(input_string):
     parts = input_string.split(' ', 0)
 

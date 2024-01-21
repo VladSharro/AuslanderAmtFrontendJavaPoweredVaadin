@@ -1,5 +1,5 @@
 import os
-
+import json
 import cv2
 import pytesseract
 import re
@@ -70,4 +70,18 @@ if __name__ == "__main__":
 
     # Call the function and print the result
     name, date_birth, city, address, semester_ends = extract_immatrikulation(image_data)
-    print(','.join([name, surname, date_birth, city, address, semester_ends]))
+
+    data = {
+        "name": name,
+        "surname": surname,
+        "date_birth": date_birth,
+        "city": city,
+        "address": address,
+        "semester_ends": semester_ends
+    }
+
+    json_data = json.dumps(data, ensure_ascii=False)
+    print(json_data)
+
+
+    #print(','.join([name, surname, date_birth, city, address, semester_ends]))
