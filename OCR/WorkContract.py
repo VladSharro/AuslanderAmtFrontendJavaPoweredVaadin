@@ -13,40 +13,7 @@ from datetime import datetime
 
 
 
-# Path to the Tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-#def similar(a, b):
-#    return SequenceMatcher(None, a, b).ratio()
-
-
-def extract_date_after_word(text, word, lines_before=200):
-    pattern = re.compile(r'\d{1,2}/\d{1,2}/\d{4}')
-
-    lines = text.split('\n')
-    for i in range(max(0, len(lines) - lines_before), len(lines)):
-        match = pattern.search(lines[i])
-        if match:
-            return match.group(0)
-
-    return None
-
-
-def extract_number_after_word(text, word):
-    pattern = re.compile(rf'{word}\D*(\d+)')
-    match = pattern.search(text)
-    if match:
-        return int(match.group(1))
-    else:
-        return None
-
-def extract_first_number_after_word(text, word):
-    pattern = re.compile(rf'{word}\D*(\d+)', re.MULTILINE)
-    match = pattern.search(text)
-    if match:
-        return int(match.group(1))
-    else:
-        return None
 
 
 def convert_pdf_to_images(pdf_path):
