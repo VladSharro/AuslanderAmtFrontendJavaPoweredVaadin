@@ -71,6 +71,17 @@ def convert_pdf_to_images(encoded_pdf):
                         #print("Обнаруженная сумма:", money)
 
 
+                for match in matches:
+                    number = match[0] if match[0] else match[1]
+                    #print(number)
+
+                    if number:
+                        #money = number
+                        moneys.append(number)
+                        #print("Обнаруженная сумма:", money)
+
+
+
             if "Stunden" in line:
                 pattern = r'(\b\d+,\d+\b|\b\d+\b)?\s*Stunde\s*(\b\d+,\d+\b|\b\d+\b)?'
 
