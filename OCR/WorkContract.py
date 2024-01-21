@@ -28,6 +28,7 @@ def convert_pdf_to_images(encoded_pdf):
 
     doc = fitz.open(stream=pdf_stream, filetype="pdf")
 
+    moneys = []
 
     numbers = []
     hours = 0
