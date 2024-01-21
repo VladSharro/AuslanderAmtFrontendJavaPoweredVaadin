@@ -3,6 +3,7 @@ package com.example.appforauslenderamt.controller;
 import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import com.example.appforauslenderamt.service.GenerateReportService;
+import com.example.appforauslenderamt.service.OCRService;
 import com.itextpdf.text.DocumentException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ import java.io.IOException;
 public class FileController {
 
     private final GenerateReportService generateReportService;
+    private final OCRService ocrService;
 
     @Autowired
-    public FileController(GenerateReportService generateReportService) {
+    public FileController(GenerateReportService generateReportService, OCRService ocrService) {
         this.generateReportService = generateReportService;
+        this.ocrService = ocrService;
     }
 
     @ExceptionHandler(Exception.class)
@@ -39,7 +42,7 @@ public class FileController {
     @CrossOrigin
     public ResponseEntity<PassportDataResponseDto> getDataFromPassport(@RequestPart("passport_image") MultipartFile passportImage)
             throws IOException, InterruptedException {
-        return new ResponseEntity<>(generateReportService.getDataFromPassport(passportImage), HttpStatus.OK);
+        return new ResponseEntity<>(ocrService.getDataFromPassport(passportImage), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for getting user's data from certificate of enrollment",
@@ -50,7 +53,7 @@ public class FileController {
     public ResponseEntity<CertificateOfEnrollmentDataResponseDto> getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
                                                                               MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
-        return new ResponseEntity<>(generateReportService.getDataFromCertificateOfEnrollment(certificateOfEnrollment), HttpStatus.OK);
+        return new ResponseEntity<>(ocrService.getDataFromCertificateOfEnrollment(certificateOfEnrollment), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for getting user's data from health insurance certificate",
@@ -61,7 +64,7 @@ public class FileController {
     public ResponseEntity<HealthInsuranceCertificateDataResponseDto> getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
                                                                                              MultipartFile healthInsuranceCertificate)
             throws IOException, InterruptedException {
-        return new ResponseEntity<>(generateReportService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate), HttpStatus.OK);
+        return new ResponseEntity<>(ocrService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for getting financial data from financial document",
@@ -72,7 +75,7 @@ public class FileController {
     public ResponseEntity<FinancialDocumentResponseDto> getDataFromFinancialDocument(@RequestPart("financial_document")
                                                                                  MultipartFile financialDocument)
             throws IOException, InterruptedException {
-        return new ResponseEntity<>(generateReportService.getDataFromFinancialDocument(financialDocument), HttpStatus.OK);
+        return new ResponseEntity<>(ocrService.getDataFromFinancialDocument(financialDocument), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",

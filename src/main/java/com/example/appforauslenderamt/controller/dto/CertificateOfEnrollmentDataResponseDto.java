@@ -12,8 +12,10 @@ import lombok.Value;
 @AllArgsConstructor
 public class CertificateOfEnrollmentDataResponseDto {
 
-    @JsonProperty("name")
-    String name;
+    @JsonProperty("first_name")
+    String firstName;
+    @JsonProperty("family_name")
+    String familyName;
     @JsonProperty("date_of_birth")
     String dateOfBirth;
     @JsonProperty("place_of_birth")
