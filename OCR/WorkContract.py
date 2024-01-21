@@ -59,14 +59,16 @@ def convert_pdf_to_images(encoded_pdf):
                 matches = re.findall(pattern, line)
                 matches2 = re.findall(pattern2, line)
 
-                
-                for before, after in matches:
-                    if before:
-                        money = before
-                        #print(before)
-                    elif after:
-                        money = after
-                        #print(after)
+
+                for match in matches2:
+                    number = match[0] if match[0] else match[1]
+                    #print(number)
+
+                    if number:
+                        #money = number
+                        moneys.append(number)
+
+                        #print("Обнаруженная сумма:", money)
 
 
             if "Stunden" in line:
