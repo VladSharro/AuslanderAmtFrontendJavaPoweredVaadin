@@ -38,15 +38,20 @@ def convert_pdf_to_images(encoded_pdf):
     i = 0
 
     pages = doc.page_count
+    extracted_text = ""
+
 
     while i < pages:
         page = doc[i]
-        extracted_text = page.get_text()
+        pix = page.get_pixmap()
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        page_text = pytesseract.image_to_string(img)  
+        extracted_text += page_text + "\n"  
+
         lines = extracted_text.split('\n')
 
 
-
-        date_pattern = r'\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b'
+        date_pattern = r'\b\d{1,2}[./\\,-]\d{1,2}[./\\,-]\d{2,4}\b'
         dates = re.findall(date_pattern, extracted_text)
 
         for j, line in enumerate(lines):
@@ -63,13 +68,12 @@ def convert_pdf_to_images(encoded_pdf):
 
                 for match in matches2:
                     number = match[0] if match[0] else match[1]
-                    #print(number)
 
                     if number:
-                        #money = number
+
                         moneys.append(number)
 
-                        #print("Обнаруженная сумма:", money)
+
 
 
                 for match in matches:
@@ -77,9 +81,9 @@ def convert_pdf_to_images(encoded_pdf):
                     #print(number)
 
                     if number:
-                        #money = number
+
                         moneys.append(number)
-                        #print("Обнаруженная сумма:", money)
+
 
                 money = max(moneys)
 
