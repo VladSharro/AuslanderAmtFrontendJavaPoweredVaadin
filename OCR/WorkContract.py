@@ -20,7 +20,7 @@ def convert_pdf_to_images(encoded_pdf):
     decoded_pdf = base64.b64decode(encoded_pdf)
     pdf_stream = io.BytesIO(decoded_pdf)
 
-    doc = fitz.open(pdf_path)
+    doc = fitz.open(stream=pdf_stream)
 
     moneys = []
     numbers = []
