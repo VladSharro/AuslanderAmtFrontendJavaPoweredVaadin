@@ -17,6 +17,16 @@ from datetime import datetime
 
 
 def convert_pdf_to_images(pdf_path):
+
+
+    doc = fitz.open(pdf_path)
+
+    numbers = []
+    hours = 0
+    money = 0
+    week = 4
+
+
     
 
 
