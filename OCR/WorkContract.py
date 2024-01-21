@@ -80,6 +80,10 @@ def convert_pdf_to_images(pdf_path):
 
         i = i + 1
 
+    money = float(money.replace(',', '.'))
+    final_count = money * hours * week
+
+
     
 
 
