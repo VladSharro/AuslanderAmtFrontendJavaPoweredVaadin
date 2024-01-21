@@ -104,26 +104,8 @@ def convert_pdf_to_images(pdf_path):
 
 #pdf_path = "C:\\Users\\vlads\\test\\Arbeitsvertrag_Muster_Photo.pdf"
 
+if __name__ == "__main__":
+    image_data = os.environ.get("IMAGE_DATA")
+    moneys, date = convert_pdf_to_images(pdf_path)
+    print(','.join([moneys, date]))
 
-
-image_data = os.environ.get("IMAGE_DATA")
-
-
-moneys, date = convert_pdf_to_images(pdf_path)
-
-today = datetime.now().date()
-
-target_date = datetime.strptime(date, "%d/%m/%Y").date()
-
-if target_date > today:
-    print("True")
-else:
-    print("False")
-
-
-
-
-
-print(','.join([moneys, date]))
-
-#print(moneys)
