@@ -26,6 +26,59 @@ def convert_pdf_to_images(pdf_path):
     money = 0
     week = 4
 
+    i = 0
+
+    pages = doc.page_count
+
+    while i < pages:
+        page = doc[i]
+        extracted_text = page.get_text()
+        lines = extracted_text.split('\n')
+        #hours
+        #money
+        #print("this is page ", i)
+        for j, line in enumerate(lines):
+            #print(j, "   ", line)
+
+            if "EUR" in line:
+                pattern = r'(\b\d+,\d+\b(?!,-))?\s*EUR\s*(\b\d+,\d+\b(?!,-))?'
+                matches = re.findall(pattern, line)
+                for before, after in matches:
+                    if before:
+                        money = before
+                        #print(before)
+                    elif after:
+                        money = after
+                        #print(after)
+                #print("WHAT A FUCK")
+                #print(money)
+
+            if "Stunden" in line:
+                pattern = r'(\b\d+,\d+\b|\b\d+\b)?\s*Stunde\s*(\b\d+,\d+\b|\b\d+\b)?'
+
+                matches = re.findall(pattern, line)
+                max_number = None
+
+                for before, after in matches:
+                    #numbers = []
+                    if before:
+                        numbers.append(float(before.replace(',', '.')))
+                    if after:
+                        numbers.append(float(after.replace(',', '.')))
+                    if numbers:
+                        #print(numbers)
+                        local_max = max(numbers)
+                        hours = local_max
+                        if max_number is None or local_max > max_number:
+                            max_number = local_max
+                            hours = max_number
+
+            if "Stunder pro woche" in line:
+                week = 1
+
+        #print(hours)
+
+        i = i + 1
 
     
 
