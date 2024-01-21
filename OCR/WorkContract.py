@@ -17,71 +17,8 @@ from datetime import datetime
 
 
 def convert_pdf_to_images(pdf_path):
-    doc = fitz.open(pdf_path)
+    
 
-    for page_num in range(doc.page_count):
-        page = doc[page_num]
-
-        image_list = page.get_images(full=True)
-
-        i = 0
-
-        for img_index, img_info in enumerate(image_list):
-            xref = img_info[0]
-            base_image = doc.extract_image(xref)
-
-            image_bytes = base_image["image"]
-
-            image_np = np.frombuffer(image_bytes, dtype=np.uint8)
-            image = cv2.imdecode(image_np, flags=cv2.IMREAD_COLOR)
-
-            gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-            extracted_text = pytesseract.image_to_string(Image.fromarray(gray_image, 'L'))
-
-
-            #target_word = "Arbeitszeit"
-
-
-            #print(extracted_text)
-
-            if "Arbeitsvergitung" in extracted_text:
-
-                money = extract_number_after_word(extracted_text, "von")
-
-                #print(money)
-                #if number is not None:
-                    #print(f"Found on Page {page_num + 1}, Image {img_index + 1}: Arbeitsvergitung {number}")
-                    #print('=' * 30)
-
-                #cv2.imshow(f"Page {page_num + 1}, Image {img_index + 1}", image)
-                #cv2.waitKey(0)
-                #cv2.destroyAllWindows()
-
-
-            if "Arbeitszoit" in extracted_text:
-
-
-                hours = extract_first_number_after_word(extracted_text, "Arbeitszoit")
-
-                #print(hours)
-
-                #if number is not None:
-                    #print(f"Found on Page {page_num + 1}, Image {img_index + 1}: Arbeitszeit Number {number}")
-                    #print('=' * 30)
-
-                #cv2.imshow(f"Page {page_num + 1}, Image {img_index + 1}", image)
-                #cv2.waitKey(0)
-                #cv2.destroyAllWindows()
-
-            if "Datum" in extracted_text:
-
-                date = extract_date_after_word(extracted_text, "Datum")
-
-
-                #print(date)
-
-            #i = i + 1
 
 
 
