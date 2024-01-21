@@ -53,8 +53,7 @@ def convert_pdf_to_images(pdf_path):
                     elif after:
                         money = after
                         #print(after)
-                #print("WHAT A FUCK")
-                #print(money)
+
 
             if "Stunden" in line:
                 pattern = r'(\b\d+,\d+\b|\b\d+\b)?\s*Stunde\s*(\b\d+,\d+\b|\b\d+\b)?'
