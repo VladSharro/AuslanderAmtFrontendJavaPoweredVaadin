@@ -13,7 +13,7 @@ import WorkContract
 
 class ContractOCRTest(unittest.TestCase):
     def setUp(self) -> None:
-        paths = ["./OCR/tests/data/contract.pdf"]
+        paths = ["./OCR/tests/data/contract2.pdf"]
         pdf_paths = []
         for p in paths:
             abspath = os.path.abspath(p)
