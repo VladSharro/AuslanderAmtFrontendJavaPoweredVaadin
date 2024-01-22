@@ -3,7 +3,6 @@ import json
 import cv2
 import pytesseract
 import re
-import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import io
