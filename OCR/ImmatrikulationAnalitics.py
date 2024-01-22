@@ -12,6 +12,7 @@ import fitz  # PyMuPDF
 import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
+import sys
 
 
 def find_index_of_phrase(lines, phrase):
@@ -20,9 +21,11 @@ def find_index_of_phrase(lines, phrase):
             return i
     return -1
 
-def extract_immatrikulation(encoded_pdf):
-    # Decode the base64-encoded PDF
-    decoded_pdf = base64.b64decode(encoded_pdf)
+def extract_immatrikulation(encoded_pdf_path):
+    # Read the encoded PDF file
+    with open(encoded_pdf_path, 'rb') as pdf_file:
+        # Decode the base64-encoded PDF
+        decoded_pdf = base64.b64decode(pdf_file.read())
 
     # Create a BytesIO object to simulate a file-like object from the decoded PDF
     pdf_stream = io.BytesIO(decoded_pdf)
@@ -39,11 +42,16 @@ def extract_immatrikulation(encoded_pdf):
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
+    name = ""
+    surname = ""
+    date_birth = ""
+    city = ""
+    address = ""
+    semester_ends = ""
+
     for i, line in enumerate(lines):
         if lines[i] == "Herr" or lines[i] == "Frau":
-            #print(lines[i])
             name, surname = lines[i + 1].split()
-        print(i, "   ", line)
 
         if lines[i] == "geboren am":
             date_birth = lines[i + 1]
@@ -58,30 +66,30 @@ def extract_immatrikulation(encoded_pdf):
             while i < j:
                 address = address + ", " + lines[i]
                 i = i + 1
-        
+
         if lines[i] == "Vorlesungsende":
             semester_ends = lines[i + 1]
 
     return name, surname, date_birth, city, address, semester_ends
 
 if __name__ == "__main__":
-    # Access the image data from the environment variable
-    image_data = os.environ.get("IMAGE_DATA")
+    # Access the PDF file path from the command-line argument
+    encoded_pdf_path = sys.argv[1]
 
     # Call the function and print the result
-    name, date_birth, city, address, semester_ends = extract_immatrikulation(image_data)
+    name, surname, date_birth, city, address, semester_ends = extract_immatrikulation(encoded_pdf_path)
 
-    data = {
-        "name": name,
-        "surname": surname,
-        "date_birth": date_birth,
-        "city": city,
-        "address": address,
-        "semester_ends": semester_ends
-    }
+#     data = {
+#         "name": name,
+#         "surname": surname,
+#         "date_birth": date_birth,
+#         "city": city,
+#         "address": address,
+#         "semester_ends": semester_ends
+#     }
+#
+#     json_data = json.dumps(data, ensure_ascii=False)
+#     print(json_data)
 
-    json_data = json.dumps(data, ensure_ascii=False)
-    print(json_data)
 
-
-    #print(','.join([name, surname, date_birth, city, address, semester_ends]))
+    print(','.join([name, surname, date_birth, city, address, semester_ends]))

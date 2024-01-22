@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 import pycountry
 
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
 
@@ -127,6 +127,9 @@ def extract_name_and_surname(encoded_image):
 
 # Access the image data from the environment variable
 if __name__ == "__main__":
-    image_data = os.environ.get("IMAGE_DATA")
+    image_file_path = sys.argv[1]
+    with open(image_file_path, 'r') as file:
+        image_data = file.read()
+
     name, surname, nationality, birth, sex, start_date = extract_name_and_surname(image_data)
     print(','.join([name, surname, nationality, birth, sex, start_date]))
