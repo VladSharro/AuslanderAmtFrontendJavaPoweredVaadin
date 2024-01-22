@@ -1,5 +1,6 @@
 pytesseract
 pybase64
+pycountry
 opencv-python
 Pillow
 PassportEye
