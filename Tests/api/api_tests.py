@@ -1,6 +1,7 @@
 import requests
 import json
 import unittest
+import os
 
 ENDPOINT_BASE_URL = "http://132.231.1.189:8080"
 
@@ -24,6 +25,7 @@ class ApiEndpointTests(unittest.TestCase):
             "accept": "application/hal+json"
         }
         url = ENDPOINT_BASE_URL + endpoint
+        print(os.getcwd())
 
         with open('./OCR/tests/data/enrolment2.pdf', 'rb') as file:
             f = { 'certificate_of_enrollment_image': ('enrolment2.pdf', file, 'application/pdf') }
