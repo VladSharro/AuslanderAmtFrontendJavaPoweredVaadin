@@ -24,7 +24,8 @@ ocr-test:
     - apt-get -y install ffmpeg libsm6 libxext6
     - cd OCR
     - pip install -r requirements.txt
-    - python -m tests/ocrTests.py
+    - cd ..
+    - python OCR/tests/ocrTests.py
 
 fe-build:
   image: debian:stable
