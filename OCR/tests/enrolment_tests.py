@@ -2,7 +2,6 @@
 ###
 ### Owner: Kirill Borisov
 
-import pytesseract
 import unittest
 import os
 import sys
@@ -12,6 +11,12 @@ import re
 path = os.path.abspath("./OCR")
 sys.path.append(path)
 import ImmatrikulationAnalitics
+
+def create_encoded_file(filepath, encoded_filepath):
+    with open(filepath, "rb") as file:
+        encoded = base64.b64encode(file.read())
+        with open(encoded_filepath, "wb") as encoded_file:
+                encoded_file.write(encoded)
 
 class EnrolmentOCRTests(unittest.TestCase):
     extracted_data = []
@@ -23,21 +28,22 @@ class EnrolmentOCRTests(unittest.TestCase):
         for p in paths:
             abspath = os.path.abspath(p)
             pdf_paths.append(abspath)
-        
-        # Get base64 encodings of test certificates
-        self.encoded_pdfs = []
-        for pdf_path in pdf_paths:
-            with open(pdf_path, "rb") as pdf_file:
-                encoded_pdf = base64.b64encode(pdf_file.read())
-                self.encoded_pdfs.append(encoded_pdf)
+
+        # Create temp files with encoded pdf data
+        self.encoded_pdf_paths = []
+        for i in range(2):
+            pdf_path = "./OCR/tests/data/enrolment" + str(i + 1) + ".pdf"
+            encoded_path = "./OCR/tests/data/encoded" + str(i + 1) + ".txt"
+            create_encoded_file(pdf_path, encoded_path)
+            self.encoded_pdf_paths.append(encoded_path)
     
     # Verify that PDFs are processed
     def test_enrolment_processing(self):
         print("\nVerifying extracted dataset lengths...\n")
-        # Run module under test over encoded PDFs
-        for pdf in self.encoded_pdfs:
+        for pdf in self.encoded_pdf_paths:
             pdf_data = ImmatrikulationAnalitics.extract_immatrikulation(pdf)
             self.__class__.extracted_data.append(pdf_data)
+            os.remove(pdf)        # cleaning up the temp files needed to pass the encoded values
 
         for dataset in self.__class__.extracted_data:
             print("Verifying length of the dataset: ", dataset)

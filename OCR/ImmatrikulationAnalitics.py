@@ -3,8 +3,6 @@ import json
 import cv2
 import pytesseract
 import re
-# from tkinter import filedialog
-# from PIL import Image, ImageTk
 import io
 import base64
 import fitz  # PyMuPDF
