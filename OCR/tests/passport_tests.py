@@ -13,6 +13,8 @@ sys.path.append(path)
 import PassportAnalitics
 
 class PassportOCRTest(unittest.TestCase):
+    extracted_data = []
+
     def setUp(self) -> None:
         pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -29,17 +31,17 @@ class PassportOCRTest(unittest.TestCase):
             with open(img_path, "rb") as image_file:
                 encoded_img = base64.b64encode(image_file.read())
                 self.encoded_imgs.append(encoded_img)
-
-        # Run OCR extraction over encoded images
-        self.extracted_data = []
-        for img in self.encoded_imgs:
-            img_data = PassportAnalitics.extract_name_and_surname(img)
-            self.extracted_data.append(img_data)
     
     ### Verify that images are processed
     def test_pass_image_processing(self):
         print("\nVerifying extracted dataset lengths...\n")
-        for dataset in self.extracted_data:
+        # Run OCR extraction over encoded images
+        self.__class__.extracted_data = []
+        for img in self.encoded_imgs:
+            img_data = PassportAnalitics.extract_name_and_surname(img)
+            self.__class__.extracted_data.append(img_data)
+
+        for dataset in self.__class__.extracted_data:
             print("Verifying length of the dataset: ", dataset)
             self.assertGreater(len(dataset), 0, "Extracted data list is empty")
     
@@ -50,7 +52,7 @@ class PassportOCRTest(unittest.TestCase):
         # this can be expanded if new test data comes into play
         expected = ["INES", "GARCAO DE MAGALHAES", "Portugal", "07/04/74", "Female", "16/06/17"]
         
-        for dataset in self.extracted_data:
+        for dataset in self.__class__.extracted_data:
             print("Verifying dataset: ", dataset)
             self.assertEqual(dataset, expected, "One of the datasets is different from the sample: " + str(dataset))
 
