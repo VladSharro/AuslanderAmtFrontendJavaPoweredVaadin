@@ -1,7 +1,6 @@
 import os
-
-
-
+import base64
+import io
 import fitz
 import cv2
 import pytesseract
@@ -10,9 +9,6 @@ import numpy as np
 import re
 
 from datetime import datetime
-
-
-
 
 
 
