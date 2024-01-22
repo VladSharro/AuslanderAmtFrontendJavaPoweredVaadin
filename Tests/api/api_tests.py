@@ -13,7 +13,7 @@ class ApiEndpointTests(unittest.TestCase):
         }
         url = ENDPOINT_BASE_URL + endpoint
 
-        with open('./OCR/tests/data/pass.jpg', 'rb') as file:
+        with open('OCR/tests/data/pass.jpg', 'rb') as file:
             f = { 'passport_image': ('pass.jpg', file, 'image/jpeg') }
             r = requests.post(url, headers=h, files=f)
 
@@ -27,7 +27,7 @@ class ApiEndpointTests(unittest.TestCase):
         url = ENDPOINT_BASE_URL + endpoint
         print(os.getcwd())
 
-        with open('./OCR/tests/data/enrolment2.pdf', 'rb') as file:
+        with open('OCR/tests/data/enrolment2.pdf', 'rb') as file:
             f = { 'certificate_of_enrollment_image': ('enrolment2.pdf', file, 'application/pdf') }
             r = requests.post(url, headers=h, files=f)
         
@@ -40,7 +40,7 @@ class ApiEndpointTests(unittest.TestCase):
         }
         url = ENDPOINT_BASE_URL + endpoint
 
-        with open('./OCR/tests/data/health.pdf', 'rb') as file:
+        with open('OCR/tests/data/health.pdf', 'rb') as file:
             f = { 'health_insurance_certificate': ('health.pdf', file, 'application/pdf') }
             r = requests.post(url, headers=h, files=f)
         
