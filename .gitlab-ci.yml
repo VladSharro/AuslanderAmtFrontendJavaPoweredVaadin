@@ -3,17 +3,28 @@
 ### The pipeline includes front-end precheck build, FE and BE builds and deployment, and UI testing.
 
 stages:
-  - precheck
-  - build
   - test
+  - build
+  - test-after-deployment
 
 fe-build-test:
   image: node:lts-alpine
-  stage: precheck
+  stage: test
   script:
     - cd Frontend
     - npm install
     - npm run build
+
+ocr-test:
+  image: python:3.9
+  stage: test
+  script:
+    - apt-get update
+    - apt-get -y install tesseract-ocr
+    - apt-get -y install ffmpeg libsm6 libxext6
+    - cd OCR
+    - pip install -r requirements.txt
+    - python -m ocrTests.py
 
 fe-build:
   image: debian:stable
@@ -32,26 +43,35 @@ fe-build:
   script:
     - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git checkout prod; git pull origin prod; sudo docker stop aspd; sudo docker rm aspd; sudo docker build -t aspd ./Frontend/; sudo docker run --name aspd -d -p 80:80 aspd'
 
-be-build:
-  image: debian:stable
-  stage: build
-  when: manual
-  before_script:
-    - apt-get update
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - chmod 400 "$SSH_PRIVATE_KEY"
-    - ssh-add "$SSH_PRIVATE_KEY"
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
+### BE build stage is not required: BE is spun up containerless
+# be-build:
+#   image: debian:stable
+#   stage: build
+#   when: manual
+#   before_script:
+#     - apt-get update
+#     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - chmod 400 "$SSH_PRIVATE_KEY"
+#     - ssh-add "$SSH_PRIVATE_KEY"
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+#     - chmod 644 ~/.ssh/known_hosts
+#   script:
+#     - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git checkout prod; git pull origin prod; sudo docker stop app-for-amt; sudo docker rm app-for-amt; sudo docker build -t app-for-amt .; sudo docker run --name app-for-amt -d -p 8080:8080 app-for-amt'
+
+endpoint-tests:
+  image: python:3.11-bullseye
+  stage: test-after-deployment
   script:
-    - echo $SUDO | ssh -tt borisov@boriso02.stud.fim.uni-passau.de 'cd aspd/team2; eval $(ssh-agent); ssh-add ~/.ssh/id_rsa; git checkout prod; git pull origin prod; sudo docker stop app-for-amt; sudo docker rm app-for-amt; sudo docker build -t app-for-amt .; sudo docker run --name app-for-amt -d -p 8080:8080 app-for-amt'
+    - cd Tests/api
+    - pip install requests
+    - python -m api_tests.py
 
 e2e-test:
   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
-  stage: test
+  stage: test-after-deployment
   needs: ["fe-build"]
   script:
     - robot -d results Tests/ui/*.robot
