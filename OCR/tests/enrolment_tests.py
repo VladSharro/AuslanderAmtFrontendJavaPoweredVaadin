@@ -14,6 +14,8 @@ sys.path.append(path)
 import ImmatrikulationAnalitics
 
 class EnrolmentOCRTests(unittest.TestCase):
+    extracted_data = []
+
     def setUp(self) -> None:
         # Get absolute paths for test data
         paths = ["./OCR/tests/data/enrolment1.pdf", "./OCR/tests/data/enrolment2.pdf"]
@@ -28,17 +30,16 @@ class EnrolmentOCRTests(unittest.TestCase):
             with open(pdf_path, "rb") as pdf_file:
                 encoded_pdf = base64.b64encode(pdf_file.read())
                 self.encoded_pdfs.append(encoded_pdf)
-        
-        # Run module under test over encoded PDFs
-        self.extracted_data = []
-        for pdf in self.encoded_pdfs:
-            pdf_data = ImmatrikulationAnalitics.extract_immatrikulation(pdf)
-            self.extracted_data.append(pdf_data)
     
     # Verify that PDFs are processed
     def test_enrolment_processing(self):
         print("\nVerifying extracted dataset lengths...\n")
-        for dataset in self.extracted_data:
+        # Run module under test over encoded PDFs
+        for pdf in self.encoded_pdfs:
+            pdf_data = ImmatrikulationAnalitics.extract_immatrikulation(pdf)
+            self.__class__.extracted_data.append(pdf_data)
+
+        for dataset in self.__class__.extracted_data:
             print("Verifying length of the dataset: ", dataset)
             self.assertGreater(len(dataset), 0, "Extracted data list is empty")
     
@@ -47,7 +48,7 @@ class EnrolmentOCRTests(unittest.TestCase):
         print("\nVerifying if extracted values are correct...\n")
 
         expected = ('Kirill', 'Borisov', '18.09.1997', 'St Petersburg')
-        for dataset in self.extracted_data:
+        for dataset in self.__class__.extracted_data:
             print("Verifying dataset: ", dataset)
             dataset_reduced = dataset[:4]
             self.assertEqual(dataset_reduced, expected, "One of the datasets is different from the sample: " + str(dataset_reduced))
@@ -56,7 +57,7 @@ class EnrolmentOCRTests(unittest.TestCase):
     def test_enrolment_date_format(self):
         print("\nVerifying format of date fields...\n")
         pattern = re.compile('\d{2}.\d{2}.\d{4}')
-        for dataset in self.extracted_data:
+        for dataset in self.__class__.extracted_data:
             birthdate = dataset[2]
             semester_end = dataset[5]
             self.assertTrue(pattern.match(birthdate), "Date doesn't fit the format. Value under test " + birthdate)
