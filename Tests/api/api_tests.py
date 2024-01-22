@@ -33,20 +33,21 @@ class ApiEndpointTests(unittest.TestCase):
         
         self.assertEqual (r.status_code, 200)
     
-    def test_health_endpoint(self):
-        endpoint = "/get_data_from_health_insurance_certificate"
-        h = {
-            "accept": "application/hal+json"
-        }
-        url = ENDPOINT_BASE_URL + endpoint
+    ### skipped until we get test data
+    # def test_health_endpoint(self):
+    #     endpoint = "/get_data_from_health_insurance_certificate"
+    #     h = {
+    #         "accept": "application/hal+json"
+    #     }
+    #     url = ENDPOINT_BASE_URL + endpoint
 
-        with open('OCR/tests/data/health.pdf', 'rb') as file:
-            f = { 'health_insurance_certificate': ('health.pdf', file, 'application/pdf') }
-            r = requests.post(url, headers=h, files=f)
+    #     with open('OCR/tests/data/health.pdf', 'rb') as file:
+    #         f = { 'health_insurance_certificate': ('health.pdf', file, 'application/pdf') }
+    #         r = requests.post(url, headers=h, files=f)
         
-        response = json.loads(r.text)
-        print(response)
-        self.assertEqual (r.status_code, 200)
+    #     response = json.loads(r.text)
+    #     print(response)
+    #     self.assertEqual (r.status_code, 200)
 
 if __name__ == "__main__":
     unittest.main()
