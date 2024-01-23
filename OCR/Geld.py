@@ -28,7 +28,7 @@ def geld(pdf_path):
 
     # Поиск максимального числа среди чисел, связанных с EUR
     max_eur_number = max(eur_numbers) if eur_numbers else None
-    print(max_eur_number)
+    #print(max_eur_number)
 
     # Extract text from the PDF page
     extracted_text = page.get_text()
@@ -55,17 +55,17 @@ def geld(pdf_path):
 
 
     max_eur_number = max(eur_numbers)
-    print(max_eur_number)
+    #print(max_eur_number)
 
-    print(dates)
+    #print(dates)
 
     #gold = lines[7]
     #date = lines[0]
 
     date = dates[0]
+    #print(date)
 
-
-    return max_eur_number, date
+    return max_eur_number, date, doc
 
 
 if __name__ == "__main__":
