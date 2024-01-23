@@ -69,17 +69,17 @@ def geld(pdf_path):
 
 
 if __name__ == "__main__":
-    image_file_path = sys.argv[1]
-    with open(image_file_path, 'r') as file:
-        image_data = file.read()
+    encoded_pdf_path = sys.argv[1]
+    #with open(encoded_pdf_path, 'r') as file:
+    #    image_data = file.read()
 
-    max_eur_number, date = geld(image_data)
-    print(','.join([max_eur_number, date]))
+    max_eur_number, date = geld(encoded_pdf_path)
+    print(','.join([str(max_eur_number), date]))
 
 
 # Access the image data from the environment variable
-image_data = os.environ.get("IMAGE_DATA")
+#image_data = os.environ.get("IMAGE_DATA")
 
 # Call the function and print the result
-gold, date = geld(image_data)
-print(','.join([str(geld), date]))
+#gold, date = geld(image_data)
+#print(','.join([str(geld), date]))
