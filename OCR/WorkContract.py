@@ -130,6 +130,6 @@ def convert_pdf_to_images(encoded_pdf):
 
 if __name__ == "__main__":
     image_data = os.environ.get("IMAGE_DATA")
-    moneys, date = convert_pdf_to_images(pdf_path)
+    moneys, date = convert_pdf_to_images(image_data)
     print(','.join([moneys, date]))
 
