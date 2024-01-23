@@ -17,7 +17,6 @@ def extract_health(encoded_pdf_path):
         # Decode the base64-encoded PDF
         decoded_pdf = base64.b64decode(pdf_file.read())
 
-#     decoded_pdf = base64.b64decode(pdf_path)
     pdf_stream = io.BytesIO(decoded_pdf)
 
 

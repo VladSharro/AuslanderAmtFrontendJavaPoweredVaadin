@@ -51,7 +51,7 @@ public class FileController {
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
     public ResponseEntity<CertificateOfEnrollmentDataResponseDto> getDataFromCertificateOfEnrollment(@RequestPart("certificate_of_enrollment_image")
-                                                                              MultipartFile certificateOfEnrollment)
+                                                                                                             MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
         return new ResponseEntity<>(ocrService.getDataFromCertificateOfEnrollment(certificateOfEnrollment), HttpStatus.OK);
     }
@@ -62,20 +62,31 @@ public class FileController {
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
     public ResponseEntity<HealthInsuranceCertificateDataResponseDto> getDataFromHealthInsuranceCertificate(@RequestPart("health_insurance_certificate")
-                                                                                             MultipartFile healthInsuranceCertificate)
+                                                                                                                   MultipartFile healthInsuranceCertificate)
             throws IOException, InterruptedException {
         return new ResponseEntity<>(ocrService.getDataFromHealthInsuranceCertificate(healthInsuranceCertificate), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Endpoint for getting financial data from financial document",
-            notes = "Takes the image of financial document and returns information getting from it with using OCR")
-    @PostMapping(value = "/get_data_from_financial_document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation(value = "Endpoint data from working contract",
+            notes = "Takes the working contract and returns information getting from it with using OCR")
+    @PostMapping(value = "/get_data_from_working_contract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public ResponseEntity<FinancialDocumentResponseDto> getDataFromFinancialDocument(@RequestPart("financial_document")
-                                                                                 MultipartFile financialDocument)
+    public ResponseEntity<FinancialDocumentResponseDto> getDataFromWorkingContract(@RequestPart("working_contract")
+                                                                                           MultipartFile workingContract)
             throws IOException, InterruptedException {
-        return new ResponseEntity<>(ocrService.getDataFromFinancialDocument(financialDocument), HttpStatus.OK);
+        return new ResponseEntity<>(ocrService.getDataFromWorkingContract(workingContract), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Endpoint data from blocked account",
+            notes = "Takes the block account document and returns information getting from it with using OCR")
+    @PostMapping(value = "/get_data_from_block_account", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin
+    public ResponseEntity<FinancialDocumentResponseDto> getDataFromBlockedAccount(@RequestPart("blocked_account")
+                                                                                          MultipartFile blockedAccount)
+            throws IOException, InterruptedException {
+        return new ResponseEntity<>(ocrService.getDataFromBlockedAccount(blockedAccount), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Endpoint for generation user's application form for Auslenderamt",
@@ -84,11 +95,11 @@ public class FileController {
     @PostMapping(value = "/generate_application_form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @CrossOrigin
     public ResponseEntity<byte[]> generateApplicationForm(@RequestPart(name = "documents", required = false)
-                                                                      MultipartFile[] documents,
+                                                                  MultipartFile[] documents,
                                                           @RequestPart(name = "signature_image", required = false)
                                                                   MultipartFile signatureImage,
                                                           @RequestPart(name = "user_data", required = false)
-                                                                      UserDataRequestDto userData)
+                                                                  UserDataRequestDto userData)
             throws IOException, ScriptException, InterruptedException, DocumentException,
             com.lowagie.text.DocumentException {
 

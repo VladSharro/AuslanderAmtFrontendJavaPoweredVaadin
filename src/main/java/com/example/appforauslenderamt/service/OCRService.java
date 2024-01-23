@@ -94,10 +94,24 @@ public class OCRService {
 
     }
 
-    public FinancialDocumentResponseDto getDataFromFinancialDocument(MultipartFile financialDocument)
+    public FinancialDocumentResponseDto getDataFromWorkingContract(MultipartFile workingContract)
             throws IOException, InterruptedException {
-        logger.info("Attempt to process financial document {} with OCR", financialDocument);
-        String line = processWithOCR(financialDocument, ocrConfig.getFinancialDocumentAnalysisFilePath());
+        logger.info("Attempt to process working contract {} with OCR", workingContract);
+        String line = processWithOCR(workingContract, ocrConfig.getWorkingContractAnalysisFilePath());
+        // Process line of the output here
+        String[] userData = line.split(",");
+
+        return FinancialDocumentResponseDto.builder()
+                .sum(userData[0])
+                .date(userData[1])
+                .build();
+
+    }
+
+    public FinancialDocumentResponseDto getDataFromBlockedAccount(MultipartFile blockedAccount)
+            throws IOException, InterruptedException {
+        logger.info("Attempt to process blocked account {} with OCR", blockedAccount);
+        String line = processWithOCR(blockedAccount, ocrConfig.getBlockedAccountAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
 

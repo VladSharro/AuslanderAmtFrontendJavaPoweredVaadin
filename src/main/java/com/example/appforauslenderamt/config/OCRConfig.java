@@ -14,7 +14,8 @@ public class OCRConfig {
     private String passportAnalysisFilePath;
     private String certificateOfEnrollmentAnalysisFilePath;
     private String healthInsuranceCertificateAnalysisFilePath;
-    private String financialDocumentAnalysisFilePath;
+    private String workingContractAnalysisFilePath;
+    private String blockedAccountAnalysisFilePath;
 
 }
 

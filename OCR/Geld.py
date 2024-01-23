@@ -1,23 +1,34 @@
 import os
-
+import json
 import cv2
 import pytesseract
 import re
-import tkinter as tk
-from tkinter import filedialog
-from PIL import Image, ImageTk
+import io
+import base64
 import fitz  # PyMuPDF
 import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
+import sys
 
-# Path to the Tesseract executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# # Path to the Tesseract executable
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
 
-def geld(pdf_path):
-    doc = fitz.open(pdf_path)
+def geld(encoded_pdf_path):
+    # Read the encoded PDF file
+    with open(encoded_pdf_path, 'rb') as pdf_file:
+       # Decode the base64-encoded PDF
+       decoded_pdf = base64.b64decode(pdf_file.read())
+
+    # Create a BytesIO object to simulate a file-like object from the decoded PDF
+    pdf_stream = io.BytesIO(decoded_pdf)
+
+    # Use PyMuPDF to extract text
+    text = ""
+
+    doc = fitz.open(stream=pdf_stream, filetype="pdf")
     page = doc[0]  # Assuming the information is on the first page
 
     #eur_lines = [line for line in page.split('\n') if 'EUR' in line]
@@ -46,11 +57,9 @@ def geld(pdf_path):
         if "EUR" in line:
             for number in numbers:
                 try:
-                    # Замена запятых на точки для европейского формата чисел
                     converted_number = float(number.replace(',', ''))
                     eur_numbers.append(converted_number)
                 except ValueError:
-                    # Пропуск неверных форматов
                     continue
 
 
@@ -65,13 +74,12 @@ def geld(pdf_path):
     date = dates[0]
     #print(date)
 
-    return max_eur_number, date, doc
+    return max_eur_number, date
 
 
 if __name__ == "__main__":
+    # Access the PDF file path from the command-line argument
     encoded_pdf_path = sys.argv[1]
-    #with open(encoded_pdf_path, 'r') as file:
-    #    image_data = file.read()
 
     max_eur_number, date = geld(encoded_pdf_path)
     print(','.join([str(max_eur_number), date]))
