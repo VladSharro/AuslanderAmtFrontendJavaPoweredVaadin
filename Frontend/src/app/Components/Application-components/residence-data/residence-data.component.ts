@@ -50,7 +50,10 @@ export class ResidenceDataComponent {
 
   isOverwriteSlideOn = false;
 
-  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService, private ocrService: OcrService){}
+  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService, private ocrService: OcrService){
+    this.getDataFromUploaded()
+
+  }
 
   residence_labels = new PlaceOfResidenceSectionLabels();
 
@@ -141,8 +144,11 @@ export class ResidenceDataComponent {
     this.isDataLoading = true
     try{
       const extractedData = await this.ocrService.extractEnrollmentCertificatetData(this.enrollmentCertificateFile!);
-      this.checkData(extractedData)
-    }catch(error){
+      if(extractedData != null){
+        this.checkData(extractedData)
+      }else{
+        this.snackBarService.openFor(WarningTypes.ExtractFailed)
+      }     }catch(error){
       console.error(error)
       this.isDataLoading = false;
       this.snackBarService.openFor(WarningTypes.fileError)
@@ -222,4 +228,37 @@ export class ResidenceDataComponent {
       this.isNextAllowed = false
     }
   }
+
+  getDataFromUploaded(){
+
+    if(this.applicationService.getApplicationData().isContinue){
+      const appData = this.applicationService.getApplicationData()
+      this.residenceData = {
+        placeOfResidence: appData.placeOfResidence,
+        isPreviousStays: appData.isPreviousStays,
+        previousStayAddress: appData.previousStayAddress,
+        dateFrom: appData.visaValidFrom,
+        dateTo:appData.visaValidTo,
+        residenceAbroadIfRetained: appData.residenceAbroadIfRetained,
+        isResidenceAbroadRetained: appData.isResidenceAbroadRetained,
+        
+      }
+      this.registrationFile = this.applicationService.tempRegistrationFile;
+      this.enrollmentCertificateFile = this.applicationService.tempEnrollment
+
+      }else{
+        this.residenceData = {
+          placeOfResidence: '',
+          isPreviousStays: '',
+          previousStayAddress: '',
+          dateFrom: '',
+          dateTo:'',
+          residenceAbroadIfRetained: '',
+          isResidenceAbroadRetained: '',
+          
+        }
+        this.enrollmentCertificateFile = null
+        this.registrationFile = null
+      }
+    }
 }

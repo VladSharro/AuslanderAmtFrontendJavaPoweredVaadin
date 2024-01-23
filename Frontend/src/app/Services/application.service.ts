@@ -24,7 +24,6 @@ import { BenefitsUnderSocialLaw } from '../Models/BackendModels/BenefitsUnderSoc
 import { HealthInsuranceInfo } from '../Models/BackendModels/HealthInsuranceInfo';
 import { OffencesInfo } from '../Models/BackendModels/OffencesInfo';
 import { Location } from '../Models/BackendModels/Location';
-import { idToken } from '@angular/fire/auth';
 import { ResidencePermitValidity } from '../Models/BackendModels/ResidencePermitValidity';
 import { FinalForm } from '../Models/BackendModels/FinalForm';
 
@@ -38,8 +37,76 @@ export class ApplicationService {
   private applicationData = new Application()
   private basicDataLabels = new BasicDataLabels()
 
+  tempPassportFile: File | null = null
+  tempVisaFile: File | null = null
+  tempRegistrationFile: File | null = null
+  tempEnrollment: File | null = null
+  tempFinancial: FinancialDocument[] = []
+  tempInsurance: File | null = null
+  tempPhoto: File | null = null
+  tempSignature : File | null = null
+  tempAdditional = new Map<string, File>()
+
+
+  setApplicationPassport(passport: File){
+    this.applicationData.passportFile = passport
+    this.tempPassportFile = passport
+  }
+  
+
+  setApplicationVisa(visa: File){
+    this.applicationData.visaFile = visa
+    this.tempVisaFile = visa
+  }
+
+  setApplicationRegistration(registration: File){
+    this.applicationData.registrationFile = registration
+    this.tempRegistrationFile = registration
+  }
+
+  setApplicationEnrollment(enrollment: File){
+    this.applicationData.enrollmentCertificateFile = enrollment
+    this.tempEnrollment = enrollment
+  }
+
+  setApplicationFinancial(financial: FinancialDocument[]){
+    this.applicationData.financialSupportFiles = financial
+    this.tempFinancial = financial
+  }
+
+  setApplicationInsurance(insurance: File){
+    this.applicationData.insuranceFile = insurance
+    this.tempInsurance = insurance
+  }
+
+  setApplicationPhoto(photo: File){
+    this.applicationData.photoFile = photo
+    this.tempPhoto = photo
+  }
+
+  setApplicationSignature(signature: File){
+    this.applicationData.signatureFile = signature
+    this.tempSignature = signature
+  }
+
+  setApplicationAdittionalDocs(additionalDocs: Map<string, File>){
+    this.applicationData.additionalDocs = additionalDocs
+    this.tempAdditional = additionalDocs
+    console.log(this.tempAdditional)
+
+  }
+
+
+  setApplicationType(isDownload: boolean){
+    this.applicationData.isContinue = isDownload;
+  }
+
+  setApplicationData(application: Application){
+    this.applicationData = application;
+  }
+
   getApplicationData(){
-    console.log(this.applicationData)
+    //console.log(this.applicationData)
     return this.applicationData;
   }
 
@@ -218,6 +285,7 @@ export class ApplicationService {
 
   setAdditionalDocuments(additionalDocuments: Map<string, File>){
     this.applicationData.additionalDocs = additionalDocuments
+    this.tempAdditional = additionalDocuments
   }
 
   generateDocumentsFrom(){

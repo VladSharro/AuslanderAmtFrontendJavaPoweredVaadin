@@ -7,7 +7,11 @@ export enum WarningTypes{
     FormCreated,
     FormCreatError,
     UpdateSuccessful,
-    UpdateFailed
+    UpdateFailed,
+    ExtractSuccess,
+    ExtractFailed,
+    MissingEmail,
+    mailProblem
 
 
 }

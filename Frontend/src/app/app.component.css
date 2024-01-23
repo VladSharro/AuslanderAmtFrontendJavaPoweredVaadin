@@ -12,27 +12,18 @@ app-header {
     left: 0;
     right: 0;
     flex-shrink: 0; /* Ensure the footer doesn't shrink if the content is short */
-
-  }
-  
-  .spacer {
-    position: relative;
-    height: 50px;
-    margin: auto; /* Adjust the height based on your preference */
-    
   }
   
   /* Adjust the styles for the router-outlet or other content as needed */
   router-outlet {
     flex-grow: 0.1;
-    margin-top: auto; /* Adjust the margin to account for the fixed header */
+    flex: 1;
     margin-bottom: auto; /* Adjust the margin to account for the fixed footer */
-    display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgba(255, 255, 255, 0);
     overflow-y: auto; /* Allow vertical scrolling */
-    min-height: 100px;  
+    min-height: 100vh;  
     flex: 1;
 } 
     

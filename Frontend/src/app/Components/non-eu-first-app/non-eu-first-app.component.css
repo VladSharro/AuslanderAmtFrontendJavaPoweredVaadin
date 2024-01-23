@@ -44,11 +44,11 @@
         }
   
   
-  .main_div{
+        .main_div{
           width: 100%;
-          height: 100%;
-          justify-content: center;
+          height: 80%;
         }
+  
 
 .example-input-wrapper {
             margin-bottom: 10px;
@@ -124,5 +124,12 @@ label {
 
 .palceholder_selector{
   color: #777777;
+}
+
+.floating-button {
+  position: absolute;
+  bottom: 5%; /* Adjust the distance from the bottom as needed */
+  right: 1%; /* Adjust the distance from the right as needed */
+  /* Add other styling for your button as needed */
 }
           

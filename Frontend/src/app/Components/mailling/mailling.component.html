@@ -1,0 +1,43 @@
+<app-header></app-header>
+
+<div class="main_div">
+    <mat-card class="card-container">
+<form style="align-items: center; text-align: center; justify-content: center;" (submit)="false">
+
+
+    <div *ngIf="isLoading" class="spinner-overlay" [ngClass]="{'custom-spinner-color': isLoading}">
+            <mat-spinner color="white" ></mat-spinner>
+          
+    </div>    
+    
+    <div *ngIf="isLoading == false">
+        <h1 *ngIf="isSuccess == true" style="color: #b42e29;">{{maillingLabels.congratulation}}</h1>
+        <h3 *ngIf="isSuccess == true" style="color: grey;">{{maillingLabels.success}}</h3><br>
+        <h3 *ngIf="isSuccess == true" style="color: grey;">{{maillingLabels.checkEmail}}</h3><br>
+
+
+        
+        <br>
+        <h1 *ngIf="isSuccess == false" style="color: #b42e29;">{{maillingLabels.readyApplication}}</h1>
+        <h3 *ngIf="isSuccess == false" style="color: grey;">{{maillingLabels.provideEmail}}</h3><br>
+
+        <div *ngIf="isSuccess == false" class="rounded-input-container" >
+            <input class="rounded-input" type="email" name="email_field" id="email_field" [(ngModel)]="email" placeholder="{{maillingLabels.mail_label}}" email #emailInput="ngModel">
+            <span *ngIf="emailInput.invalid" style="margin-left: 25px; color: red;">{{maillingLabels.inValid_mail_label}}</span>
+      
+          </div>
+        <button *ngIf="isSuccess == false" mat-stroked-button style="background-color: #b42e29; color: white;   margin: 1%;" (click)="submitAndMail()" >{{ maillingLabels.submitWithMailbuttonLabel}}</button>        
+
+
+        <hr *ngIf="isSuccess == false">
+        <h1 *ngIf="isSuccess == false" >{{maillingLabels.orSentence}}</h1>
+        <button *ngIf="isSuccess == false" mat-stroked-button style="background-color: #b42e29; color: white;   margin: 1%;" (click)="submitWithoutMail()" >{{ maillingLabels.submitWithoutMail}}</button>        
+
+
+    </div>
+    
+      
+    </form>
+    </mat-card>
+    </div>
+    

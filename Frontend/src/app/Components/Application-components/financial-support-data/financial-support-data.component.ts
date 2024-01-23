@@ -44,7 +44,10 @@ export class FinancialSupportDataComponent {
   @Output() fifthStepperValidityChange = new EventEmitter<boolean>();
 
 
-  constructor(private applicationService: ApplicationService, private ocrService: OcrService, private snackBarService: SnackBarService){}
+  constructor(private applicationService: ApplicationService, private ocrService: OcrService, private snackBarService: SnackBarService){
+    this.getDataFromUploaded()
+
+  }
 
   supportLabels = new SupportLabels();
   financialSupportFiles: FinancialDocument[] = [];
@@ -123,8 +126,11 @@ export class FinancialSupportDataComponent {
     this.isDataLoading = true
     const extractedData = await this.ocrService.extractFinancialDocuemntCertificatetData(this.financialSupportFiles[index].file!);
     this.isDataLoading = false;
-    this.updateFinancialData(extractedData)
-  }
+    if(extractedData != null){
+      this.updateFinancialData(extractedData)
+    }else{
+      this.snackBarService.openFor(WarningTypes.ExtractFailed)
+    }  }
 
   private updateFinancialData(extractedData: financialdocumentResponse | never[]){
     // this.isDataLoading = false;
@@ -183,8 +189,11 @@ private async extractInsuranceData(){
     this.isDataLoading = true
     const insuracneData = await this.ocrService.extractInsuranceCertificatetData(this.insuranceFile!);
     this.isDataLoading = false
-    this.updateInsuranceData(insuracneData)
-  }
+    if(insuracneData != null){
+      this.updateInsuranceData(insuracneData)
+    }else{
+      this.snackBarService.openFor(WarningTypes.ExtractFailed)
+    }  }
 
   saveData(){
 
@@ -294,4 +303,39 @@ private async extractInsuranceData(){
     // this.nextAccepted = false;
     this.isNextDisabled = true;
   }
+
+  getDataFromUploaded(){
+    if(this.applicationService.getApplicationData().isContinue){
+      const appData = this.applicationService.getApplicationData()
+      this.meansOfSupportData = {
+
+        meansOfSupport: appData.meansOfSupport,
+        isSecondOrTwelfth: appData.isSecondOrTwelfth,
+        supportTyeIfYes: appData.supportTyeIfYes,
+        isInsuranceAvailable: appData.isInsuranceAvailable,
+        insuranceCompany: appData.insuranceCompany,
+        finalValueOfFinancialSupport: appData.finalValueOfFinancialSupport,
+        noOfMonths: appData.noOfMonths,
+        date_of_expiry: appData.insuranceExpiryDate
+    
+      }
+      this.financialSupportFiles = this.applicationService.tempFinancial;
+      this.insuranceFile = this.applicationService.tempInsurance
+  }else{
+    this.meansOfSupportData = {
+
+      meansOfSupport: '',
+      isSecondOrTwelfth: '',
+      supportTyeIfYes: '',
+      isInsuranceAvailable: '',
+      insuranceCompany: '',
+      finalValueOfFinancialSupport: 0,
+      noOfMonths: 0,
+      date_of_expiry: ''
+  
+    }
+    this.financialSupportFiles = []
+    this.insuranceFile = null
+  }
+}
 }

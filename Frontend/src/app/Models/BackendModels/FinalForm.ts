@@ -16,47 +16,87 @@ import { ResidencePermitValidity } from "./ResidencePermitValidity";
 import { SpecialResidenceRightsType } from "./SpecialResidenceRightsType";
 import { TrainingTypes } from "./TrainingTypes";
 import { UserPersonalData } from "./UserPersonalData";
+import { Expose, Transform } from 'class-transformer';
+
 
 export class FinalForm {
-
+@Expose()
     personal_data: UserPersonalData
+    @Expose()
     marital_status: string
+    @Expose()
     marital_status_since: String
+    @Expose()
     colour_of_eyes: string
+    @Expose()
     height: String
+    @Expose()
     mobile_number: String
+    @Expose()
     email: String
+    @Expose()
     passport_type: string
+    @Expose()
     custom_passport_type: String
+    @Expose()
     passport_number: String
+    @Expose()
     valid_from: String
+    @Expose()
     valid_till: String
+    @Expose()
     issued_by: String
+    @Expose()
     issued_on: String
+    @Expose()
     is_previous_stays_in_Germany: Boolean
+    @Expose()
     previous_stays_in_Germany: PreviousStaysInGermany
+    @Expose()   
     is_place_of_residence_abroad_retains: Boolean
+    @Expose()
     place_of_residence_abroad: PlaceOfResidenceAbroad
+    @Expose()
     partner_personal_data: UserPersonalData
+    @Expose()
     children_personal_data: UserPersonalData[]
+    @Expose()
     mother_personal_data: UserPersonalData
+    @Expose()
     father_personal_data: UserPersonalData
+    @Expose()
     purpose_of_stay_in_Germany: PurposeOfStayInGermany
+    @Expose()
     training_type : string
+    @Expose()
     job_seeking_type: string
+    @Expose()
         employer: String
+        @Expose()
         gainful_employment: string
+        @Expose()
         reasons_defined_under_international_law: string
+        @Expose()
         application_for_exhibitions_type: string
+        @Expose()
         application_for_exhibitions_reason: String
+        @Expose()
         family_reason: string
+        @Expose()
         special_residence_right: string
+        @Expose()
         means_of_support: String
+        @Expose()
         needs_benefit_under_social_law: Boolean
+        @Expose()
         benefit_under_social_law: string
+        @Expose()
         health_insurance_info: HealthInsuranceInfo
+        @Expose()
         offences_info: OffencesInfo
+        @Expose()
         residence_permit_validity: ResidencePermitValidity
+        @Expose()
         application_place: String
 
 

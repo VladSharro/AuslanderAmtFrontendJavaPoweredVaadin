@@ -5,7 +5,7 @@
 
   <div >
     <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openRegistrationInput()">{{residence_labels.city_registration_document_upload_button_label}} </button>
-    <input id="registrationFileInput" (change)="extractedDataChanged()" hidden type="file" accept=".pdf, .jpeg, .png" (change)="registrationUpload($event)">
+    <input id="registrationFileInput" (change)="extractedDataChanged()" hidden type="file" accept=".pdf, .jpeg, .png" (change)="registrationUpload($event)"><br>
     <span *ngIf="registrationFile" style="margin-left: 10px;">{{ registrationFile.name }}</span>
   </div>
 
@@ -63,7 +63,7 @@
 
   <div>
     <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openCertificateEnrollmentInput()">{{residence_labels.enrollment_certificate_button_label}} </button>
-    <input id="enrollmentFileInput" (change)="extractedDataChanged()" hidden type="file" accept=".pdf, .jpeg, .png" (change)="enrollmentCertificateUpload($event)">
+    <input id="enrollmentFileInput" (change)="extractedDataChanged()" hidden type="file" accept=".pdf, .jpeg, .png" (change)="enrollmentCertificateUpload($event)"><br>
     <span *ngIf="enrollmentCertificateFile" style="margin-left: 10px;">{{ enrollmentCertificateFile.name }}</span>
   </div>
 

@@ -34,7 +34,9 @@ export class PhotoDataComponent {
 
   isDataLoading = false;
   isNextDisabled = true;
-constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
+constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){    
+  this.getDataFromUploaded()
+}
 
 photoLabels = new PhotoLabels();
 
@@ -107,4 +109,14 @@ extractedDataChanged(){
 
  }
 
+ getDataFromUploaded(){
+  if(this.applicationService.getApplicationData().isContinue){
+    this.photoFile = this.applicationService.tempPhoto
+    this.signFile = this.applicationService.tempSignature    
+
+ }else{
+  this.photoFile = null
+  this.signFile = null
+ }
+ }
 }

@@ -38,7 +38,10 @@ export class FamilyDataComponent {
   isDataLoading = false;
   isNextDisabled = true;
 
-  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
+  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){
+    this.getDataFromUploaded()
+
+  }
   fmailyLabels = new familyLabels();
   sexOptions = [this.fmailyLabels.sex_options_m , this.fmailyLabels.sex_options_f, this.fmailyLabels.sex_options_d]
   yesNoOptions = [this.fmailyLabels.yes_option, this.fmailyLabels.no_option];
@@ -119,6 +122,66 @@ export class FamilyDataComponent {
     this.snackBarService.openFor(WarningTypes.dataSaved)
     this.isNextDisabled = false;
  
+  }
+
+  getDataFromUploaded(){
+    if(this.applicationService.getApplicationData().isContinue){
+      const appData = this.applicationService.getApplicationData()
+      this.familyData.partnerLastName = appData.partnerLastName
+      this.familyData.partnerFirstName = appData.partnerFirstName
+      this.familyData.partnerDateOfBirth = appData.partnerDateOfBirth
+      this.familyData.partnerPlaceOfBirth = appData.partnerPlaceOfBirth
+      this.familyData.partnerNationality = appData.partnerNationality
+      this.familyData.partnerSex = appData.partnerSex
+      this.familyData.partnerCurrentResidenceInGermany = appData.partnerCurrentResidenceInGermany
+      this.familyData.isChildrenAvailable = appData.isChildrenAvailable
+      this.familyData.childern = appData.childern
+      this.familyData.isFatherApplicable = appData.isFatherApplicable
+      this.familyData.fatherLastName = appData.fatherLastName
+      this.familyData.fatherFisrtName = appData.fatherFisrtName
+      this.familyData.fatherNationality = appData.fatherNationality
+      this.familyData.fatherPlaceOfBirthForMinors = appData.fatherPlaceOfBirthForMinors
+      this.familyData.fatherDateOfBirthForMinors = appData.fatherDateOfBirthForMinors
+      this.familyData.fatherCurrentResidenceForMinors = appData.fatherCurrentResidenceForMinors
+      this.familyData.isMotherApplicable = appData.isMotherApplicable
+      this.familyData.motherLastName = appData.motherLastName
+      this.familyData.motherFisrtName = appData.motherFisrtName
+      this.familyData.motherNationality = appData.motherNationality
+      this.familyData.motherPlaceOfBirthForMinors = appData.motherPlaceOfBirthForMinors
+      this.familyData.motherDateOfBirthForMinors = appData.motherDateOfBirthForMinors
+      this.familyData.motherCurrentResidenceForMinors = appData.motherCurrentResidenceForMinors
+
+    }else{
+
+      this.familyData = {
+        
+        partnerLastName: '',
+        partnerFirstName: '',
+        partnerDateOfBirth: '',
+        partnerPlaceOfBirth: '',
+        partnerNationality: '',
+        partnerSex: '',
+        partnerCurrentResidenceInGermany:'',
+        isChildrenAvailable: '',
+        childern: [new Child()],
+        isFatherApplicable: '',
+        fatherLastName: '',
+        fatherFisrtName: '',
+        fatherNationality: '',
+        fatherPlaceOfBirthForMinors: '',
+        fatherDateOfBirthForMinors: '',
+        fatherCurrentResidenceForMinors: '',
+        isMotherApplicable: '',
+        motherLastName: '',
+        motherFisrtName: '',
+        motherNationality: '',
+        motherPlaceOfBirthForMinors: '',
+        motherDateOfBirthForMinors: '',
+        motherCurrentResidenceForMinors: '',
+    
+    
+      }
+    }
   }
 
 }

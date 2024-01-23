@@ -11,10 +11,13 @@ import { AdminDashboardComponent } from './Components/admin-dashboard/admin-dash
 import { NonEuRenewAppComponent } from './Components/non-eu-renew-app/non-eu-renew-app.component';
 import { DownloadApplicationComponent } from './Fixed_components/download-application/download-application.component';
 import { StayDataRenewalComponent } from './Components/Application-components/stay-data-renewal/stay-data-renewal.component';
+import { ContinueApplicationComponent } from './Components/continue-application/continue-application.component';
+import { MaillingComponent } from './Components/mailling/mailling.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
     {path: "new-application", component: StartApplicationComponent},
+    {path: "continue-application", component: ContinueApplicationComponent},
     {path: "Guide", component: GuideComponent},
     {path: "FAQ", component: FaqScreenComponent},
     {path: "Documents", component: DocumentsComponent},
@@ -24,7 +27,6 @@ export const routes: Routes = [
     {path: "nonEuRenewApp", component: NonEuRenewAppComponent},
     {path: "adminDashboard", component:AdminDashboardComponent},
     {path: "downloadApplication", component:DownloadApplicationComponent},
-    {path: "nonEuRenewApp", component: NonEuRenewAppComponent},
-    // {path: "previewApplication", component: ApplicationPreviewComponent},
+    {path: "mailling", component: MaillingComponent}
 
 ];

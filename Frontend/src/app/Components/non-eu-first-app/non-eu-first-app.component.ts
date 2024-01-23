@@ -22,6 +22,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { FamilyDataComponent } from '../Application-components/family-data/family-data.component';
 import { SnackBarService } from '../../Services/snack-bar.service';
 import { DownloadApplicationComponent } from '../../Fixed_components/download-application/download-application.component';
+import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
 
 
 
@@ -51,7 +53,8 @@ import { DownloadApplicationComponent } from '../../Fixed_components/download-ap
     PhotoDataComponent,
     AdiitionalDocumentsComponent,
     DoneComponent,
-    DownloadApplicationComponent
+    DownloadApplicationComponent,
+    HeaderComponent
   ],
   templateUrl: './non-eu-first-app.component.html',
   styleUrl: './non-eu-first-app.component.css'
@@ -69,9 +72,11 @@ export class NonEuFirstAppComponent {
   }
 
 
-  constructor(private snackBarService: SnackBarService) {}
+  constructor(private snackBarService: SnackBarService, private activeRouter: ActivatedRoute) {}
 
   stepperLabels = new stepperLabels();
+
+  pIsContinue = false;
 
   isBasicDataValid = false;
 
@@ -104,6 +109,7 @@ export class NonEuFirstAppComponent {
   onCheckFifthStepperChange(isValid: boolean) {
     this.isSupportDataValid = isValid;
   }
+
   
   //////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////// passport section ////////////////////////////

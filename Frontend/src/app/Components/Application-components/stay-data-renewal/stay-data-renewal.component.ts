@@ -34,7 +34,10 @@ export class StayDataRenewalComponent {
 
   isNextDisabled = true;
 
-  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
+  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){
+    this.getDataFromUploaded()
+
+  }
 
   stayData = {
     purpose_of_stay_germany:'',
@@ -63,5 +66,20 @@ export class StayDataRenewalComponent {
   staySectionButtonClicked(){
 
     
+  }
+
+  getDataFromUploaded(){
+      if(this.applicationService.getApplicationData().isContinue){
+        const appData = this.applicationService.getApplicationData()
+        this.stayData = {
+          purpose_of_stay_germany: appData.purposeOfStay,
+          purpose_changed_explaination: appData.PurposeChanged
+        }
+      }else{
+        this.stayData = {
+          purpose_of_stay_germany:'',
+          purpose_changed_explaination:''
+        }
+      }
   }
 }

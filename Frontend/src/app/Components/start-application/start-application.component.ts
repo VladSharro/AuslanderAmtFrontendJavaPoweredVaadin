@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationTypeLabels } from '../../Labels/applicationType_labels';
 import { MatRadioModule } from '@angular/material/radio';
@@ -8,6 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { SnackBarService } from '../../Services/snack-bar.service';
 import { WarningTypes } from '../../Models/enums/warningEnum';
+import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
+import { AppPositionService } from '../../Services/app-position.service';
+
 
 
 
@@ -16,17 +20,21 @@ import { WarningTypes } from '../../Models/enums/warningEnum';
 @Component({
   selector: 'app-start-application',
   standalone: true,
-  imports: [CommonModule, MatRadioModule, FormsModule, MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatRadioModule, FormsModule, MatCardModule, MatButtonModule, HeaderComponent],
   templateUrl: './start-application.component.html',
   styleUrl: './start-application.component.css'
 })
 
 
 
-export class StartApplicationComponent {
+export class StartApplicationComponent implements OnInit{
 
-  constructor(private router: Router, private snackBarService: SnackBarService){}
-  
+  constructor(private router: Router, private snackBarService: SnackBarService, private route: ActivatedRoute, private appPosition: AppPositionService){}
+  ngOnInit(): void {
+  this.checkIfContinue()
+  }
+
+    isContinue = false;
     isFirstTime = false
     isRenew = false;
   
@@ -72,13 +80,22 @@ export class StartApplicationComponent {
   }
 
 
+  checkIfContinue(){
+    this.route.params.subscribe(params => {
+      this.isContinue= params['id'];
+     
+    });
+  }
   
 
   navigateToProperApplication(){
       if(this.isFirstTime){
+        this.appPosition.isOutAllowed = false;
         this.router.navigateByUrl('nonEuFirstTimeApp')
+
       }
       if(this.isRenew){
+        this.appPosition.isOutAllowed = false;
         this.router.navigateByUrl('nonEuRenewApp')
       }
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +21,9 @@ import { AdiitionalDocumentsComponent } from '../Application-components/adiition
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { FamilyDataComponent } from '../Application-components/family-data/family-data.component';
 import { SnackBarService } from '../../Services/snack-bar.service';
+import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
+
 
 @Component({
   selector: 'app-non-eu-renew-app',
@@ -45,13 +48,15 @@ import { SnackBarService } from '../../Services/snack-bar.service';
     OffenceDataComponent,
     PhotoDataComponent,
     AdiitionalDocumentsComponent,
-    DoneComponent],
+    DoneComponent,
+  HeaderComponent],
   templateUrl: './non-eu-renew-app.component.html',
   styleUrl: './non-eu-renew-app.component.css'
 })
 export class NonEuRenewAppComponent {
 
-  constructor(private snackBarService: SnackBarService) {}
+  constructor(private snackBarService: SnackBarService, private activeRouter: ActivatedRoute) {}
+  
 
   stepperLabels = new stepperLabels();
 
@@ -86,6 +91,8 @@ export class NonEuRenewAppComponent {
   onCheckFifthStepperChange(isValid: boolean) {
     this.isSupportDataValid = isValid;
   }
+
+  
   
   //////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////// passport section ////////////////////////////

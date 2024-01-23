@@ -1,11 +1,16 @@
+import { Expose } from "class-transformer"
 
 
 export class PlaceOfResidenceAbroad {
-
+    @Expose()
     country: string
+    @Expose()
     postal_code: string
+    @Expose()
     place: string
+    @Expose()
     street: string
+    @Expose()
     house_number: string
 
 

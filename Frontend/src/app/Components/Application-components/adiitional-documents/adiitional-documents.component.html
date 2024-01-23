@@ -2,7 +2,7 @@
     <br>
     <div *ngFor="let doc of additionalDocs">
       <button mat-raised-button type="button" class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openDocumentInput(doc.name)">upload {{doc.name}}</button>
-    <input #fileInput [id]="'input-' + doc.name" hidden type="file" accept=".pdf, .jpeg, .png" (change)="inputUploaded($event, doc.name)" >
+    <input #fileInput [id]="'input-' + doc.name" hidden type="file" accept=".pdf, .jpeg, .png" (change)="inputUploaded($event, doc.name)" ><br>
     <span *ngIf="additionalDocsMap.get(doc.name)" style="margin-left: 10px;">{{ additionalDocsMap.get(doc.name)?.name }}</span>
     </div>
     <div style="display: flex; justify-content: center; margin-top: 1%;">

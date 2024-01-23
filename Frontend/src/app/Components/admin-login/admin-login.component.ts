@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
 
 
 
@@ -19,7 +20,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [CommonModule, MatCardModule, FormsModule, MatButtonModule, ReactiveFormsModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatCardModule, FormsModule, MatButtonModule, ReactiveFormsModule, MatProgressSpinnerModule, HeaderComponent],
   templateUrl: './admin-login.component.html',
   styleUrl: './admin-login.component.css'
 })

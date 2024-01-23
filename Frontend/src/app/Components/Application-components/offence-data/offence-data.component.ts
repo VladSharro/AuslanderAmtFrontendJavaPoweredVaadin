@@ -35,7 +35,10 @@ export class OffenceDataComponent {
   isNextDisabled = true;
 
 
-  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
+  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){
+    this.getDataFromUploaded()
+
+  }
 
   offencesLabel = new offenciesLabels();
 
@@ -81,6 +84,49 @@ extractedDataChanged(){
 
  }
 
+getDataFromUploaded(){
+  if(this.applicationService.getApplicationData().isContinue){
+    const appData = this.applicationService.getApplicationData()
+    this.offencesData = {
 
+      isConvicted: appData.isConvicted,
+      convictionPlace: appData.convictionPlace,
+      convictionReason: appData.convictionReason,
+      convictionTypeAndamount: appData.convictionTypeAndamount,
+      isUnderInvestigation: appData.isUnderInvestigation,
+      investigationPlace: appData.investigationPlace,
+      investigationAuthority: appData.investigationAuthority,
+      isExpelledOrDeported: appData.isExpelledOrDeported,
+      expelledFrom: appData.expelledFrom,
+      expelledOn: appData.expelledOn,
+      isEntryApplicationRejected: appData.isEntryApplicationRejected,
+      entryRejectedFrom: appData.entryRejectedFrom,
+      entyRejectedOn: appData.entyRejectedOn,
+      isResidenceApplicationRejected: appData.isResidenceApplicationRejected,
+      residenceRejectedFrom: appData.residenceRejectedFrom,
+      residenceRejectedOn: appData.residenceRejectedOn
+    }
 
+ }else{
+  this.offencesData = {
+
+    isConvicted: '',
+    convictionPlace: '',
+    convictionReason: '',
+    convictionTypeAndamount: '',
+    isUnderInvestigation: '',
+    investigationPlace: '',
+    investigationAuthority: '',
+    isExpelledOrDeported: '',
+    expelledFrom: '',
+    expelledOn: '',
+    isEntryApplicationRejected: '',
+    entryRejectedFrom: '',
+    entyRejectedOn: '',
+    isResidenceApplicationRejected: '',
+    residenceRejectedFrom: '',
+    residenceRejectedOn: ''
+  }
+ }
+  }
 }

@@ -1,3 +1,8 @@
 <div class="download-app">
-    <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;">{{labels.download_application}}</button>
+    <!-- <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;">{{labels.download_application}}</button> -->
+    <button mat-fab style="background-color: #b42e29; ;" (click)="downloadCurrentApplication()" aria-label="Example icon button with a delete icon">
+        <mat-icon style=" color: white">download</mat-icon>
+      </button>
 </div>
+
+
