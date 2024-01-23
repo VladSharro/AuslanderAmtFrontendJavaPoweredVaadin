@@ -27,10 +27,9 @@ def process_string(input_string):
 def extract_name_and_surname(encoded_image):
 
 
-    decoded_pdf = base64.b64decode(image_path)
+    decoded_pdf = base64.b64decode(encoded_image)
     pdf_stream = io.BytesIO(decoded_pdf)
 
-    # Конвертация PDF в изображение
     doc = fitz.open(stream=pdf_stream)
     page = doc[0]
     pix = page.get_pixmap()
@@ -44,7 +43,6 @@ def extract_name_and_surname(encoded_image):
 
     _, thresh = cv2.threshold(gray_img, 200, 255, cv2.THRESH_BINARY_INV)
 
-    # Поиск контуров
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 
