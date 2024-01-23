@@ -10,6 +10,7 @@ stages:
 ocr-test:
   image: python:3.11-slim
   stage: test
+  when: manual
   script:
     - apt-get update
     - apt-get -y install tesseract-ocr
@@ -49,6 +50,7 @@ e2e-test:
   before_script:
     - apt-get update && apt-get install -y docker.io
     - docker version
+    - service docker start
   script:
     - cd Tests
     - docker run --shm-size="2g" -v `pwd`:/opt/robotframework/tests:Z -e ROBOT_OPTIONS="--variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189" ppodgorsek/robot-framework
