@@ -1,26 +1,15 @@
-from io import BytesIO
-
 import cv2
 import pytesseract
-import re
-import tkinter as tk
-from tkinter import filedialog
-from PIL import Image, ImageTk
-import fitz  # PyMuPDF
 import numpy as np
-from datetime import datetime, timedelta
-import mimetypes
-import io
-
+import sys
+import os
 import base64
-
-
+import re
+from io import BytesIO
+from passporteye import read_mrz
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from passporteye import read_mrz, mrz
-
-# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
-
+import pycountry
 
 def process_string(input_string):
     parts = input_string.split(' ', 0)
@@ -31,35 +20,19 @@ def process_string(input_string):
         return input_string
 
 def extract_name_and_surname(encoded_image):
+    # Decode the Base64-encoded image data
+    image_data = base64.b64decode(encoded_image)
 
+    numpy_array = np.frombuffer(image_data, np.uint8)
+    img = cv2.imdecode(numpy_array, cv2.IMREAD_COLOR)
 
-    decoded_pdf = base64.b64decode(encoded_image)
-    pdf_stream = io.BytesIO(decoded_pdf)
-
-    doc = fitz.open(stream=pdf_stream)
-    page = doc[0]
-    pix = page.get_pixmap()
-    img_data = pix.tobytes("png")
-    img = Image.open(BytesIO(img_data))
-    image = np.array(img)
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
+    country_dict = {country.alpha_3: country.name for country in pycountry.countries}
 
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    _, thresh = cv2.threshold(gray_img, 200, 255, cv2.THRESH_BINARY_INV)
+    _, thresh_img = cv2.threshold(gray_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-
-
-    binary_img = cv2.adaptiveThreshold(
-        thresh, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    )
-
-        
-    # Perform OCR using Tesseract
-    extracted_text = pytesseract.image_to_string(thresh, config='--psm 6') #, config='--psm 6'
+    extracted_text = pytesseract.image_to_string(thresh_img, config='--psm 6')
 
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
