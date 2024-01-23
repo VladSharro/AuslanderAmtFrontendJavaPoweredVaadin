@@ -45,15 +45,14 @@ endpoint-test:
     - python Tests/api/api_tests.py
 
 e2e-test:
-  image: debian:bullseye-slim
+  image: ppodgorsek/robot-framework:latest
   stage: test-after-deployment
+  variables:
+    BROWSER: "headlesschrome"
+    DOMAIN: "132.231.1.189"
+    ROBOT_TESTS_DIR: Tests/ui
   script:
-    - apt-get update && apt-get install -y docker.io
-    - service docker start
-    - docker version
-    - cd Tests
-    - docker run --shm-size="2g" -v `pwd`:/opt/robotframework/tests:Z -e ROBOT_OPTIONS="--variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189" ppodgorsek/robot-framework
-  
+    - /opt/robotframework/bin/run-tests-in-virtual-screen.sh
 
 # e2e-test:
 #   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
