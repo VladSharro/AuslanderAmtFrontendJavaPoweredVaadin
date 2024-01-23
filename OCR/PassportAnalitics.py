@@ -1,17 +1,20 @@
+from io import BytesIO
+
 import cv2
 import pytesseract
-import numpy as np
-import sys
-import os
-import base64
 import re
-from io import BytesIO
-from passporteye import read_mrz
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image, ImageTk
+import fitz  # PyMuPDF
+import numpy as np
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-import pycountry
+import mimetypes
 import io
 
+
+from dateutil.relativedelta import relativedelta
+from passporteye import read_mrz, mrz
 
 # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
