@@ -1,20 +1,23 @@
 import os
-
+import json
 import cv2
 import pytesseract
 import re
-# import tkinter as tk
-# from tkinter import filedialog
-# from PIL import Image, ImageTk
+import io
 import base64
 import fitz  # PyMuPDF
 import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
+import sys
 
-def extract_health(pdf_path):
+def extract_health(encoded_pdf_path):
+    # Read the encoded PDF file
+    with open(encoded_pdf_path, 'rb') as pdf_file:
+        # Decode the base64-encoded PDF
+        decoded_pdf = base64.b64decode(pdf_file.read())
 
-    decoded_pdf = base64.b64decode(pdf_path)
+#     decoded_pdf = base64.b64decode(pdf_path)
     pdf_stream = io.BytesIO(decoded_pdf)
 
 
@@ -27,6 +30,8 @@ def extract_health(pdf_path):
     page = doc[0]
 
     extracted_text = page.get_text()
+
+
 
     lines = extracted_text.split('\n')
 
@@ -63,11 +68,10 @@ def extract_health(pdf_path):
 
     return name, surname, krankenkasse, date
 
+if __name__ == "__main__":
+    # Access the PDF file path from the command-line argument
+    encoded_pdf_path = sys.argv[1]
 
-
-# Access the image data from the environment variable
-image_data = os.environ.get("IMAGE_DATA")
-
-# Call the function and print the result
-name, surname, krankenkasse, date = extract_health(image_data)
-print(','.join([name, surname, krankenkasse, date]))
+    # Call the function and print the result
+    name, surname, krankenkasse, date = extract_health(encoded_pdf_path)
+    print(','.join([name, surname, krankenkasse, date]))

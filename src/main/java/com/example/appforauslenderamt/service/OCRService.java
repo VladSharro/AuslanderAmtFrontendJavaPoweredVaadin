@@ -84,7 +84,6 @@ public class OCRService {
                 ocrConfig.getHealthInsuranceCertificateAnalysisFilePath());
         // Process line of the output here
         String[] userData = line.split(",");
-        System.out.println(line);
 
         return HealthInsuranceCertificateDataResponseDto.builder()
                 .firstName(userData[0])
