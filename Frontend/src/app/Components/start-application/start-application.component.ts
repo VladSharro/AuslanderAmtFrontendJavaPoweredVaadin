@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { SnackBarService } from '../../Services/snack-bar.service';
 import { WarningTypes } from '../../Models/enums/warningEnum';
 import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
+import { AppPositionService } from '../../Services/app-position.service';
 
 
 
@@ -18,7 +20,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-start-application',
   standalone: true,
-  imports: [CommonModule, MatRadioModule, FormsModule, MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatRadioModule, FormsModule, MatCardModule, MatButtonModule, HeaderComponent],
   templateUrl: './start-application.component.html',
   styleUrl: './start-application.component.css'
 })
@@ -27,7 +29,7 @@ import { ActivatedRoute } from '@angular/router';
 
 export class StartApplicationComponent implements OnInit{
 
-  constructor(private router: Router, private snackBarService: SnackBarService, private route: ActivatedRoute){}
+  constructor(private router: Router, private snackBarService: SnackBarService, private route: ActivatedRoute, private appPosition: AppPositionService){}
   ngOnInit(): void {
   this.checkIfContinue()
   }
@@ -88,11 +90,12 @@ export class StartApplicationComponent implements OnInit{
 
   navigateToProperApplication(){
       if(this.isFirstTime){
+        this.appPosition.isOutAllowed = false;
         this.router.navigateByUrl('nonEuFirstTimeApp')
 
       }
       if(this.isRenew){
-
+        this.appPosition.isOutAllowed = false;
         this.router.navigateByUrl('nonEuRenewApp')
       }
   }

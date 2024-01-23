@@ -10,6 +10,7 @@ import { ContactsComponent } from '../Dashboard-components/contacts/contacts.com
 import { UsersComponent } from '../Dashboard-components/users/users.component';
 import { AdditionalDocumentsComponent } from '../Dashboard-components/additional-documents/additional-documents.component';
 import { FinancialValueComponent } from '../Dashboard-components/financial-value/financial-value.component';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
 
 
 
@@ -17,7 +18,7 @@ import { FinancialValueComponent } from '../Dashboard-components/financial-value
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent, UsersComponent, AdditionalDocumentsComponent, FinancialValueComponent],
+  imports: [CommonModule,HeaderComponent, MatTabsModule, MatCardModule, MatChipsModule, MatIconModule, FaqComponentComponent, DocumentsComponent, ContactsComponent, UsersComponent, AdditionalDocumentsComponent, FinancialValueComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css'
 })

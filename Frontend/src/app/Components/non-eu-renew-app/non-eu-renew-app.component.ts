@@ -22,6 +22,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { FamilyDataComponent } from '../Application-components/family-data/family-data.component';
 import { SnackBarService } from '../../Services/snack-bar.service';
 import { ActivatedRoute } from '@angular/router';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
 
 
 @Component({
@@ -47,7 +48,8 @@ import { ActivatedRoute } from '@angular/router';
     OffenceDataComponent,
     PhotoDataComponent,
     AdiitionalDocumentsComponent,
-    DoneComponent],
+    DoneComponent,
+  HeaderComponent],
   templateUrl: './non-eu-renew-app.component.html',
   styleUrl: './non-eu-renew-app.component.css'
 })

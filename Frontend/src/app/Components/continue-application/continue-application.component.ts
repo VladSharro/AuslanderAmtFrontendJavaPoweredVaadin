@@ -13,6 +13,7 @@ import { SnackBarService } from '../../Services/snack-bar.service';
 import { WarningTypes } from '../../Models/enums/warningEnum';
 import { DownloadApplicationService } from '../../Services/download-application.service';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
 
 @Component({
   selector: 'app-continue-application',
@@ -21,6 +22,7 @@ import { Router } from '@angular/router';
     FormsModule,
     MatButtonModule,
     MatCardModule,
+    HeaderComponent
   ],
   templateUrl: './continue-application.component.html',
   styleUrl: './continue-application.component.css'

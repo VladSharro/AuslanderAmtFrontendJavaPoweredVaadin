@@ -6,11 +6,12 @@ import { ContactService } from '../../../Services/contact.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { HeaderComponent } from '../../../Fixed_components/header/header.component';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatCardModule, MatDividerModule, MatIconModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MatCardModule, MatDividerModule, MatIconModule, HeaderComponent],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css'
 })

@@ -1,4 +1,6 @@
-<mat-grid-list [cols]="isSmallScreen ? 1 : 2" rowHeight="2:1" class="custom_mat-grid-list">
+<app-header></app-header>
+
+<mat-grid-list style="display: flex;" [cols]="isSmallScreen ? 1 : 2" rowHeight="2:1" class="custom_mat-grid-list">
 
     <!-- First Grid Tile -->
     <mat-grid-tile  class="new_app_tile">
@@ -8,7 +10,7 @@
         <span>{{globalLabels.apply_first_time_residence_permit_hint}}</span>
         <button mat-raised-button color="primary" (click)="startNewApplication()">{{globalLabels.apply_first_time_residence_permit_button_text}}</button>
         <span>{{globalLabels.apply_first_time_residence_permit_reminder}}</span>
-        <a mat-button routerLink=".">{{globalLabels.apply_first_time_residence_permit_needed_documents_link_text}}</a>
+        <a mat-button routerLink="/Documents">{{globalLabels.apply_first_time_residence_permit_needed_documents_link_text}}</a>
       </mat-card>
     </mat-grid-tile>
   
@@ -22,3 +24,4 @@
     </mat-grid-tile>
   
   </mat-grid-list>
+

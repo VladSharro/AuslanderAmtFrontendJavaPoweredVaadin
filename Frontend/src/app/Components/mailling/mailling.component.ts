@@ -10,11 +10,12 @@ import { SnackBarService } from '../../Services/snack-bar.service';
 import { WarningTypes } from '../../Models/enums/warningEnum';
 import { response } from 'express';
 import { ApplicationService } from '../../Services/application.service';
+import { HeaderComponent } from '../../Fixed_components/header/header.component';
 
 @Component({
   selector: 'app-mailling',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule, MatCardModule, FormsModule, ReactiveFormsModule,],
+  imports: [CommonModule, MatButtonModule, MatProgressSpinnerModule, MatCardModule, FormsModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './mailling.component.html',
   styleUrl: './mailling.component.css'
 })

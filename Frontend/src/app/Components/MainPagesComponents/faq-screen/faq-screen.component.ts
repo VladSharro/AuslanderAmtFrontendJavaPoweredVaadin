@@ -6,13 +6,14 @@ import { FaqService } from '../../../Services/faq.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { HeaderComponent } from '../../../Fixed_components/header/header.component';
 
 
 
 @Component({
   selector: 'app-faq-screen',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatCardModule, MatDividerModule, MatIconModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MatCardModule, MatDividerModule, MatIconModule, HeaderComponent],
   templateUrl: './faq-screen.component.html',
   styleUrl: './faq-screen.component.css'
 })

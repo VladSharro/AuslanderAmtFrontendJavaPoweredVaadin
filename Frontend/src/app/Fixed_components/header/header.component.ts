@@ -6,6 +6,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDividerModule} from '@angular/material/divider';
 import {headerLabels} from '../../Labels/header_labels'
 import { Router } from '@angular/router';
+import { AppPositionService } from '../../Services/app-position.service';
+import { SnackBarService } from '../../Services/snack-bar.service';
 
 
 @Component({
@@ -17,7 +19,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private appPosition: AppPositionService, private snackBarService: SnackBarService){}
   labels = new headerLabels()
 
   headerLinkClicked(linkName: string){
@@ -47,8 +49,16 @@ export class HeaderComponent {
         break;
 
     }
-
-    this.router.navigateByUrl(destinationLink);
+    if(this.appPosition.isOutAllowed){
+      this.router.navigateByUrl(destinationLink);
+    }else{
+      this.snackBarService.openForAllowOut()
+      const newWindow = window.open(destinationLink, '_blank');
+  if (newWindow) {
+    // Optionally focus the new window
+    newWindow.focus();
+  }
+    }
 
   }
 
