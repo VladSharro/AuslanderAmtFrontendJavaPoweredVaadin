@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 import mimetypes
 import io
 
+import base64
+
 
 from dateutil.relativedelta import relativedelta
 from passporteye import read_mrz, mrz
