@@ -24,9 +24,10 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
 
   additionalDocumentsLabels = new AdditionalDocumentsLabels
   constructor(private additionalDocumentsService: AdditionalDocumentsService, private applicationService: ApplicationService, private snackBarService: SnackBarService){     
-    this.isDataLoading = true;  }
-  ngAfterViewInit(): void {
+    this.isDataLoading = true;  
     this.getAdditionalDocumentsData();
+  }
+  ngAfterViewInit(): void {
 
   }
 
@@ -62,6 +63,7 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
 
   async getAdditionalDocumentsData(){
     this.additionalDocs = await this.additionalDocumentsService.getAdditionalDocuments()
+    this.getDataFromUploaded()
     this.isDataLoading = false;
   }
 
@@ -75,4 +77,15 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
     this.snackBarService.openFor(WarningTypes.dataSaved)
     this.isNextDisabled = false;
   }
+
+  getDataFromUploaded(){
+    if(this.applicationService.getApplicationData().isContinue){
+      this.additionalDocs.forEach((fileName) => {
+        if(this.applicationService.tempAdditional.get(fileName.name)){
+          this.additionalDocsMap.set(fileName.name, this.applicationService.tempAdditional.get(fileName.name)!)
+        }
+      })
+    }
+  }
+
 }

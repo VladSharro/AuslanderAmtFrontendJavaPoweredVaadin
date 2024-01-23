@@ -3,27 +3,26 @@ import { CommonModule } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatDividerModule} from '@angular/material/divider';
 import {stepperLabels} from '../../Labels/Stepper-labels'
 import { Router } from '@angular/router';
+import { ApplicationService } from '../../Services/application.service';
+import { DownloadApplicationService } from '../../Services/download-application.service';
 
 @Component({
   selector: 'app-download-application',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatToolbarModule, MatDividerModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatToolbarModule, ],
   templateUrl: './download-application.component.html',
   styleUrl: './download-application.component.css',
   encapsulation: ViewEncapsulation.None
 })
 export class DownloadApplicationComponent {
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private downloadService: DownloadApplicationService){}
   labels = new stepperLabels()
 
-  downloadAppLinkClicked(linkName: string){
-    if (linkName == this.labels.download_application){
-      this.router.navigateByUrl("Guide");
-    }
+  downloadCurrentApplication(){
+    this.downloadService.downloadApplication();
   }
 }
 

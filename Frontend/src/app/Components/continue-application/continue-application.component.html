@@ -1,1 +1,24 @@
-<p>continue-application works!</p>
+<div class="main_div">
+    <mat-card class="card-container">
+<form style="align-items: center; text-align: center; justify-content: center;">
+  
+    <h2 >
+      Please, Upload the ".zip" file you downloaded earlier to continue you application
+    </h2>
+    <h3 style="color: #808080;">The file is probably by the name "Application.zip"</h3>
+
+    
+     <div>
+        <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openApplicationInput()">Upload Application</button>
+        <input id="applicationFileInput" hidden type="file" accept=".zip" (change)="applicationUpload($event)">
+        <br><span *ngIf="uploadFile" style="margin-left: 10px;">{{ uploadFile.name }}</span>
+      </div>
+      <hr>
+    
+      
+      <div style="display: flex; justify-content: center; margin-top: 1%;">
+        <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" [disabled]="isContinueDisabled" (click)="continue()" >Continue</button>        
+      </div>
+  </form>
+    </mat-card>
+    </div>

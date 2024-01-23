@@ -6,6 +6,7 @@ import { GlobalLabels } from '../../Labels/global_labels';
 import {MatButtonModule} from '@angular/material/button';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
+import { ApplicationService } from '../../Services/application.service';
 
 
 
@@ -17,13 +18,12 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit{
-  constructor(private breakpointObserver: BreakpointObserver, private router: Router){
+  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private applicationService: ApplicationService){
 
   }
   globalLabels = new GlobalLabels ()
   isSmallScreen: boolean = false;
   ngOnInit() {
-    // Subscribe to screen size changes
     this.breakpointObserver.observe([Breakpoints.Medium, Breakpoints.XSmall, Breakpoints.Small])
       .subscribe(result => {
         this.isSmallScreen = result.matches;
@@ -32,6 +32,13 @@ export class HomeComponent implements OnInit{
 
 
   startNewApplication(){
-      this.router.navigateByUrl('new-application')
+    this.applicationService.setApplicationType(false)
+    this.router.navigateByUrl(`/new-application`);
+
   }
+  continueApplication(){
+    this.applicationService.setApplicationType(false)
+
+    this.router.navigateByUrl('continue-application')
+}
 }

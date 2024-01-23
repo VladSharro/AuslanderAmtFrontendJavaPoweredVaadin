@@ -1,10 +1,11 @@
 <div class="main_div">
 <mat-card class="card-container">
-    
+  <app-download-application class="floating-button"></app-download-application>
+
     <mat-stepper [linear]="true"  #stepper>
 
         <mat-step [completed]="checkFirstStepperChange()" label="{{stepperLabels.basic_data_label}}">
-          <app-basic-data (firstStepperValidityChange)="onCheckFirstStepperChange($event)"></app-basic-data>
+          <app-basic-data  (firstStepperValidityChange)="onCheckFirstStepperChange($event)"></app-basic-data>
         </mat-step>
 
         <mat-step label={{stepperLabels.family_label}}>
@@ -39,6 +40,7 @@
           <app-done></app-done>
         </mat-step>
     </mat-stepper>
+
 </mat-card>
 </div>
   

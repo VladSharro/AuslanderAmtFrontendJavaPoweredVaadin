@@ -76,6 +76,26 @@ export class SnackBarService {
       
         });
         break;
+
+        case WarningTypes.ExtractFailed:
+        this._snackBar.open("Sorry!, the extraction of data failed, please start a new application", "Ok", {
+          duration: 5 * 1000,
+      
+        });
+        break;
+
+        case WarningTypes.ExtractSuccess:
+        this._snackBar.open("Your data is extracted successfully, please press continue", "Ok", {
+          duration: 5 * 1000,
+      
+        });
+        break;
+        case WarningTypes.MissingEmail:
+          this._snackBar.open("The email can't be empty", "Ok", {
+            duration: 5 * 1000,
+        
+          });
+          break;
     }
     }
    

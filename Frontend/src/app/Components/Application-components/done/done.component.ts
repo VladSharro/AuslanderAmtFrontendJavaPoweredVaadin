@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OcrService } from '../../../Services/ocr.service';
 import { SnackBarService } from '../../../Services/snack-bar.service';
 import { WarningTypes } from '../../../Models/enums/warningEnum';
+import { MaillingService } from '../../../Services/mailling.service';
 
 
 @Component({
@@ -21,9 +22,11 @@ export class DoneComponent {
 
   finalForm: File | null = null
   isLoading = false;
-  isPreviewDisabled= true;
+  isPreviewDisabled = true;
+  generatedForm: File | null = null
+  blobUrl = ''
 
-  constructor(private router: Router, private appPreview: AppPreviewService, private ocrService: OcrService,private snackBarService: SnackBarService){}
+  constructor(private router: Router, private appPreview: AppPreviewService, private ocrService: OcrService,private snackBarService: SnackBarService, private maillingService: MaillingService){}
 
 
 
@@ -31,11 +34,16 @@ export class DoneComponent {
 
   doneApplication(){
    // this.router.navigateByUrl('previewApplication');
+   if(this.isPreviewDisabled){
       this.load()
+   }else{
+    this.maillingService.setApplicationFile(this.generatedForm!)
+    this.router.navigateByUrl('mailling')
+   }
   }
 
   preview(){
-    this.appPreview.openApplicationFile("assets/user_form.pdf")
+    this.appPreview.openApplicationFile(this.blobUrl)
   }
 
   async load(){
@@ -43,16 +51,17 @@ export class DoneComponent {
     this.isLoading = true;
 
     const response = await this.ocrService.generateApplicationForm()
-    if(response == true){
-      this.snackBarService.openFor(WarningTypes.FormCreated)
+    if(response != null){
       this.isPreviewDisabled = false;
+      this.blobUrl = URL.createObjectURL(response);
+
+      this.generatedForm = new File([response], "application")
+      this.snackBarService.openFor(WarningTypes.FormCreated)
     }else{
       this.snackBarService.openFor(WarningTypes.FormCreatError)
 
     }
     this.isLoading = false
     console.log("Data is back")
-    this.isLoading = false;
-
   }
 }

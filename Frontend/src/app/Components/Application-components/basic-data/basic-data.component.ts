@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Output, AfterViewChecked, Input, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -28,8 +28,13 @@ export class BasicDataComponent {
   @Output() firstStepperValidityChange = new EventEmitter<boolean>();
 
 
-  constructor(private _formBuilder: FormBuilder,private snackBarService: SnackBarService ,private applicationService: ApplicationService, private ocrService: OcrService, private _snackBar: MatSnackBar) {}
-  passportFile: File | null = null;
+  constructor(private _formBuilder: FormBuilder,private snackBarService: SnackBarService ,private applicationService: ApplicationService, private ocrService: OcrService, private _snackBar: MatSnackBar) {
+    this.getDataFromUploaded()
+
+  }
+  
+ 
+  passportFile: File | null = null
   isDataLoading = false;
 
 
@@ -99,7 +104,11 @@ export class BasicDataComponent {
     this.isDataLoading = true
     const extractedData = await this.ocrService.extractPassportData(this.passportFile!);
     this.isDataLoading = false
-    this.updateData(extractedData)
+    if(extractedData != null){
+      this.updateData(extractedData)
+    }else{
+      this.snackBarService.openFor(WarningTypes.ExtractFailed)
+    }
   }
 
   private updateData(extractedData: passportResponse | never[]){
@@ -139,9 +148,7 @@ export class BasicDataComponent {
         this.snackBarService.openFor(WarningTypes.confirmNeeded);
       }
     }
-    // this.nextAccepted = false;
     this.isNextDiabled = true;
-    // this.firstStepperValidityChange.emit(false);
 
 
   }
@@ -249,5 +256,55 @@ export class BasicDataComponent {
     this.checkIfNext();
     this.snackBarService.openFor(WarningTypes.dataSaved)
     this.isNextDiabled = false
+  }
+
+
+   getDataFromUploaded(){
+
+    if(this.applicationService.getApplicationData().isContinue){
+      const appData = this.applicationService.getApplicationData()
+      this.basicData.first_name = appData.first_name
+      this.basicData.last_name = appData.last_name
+      this.basicData.birth_date = appData.birth_date
+      this.basicData.place_country = appData.place_country
+      this.basicData.sex_type = appData.sex_type
+      this.basicData.nationality = appData.nationality
+      this.basicData.martial_type = appData.martial_type
+      this.basicData.email = appData.email
+      this.basicData.eyes_color = appData.eyes_color
+      this.basicData.height = appData.height
+      this.basicData.mobile = appData.mobile
+      this.basicData.since = appData.since
+      this.passportData.issued_by = appData.issued_by
+      this.passportData.issued_on = appData.issued_on
+      this.passportData.passportNr = appData.passportNr
+      this.passportData.valid_from = appData.valid_from
+      this.passportData.valid_to = appData.valid_to
+      this.passportFile = this.applicationService.tempPassportFile
+     // console.log("application: "+await this.applicationService.getApplicationPassport().then)
+
+
+    }else{
+      this.basicData.first_name = ''
+      this.basicData.last_name = ''
+      this.basicData.birth_date = ''
+      this.basicData.place_country = ''
+      this.basicData.sex_type = ''
+      this.basicData.nationality = ''
+      this.basicData.martial_type = ''
+      this.basicData.email = ''
+      this.basicData.eyes_color = ''
+      this.basicData.height = 0
+      this.basicData.mobile = ''
+      this.basicData.since = ''
+      this.passportData.issued_by = ''
+      this.passportData.issued_on = ''
+      this.passportData.passportNr = ''
+      this.passportData.valid_from = ''
+      this.passportData.valid_to = ''
+      this.passportFile = null
+    }
+
+
   }
 }

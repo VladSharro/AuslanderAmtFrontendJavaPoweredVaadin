@@ -1,22 +1,38 @@
+import { Expose } from "class-transformer"
 import { Location } from "./Location"
 
 export class OffencesInfo {
-
+    @Expose()
     have_been_convicted_for_violating_law: boolean
+    @Expose()
     violating_location: string
+    @Expose()
     reason: string
+    @Expose()
     type_of_conviction: string
+    @Expose()
     under_investigation: boolean
+    @Expose()
     investigation_location: String
+    @Expose()
     investigation_authority: string
+    @Expose()
     have_been_deported: boolean
+    @Expose()
     deported_from: string
+    @Expose()
     deportation_date: string
+    @Expose()
     has_entry_application_been_rejected: boolean
+    @Expose()
     entry_application_rejected_from: string
+    @Expose()
     entry_application_rejected_date: string
+    @Expose()
     has_residence_application_been_rejected: boolean
+    @Expose()
     residence_application_rejected_from: string
+    @Expose()
     residence_application_rejected_date: string
 
     constructor(

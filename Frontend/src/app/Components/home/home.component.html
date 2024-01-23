@@ -17,7 +17,7 @@
       <mat-card class="custom-card">
         <h2>{{globalLabels.continue_residence_permit_application_title}}</h2>
         <span>{{globalLabels.continue_residence_permit_application_explanation}}</span>
-        <button mat-raised-button color="primary">{{globalLabels.continue_residence_permit_application_button_text}}</button>
+        <button mat-raised-button color="primary" (click)="continueApplication()" >{{globalLabels.continue_residence_permit_application_button_text}}</button>
       </mat-card>
     </mat-grid-tile>
   

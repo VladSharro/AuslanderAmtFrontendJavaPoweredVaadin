@@ -7,7 +7,7 @@
    <div>
       <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openPhotoInput()">{{photoLabels.photo_button_label}} </button>
       <input id="photoFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="photoUpload($event)">
-      <span *ngIf="photoFile" style="margin-left: 10px;">{{ photoFile.name }}</span>
+      <br><span *ngIf="photoFile" style="margin-left: 10px;">{{ photoFile.name }}</span>
     </div>
     <hr>
   
@@ -18,7 +18,7 @@
      <div>
         <button mat-raised-button class="upload_button" style="width: 25%; margin-top: 15px; margin-bottom: 20px; background-color: #b42e29; color: white;" (click)="openSignInput()">{{photoLabels.sign_button_label}} </button>
         <input id="signFileInput" hidden type="file" accept=".pdf, .jpeg, .png" (change)="signUpload($event)">
-        <span *ngIf="signFile" style="margin-left: 10px;">{{ signFile.name }}</span>
+        <br><span *ngIf="signFile" style="margin-left: 10px;">{{ signFile.name }}</span>
       </div>
     <div style="display: flex; justify-content: center; margin-top: 1%;">
       <button mat-stroked-button matStepperPrevious style="width: 15%;  margin: 1%;  background-color: rgb(212, 212, 212); color: #b42e29;">{{photoLabels.back_button_label}}</button>

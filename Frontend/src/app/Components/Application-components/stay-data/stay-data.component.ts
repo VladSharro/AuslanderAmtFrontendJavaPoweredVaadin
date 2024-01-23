@@ -34,7 +34,9 @@ export class StayDataComponent {
 
   isNextDisabled = true;
 
-  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){}
+  constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){
+    this.getDataFromUploaded()
+  }
 
   stayData = {
     lastEntryDate:'',
@@ -92,8 +94,37 @@ export class StayDataComponent {
 
 
 
-  staySectionButtonClicked(){
+  staySectionButtonClicked(){}
 
-    
+  getDataFromUploaded(){
+    if(this.applicationService.getApplicationData().isContinue){
+      const appData = this.applicationService.getApplicationData()
+      this.stayData = {
+        lastEntryDate: appData.lastEntryDate,
+        lastEntryVisaType: appData.lastEntryVisaType,
+        visaIssueBy: appData.visaIssueBy,
+        visaIssueOn: appData.visaIssueOn,
+        visaNumber: appData.visaNumber,
+        visaValidFrom: appData.visaValidFrom,
+        visaValidTo: appData.visaValidTo,
+        lengthOfStay: appData.lengthOfStay,
+        purposeOfStay: appData.purposeOfStay,
+      }
+      this.visaFile = this.applicationService.tempVisaFile
+
+    }else{
+      this.stayData = {
+        lastEntryDate:'',
+        lastEntryVisaType:'',
+        visaIssueBy:'',
+        visaIssueOn:'',
+        visaNumber:'',
+        visaValidFrom:'',
+        visaValidTo:'',
+        lengthOfStay:'',
+        purposeOfStay:'',
+      }
+      this.visaFile = null
+    }
   }
 }

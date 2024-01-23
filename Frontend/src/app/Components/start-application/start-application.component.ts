@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationTypeLabels } from '../../Labels/applicationType_labels';
 import { MatRadioModule } from '@angular/material/radio';
@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { SnackBarService } from '../../Services/snack-bar.service';
 import { WarningTypes } from '../../Models/enums/warningEnum';
+import { ActivatedRoute } from '@angular/router';
+
 
 
 
@@ -23,10 +25,14 @@ import { WarningTypes } from '../../Models/enums/warningEnum';
 
 
 
-export class StartApplicationComponent {
+export class StartApplicationComponent implements OnInit{
 
-  constructor(private router: Router, private snackBarService: SnackBarService){}
-  
+  constructor(private router: Router, private snackBarService: SnackBarService, private route: ActivatedRoute){}
+  ngOnInit(): void {
+  this.checkIfContinue()
+  }
+
+    isContinue = false;
     isFirstTime = false
     isRenew = false;
   
@@ -72,13 +78,21 @@ export class StartApplicationComponent {
   }
 
 
+  checkIfContinue(){
+    this.route.params.subscribe(params => {
+      this.isContinue= params['id'];
+     
+    });
+  }
   
 
   navigateToProperApplication(){
       if(this.isFirstTime){
         this.router.navigateByUrl('nonEuFirstTimeApp')
+
       }
       if(this.isRenew){
+
         this.router.navigateByUrl('nonEuRenewApp')
       }
   }

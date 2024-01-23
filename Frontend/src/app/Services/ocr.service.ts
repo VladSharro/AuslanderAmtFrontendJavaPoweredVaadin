@@ -6,8 +6,7 @@ import { enrollmentcertificateResponse } from '../Models/apiResponseModels/enrol
 import { financialdocumentResponse } from '../Models/apiResponseModels/financialdocumentResponse';
 import { healthinsuranceResponse } from '../Models/apiResponseModels/healthinsuranceResponse';
 import { ApplicationService } from './application.service';
-import { sign } from 'crypto';
-import { response } from 'express';
+
 
 
 @Injectable({
@@ -20,7 +19,8 @@ export class OcrService {
    }
 // local api
   // local api
-  private readonly apiURL = 'http://localhost:8080'
+  // private readonly apiURL = 'http://localhost:8080'
+  private readonly apiURL = 'http://132.231.1.189:8080'
   private readonly passportAPIExtension = '/get_data_from_passport'
   private readonly enrollmentcertificateAPIExtension = '/get_data_from_certificate_of_enrollment'
   private readonly insurancecertificateAPIExtension = '/get_data_from_health_insurance_certificate'
@@ -91,27 +91,32 @@ export class OcrService {
     
     try{
       
-      const response = await lastValueFrom(this.http.post(apiURL, appData, { observe: 'response' }));
+      const response = await lastValueFrom(this.http.post(apiURL, appData, { observe: 'response', responseType: 'blob' }));
           console.log(response);
 
           if (response.status === 200) {
-               return true;
+
+               return response.body as Blob;
            } else {
-             return false;
+             return null;
             }
             } catch (e) {
             console.log(e);
-          return false;
+          return null;
       }
   }
   
 
-  private callFileAPI<ResponseType>(apiUrl: string, formedData: FormData){
+  private async callFileAPI<ResponseType>(apiUrl: string, formedData: FormData){
     try{
-      return lastValueFrom(
-       this.http.post<ResponseType>(apiUrl, formedData)
-   )  
-      }catch(e){
+      const response = await lastValueFrom(this.http.post<ResponseType>(apiUrl, formedData, {observe: 'response'}));
+      if(response.status === 200){
+        return response.body as ResponseType
+      }
+      else{
+        return null
+      }
+    }catch(e){
         console.log(e)
         return []
       } 
