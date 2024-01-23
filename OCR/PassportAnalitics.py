@@ -13,7 +13,7 @@ import mimetypes
 import io
 
 import base64
-
+import sys
 
 from dateutil.relativedelta import relativedelta
 from passporteye import read_mrz, mrz
