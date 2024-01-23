@@ -7,6 +7,10 @@ stages:
   - build
   - test-after-deployment
 
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" || ($CI_PIPELINE_SOURCE == 'merge_request_event' && ( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" ))
+
 ocr-test:
   image: python:3.11-slim
   stage: test
@@ -42,14 +46,29 @@ endpoint-test:
     - pip install requests
     - python Tests/api/api_tests.py
 
-e2e-test:
-  image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
-  stage: test-after-deployment
-  needs: ["fe-build"]
-  allow_failure: true
-  script:
-    - cd Tests
-    - robot --variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189 --argumentfile ./options.txt
-  artifacts:
-    paths:
-      - results
+### End-to-end tests are not going to be adopted for Gitlab CI
+### because it's entirely inadequate for running things like this
+
+### E2Es can be executed locally with no problem, see readmes
+
+# e2e-test:
+#   image: ppodgorsek/robot-framework:latest
+#   stage: test-after-deployment
+#   variables:
+#     BROWSER: "headlesschrome"
+#     DOMAIN: "132.231.1.189"
+#     ROBOT_TESTS_DIR: Tests/ui
+#   script:
+#     - /opt/robotframework/bin/run-tests-in-virtual-screen.sh
+
+# e2e-test:
+#   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
+#   stage: test-after-deployment
+#   needs: ["fe-build"]
+#   allow_failure: true
+#   script:
+#     - cd Tests
+#     - robot --variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189 --argumentfile ./options.txt
+#   artifacts:
+#     paths:
+#       - results
