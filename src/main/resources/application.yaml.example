@@ -6,13 +6,14 @@ mail:
 
   sender-mail-address: "mail.adress.for.mail.sending@gmail.com"
   sender-password: ""
-  abh-mail-address: "test@ads.uni-passau.de"
+  abh-mail-address: "forworkmailchat@gmail.com"
 
 ocr:
   passport-analysis-file-path: "OCR/PassportAnalitics.py"
   certificate-of-enrollment-analysis-file-path: "OCR/ImmatrikulationAnalitics.py"
   health-insurance-certificate-analysis-file-path: "OCR/Health_Analitics.py"
-  financial-document-analysis-file-path: "OCR/WorkContract.py"
+  working-contract-analysis-file-path: "OCR/WorkContract.py"
+  blocked-account-analysis-file-path: "OCR/Geld.py"
 
 spring:
   servlet:
