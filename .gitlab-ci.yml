@@ -43,13 +43,21 @@ endpoint-test:
     - python Tests/api/api_tests.py
 
 e2e-test:
-  image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
+  image: docker
   stage: test-after-deployment
-  needs: ["fe-build"]
-  allow_failure: true
   script:
     - cd Tests
-    - robot --variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189 --argumentfile ./options.txt
-  artifacts:
-    paths:
-      - results
+    - docker run --shm-size="2g" -v `pwd`:/opt/robotframework/tests:Z -e ROBOT_OPTIONS="--variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189" ppodgorsek/robot-framework
+  
+
+# e2e-test:
+#   image: ppandiyan/robotframework    # this is outdated, but i really couldn't care less at this point
+#   stage: test-after-deployment
+#   needs: ["fe-build"]
+#   allow_failure: true
+#   script:
+#     - cd Tests
+#     - robot --variable BROWSER:headlesschrome --variable DOMAIN:132.231.1.189 --argumentfile ./options.txt
+#   artifacts:
+#     paths:
+#       - results
