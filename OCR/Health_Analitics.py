@@ -13,12 +13,17 @@ from datetime import datetime
 from passporteye import read_mrz, mrz
 
 def extract_health(pdf_path):
+
+    decoded_pdf = base64.b64decode(pdf_path)
+    pdf_stream = io.BytesIO(decoded_pdf)
+
+
     name = ""
     surname = ""
     krankenkasse = ""
     date = ""
 
-    doc = fitz.open(pdf_path)
+    doc = fitz.open(stream=pdf_stream)
     page = doc[0]
 
     extracted_text = page.get_text()
