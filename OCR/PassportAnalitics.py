@@ -10,6 +10,7 @@ from passporteye import read_mrz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pycountry
+import io
 
 
 # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
