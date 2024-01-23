@@ -7,13 +7,18 @@ import pytesseract
 from PIL import Image
 import numpy as np
 import re
+import sys
 
 from datetime import datetime
 
 
 
 def convert_pdf_to_images(encoded_pdf):
-    decoded_pdf = base64.b64decode(encoded_pdf)
+    # Read the encoded PDF file
+    with open(encoded_pdf_path, 'rb') as pdf_file:
+        # Decode the base64-encoded PDF
+        decoded_pdf = base64.b64decode(pdf_file.read())
+
     pdf_stream = io.BytesIO(decoded_pdf)
 
     doc = fitz.open(stream=pdf_stream)
@@ -129,7 +134,10 @@ def convert_pdf_to_images(encoded_pdf):
 
 
 if __name__ == "__main__":
-    image_data = os.environ.get("IMAGE_DATA")
-    moneys, date = convert_pdf_to_images(image_data)
-    print(','.join([moneys, date]))
+    # Access the PDF file path from the command-line argument
+    encoded_pdf_path = sys.argv[1]
+
+    # Call the function and print the result
+    moneys, date = convert_pdf_to_images(encoded_pdf_path)
+    print(','.join([str(moneys), date]))
 
