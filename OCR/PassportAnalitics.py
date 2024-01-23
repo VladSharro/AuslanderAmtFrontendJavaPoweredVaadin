@@ -18,7 +18,7 @@ import sys
 from dateutil.relativedelta import relativedelta
 from passporteye import read_mrz, mrz
 
-# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
 
