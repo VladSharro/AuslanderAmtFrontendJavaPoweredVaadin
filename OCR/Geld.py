@@ -6,25 +6,29 @@ import re
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
-import io
-import base64
 import fitz  # PyMuPDF
 import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
 
-def geld(encoded_pdf):
-    # Decode the base64-encoded PDF
-    decoded_pdf = base64.b64decode(encoded_pdf)
+# Path to the Tesseract executable
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-    # Create a BytesIO object to simulate a file-like object from the decoded PDF
-    pdf_stream = io.BytesIO(decoded_pdf)
 
-    # Use PyMuPDF to extract text
-    text = ""
 
-    doc = fitz.open(stream=pdf_stream, filetype="pdf")
+def geld(pdf_path):
+    doc = fitz.open(pdf_path)
     page = doc[0]  # Assuming the information is on the first page
+
+    #eur_lines = [line for line in page.split('\n') if 'EUR' in line]
+
+    # Извлечение чисел только из этих строк
+    eur_numbers = []
+
+
+    # Поиск максимального числа среди чисел, связанных с EUR
+    max_eur_number = max(eur_numbers) if eur_numbers else None
+    print(max_eur_number)
 
     # Extract text from the PDF page
     extracted_text = page.get_text()
@@ -32,11 +36,46 @@ def geld(encoded_pdf):
     # Split the extracted text into lines
     lines = extracted_text.split('\n')
 
-    gold = lines[7]
-    date = lines[0]
+    for i, line in enumerate(lines):
+        #print(i, "   ", line)
+        numbers = re.findall(r'\d+[\.,]?\d*', line)
+
+        date_pattern = r'\b\d{1,2}[./\\,-]\d{1,2}[./\\,-]\d{2,4}\b'
+        dates = re.findall(date_pattern, extracted_text)
+
+        if "EUR" in line:
+            for number in numbers:
+                try:
+                    # Замена запятых на точки для европейского формата чисел
+                    converted_number = float(number.replace(',', ''))
+                    eur_numbers.append(converted_number)
+                except ValueError:
+                    # Пропуск неверных форматов
+                    continue
 
 
-    return gold, date
+    max_eur_number = max(eur_numbers)
+    print(max_eur_number)
+
+    print(dates)
+
+    #gold = lines[7]
+    #date = lines[0]
+
+    date = dates[0]
+
+
+    return max_eur_number, date
+
+
+if __name__ == "__main__":
+    image_file_path = sys.argv[1]
+    with open(image_file_path, 'r') as file:
+        image_data = file.read()
+
+    max_eur_number, date = geld(image_data)
+    print(','.join([max_eur_number, date]))
+
 
 # Access the image data from the environment variable
 image_data = os.environ.get("IMAGE_DATA")
