@@ -117,7 +117,7 @@ def extract_name_and_surname(encoded_image):
 
     nationality = country_dict[mrz_data['nationality']]
 
-    return name, surname, nationality, birth, sex, start_date
+    return name, surname, nationality, birth, sex, start_date, issue_date
 
 
 # Access the image data from the environment variable
@@ -126,5 +126,5 @@ if __name__ == "__main__":
     with open(image_file_path, 'r') as file:
         image_data = file.read()
 
-    name, surname, nationality, birth, sex, start_date = extract_name_and_surname(image_data)
-    print(','.join([name, surname, nationality, birth, sex, start_date]))
+    name, surname, nationality, birth, sex, start_date, issue_date = extract_name_and_surname(image_data)
+    print(','.join([name, surname, nationality, birth, sex, start_date, issue_date]))
