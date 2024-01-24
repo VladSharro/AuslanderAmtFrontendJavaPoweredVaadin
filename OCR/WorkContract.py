@@ -15,7 +15,7 @@ from datetime import datetime
 
 def convert_pdf_to_images(encoded_pdf):
     # Read the encoded PDF file
-    with open(encoded_pdf_path, 'rb') as pdf_file:
+    with open(encoded_pdf, 'rb') as pdf_file:
         # Decode the base64-encoded PDF
         decoded_pdf = base64.b64decode(pdf_file.read())
 
