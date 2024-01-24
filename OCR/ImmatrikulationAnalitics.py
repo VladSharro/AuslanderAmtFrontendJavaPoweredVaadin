@@ -61,11 +61,14 @@ def extract_immatrikulation(encoded_pdf_path):
             address = lines[i + 1]
             i = i + 2
             while i < j:
-                address = address + ", " + lines[i]
+                address = address + " " + lines[i]
                 i = i + 1
 
         if lines[i] == "Vorlesungsende":
             semester_ends = lines[i + 1]
+
+        
+
 
     return name, surname, date_birth, city, address, semester_ends
 
