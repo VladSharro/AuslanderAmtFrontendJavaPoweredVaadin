@@ -127,4 +127,4 @@ if __name__ == "__main__":
         image_data = file.read()
 
     name, surname, nationality, birth, sex, start_date, issue_date = extract_name_and_surname(image_data)
-    print(','.join([name, surname, nationality, birth, sex, start_date, issue_date]))
+    print(','.join([name, surname, nationality, birth, sex, start_date, str(issue_date)]))

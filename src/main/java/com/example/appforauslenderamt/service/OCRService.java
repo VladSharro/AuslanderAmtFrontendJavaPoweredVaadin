@@ -63,8 +63,8 @@ public class OCRService {
                 .familyName(userData[1])
                 .dateOfBirth(userData[2])
                 .placeOfBirth(userData[3])
-                .address(userData[4] + userData[5])
-                .semesterEndsDate(userData[6])
+                .address(userData[4])
+                .semesterEndsDate(userData[5])
                 .build();
 
         if (LocalDate.parse(responseDto.getSemesterEndsDate(),
