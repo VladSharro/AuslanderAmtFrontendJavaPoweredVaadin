@@ -3,7 +3,7 @@ export class BasicDataLabels{
     readonly last_name_label = "Last name";
     readonly birth_date_label = "Date of birth";
     readonly place_birth_label = "Place of birth (place, country)";
-    readonly nationality_label = "Nationality / nationalities";
+    readonly nationality_label = "Nationality / nationalities (In case of more than one, please seperate by a space )";
     readonly sex_label = "Sex"
     readonly martial_status_label = "Martial status";
     readonly since_label = "Since";
