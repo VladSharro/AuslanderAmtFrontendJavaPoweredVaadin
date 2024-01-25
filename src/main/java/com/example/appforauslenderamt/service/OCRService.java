@@ -46,6 +46,7 @@ public class OCRService {
                 .dateOfBirth(userData[3])
                 .sex(userData[4])
                 .startDate(userData[5])
+                .issueDate(userData[6])
                 .build();
 
     }
