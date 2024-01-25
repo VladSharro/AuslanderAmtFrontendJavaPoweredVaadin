@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -64,6 +64,8 @@ import { HeaderComponent } from '../../Fixed_components/header/header.component'
 export class NonEuFirstAppComponent {
 
   labels = new stepperLabels()
+  @ViewChild('stepper') stepper!: MatStepper;
+
 
   downloadAppLinkClicked(linkName: string){
     if (linkName == this.labels.download_application){
@@ -78,39 +80,10 @@ export class NonEuFirstAppComponent {
 
   pIsContinue = false;
 
-  isBasicDataValid = false;
-
-  checkFirstStepperChange() {
-    return this.isBasicDataValid;
-  }
-
-  onCheckFirstStepperChange(isValid: boolean) {
-    this.isBasicDataValid = isValid;
-  }
-
-
-  isResidenceDataValid = false;
-
-  checkThirdStepperChange() {
-    return this.isResidenceDataValid;
-  }
-
-  onCheckThirdStepperChange(isValid: boolean) {
-    this.isResidenceDataValid = isValid;
-  }
   
 
-  isSupportDataValid = false;
 
-  checkFifthStepperChange() {
-    return this.isSupportDataValid;
-  }
-
-  onCheckFifthStepperChange(isValid: boolean) {
-    this.isSupportDataValid = isValid;
-  }
-
-  
+ 
   //////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////// passport section ////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////////

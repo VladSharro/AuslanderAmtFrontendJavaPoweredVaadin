@@ -1,4 +1,4 @@
 
 export enum Sex {
-    MALE, FEMALE, DIVERSITY
+    MALE, FEMALE, DIVERSITY, None
 }

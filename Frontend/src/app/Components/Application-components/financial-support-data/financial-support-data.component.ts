@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SupportLabels } from '../../../Labels/financial_support_labels';
 import { FinancialDocument } from '../../../Models/FinancialDocument';
@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { WarningTypes } from '../../../Models/enums/warningEnum';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { OcrService } from '../../../Services/ocr.service';
+import { FinancialValueService } from '../../../Services/financial-value.service';
 
 @Component({
   selector: 'app-financial-support-data',
@@ -41,27 +42,29 @@ import { OcrService } from '../../../Services/ocr.service';
 export class FinancialSupportDataComponent {
 
 
-  @Output() fifthStepperValidityChange = new EventEmitter<boolean>();
+  @ViewChild('hiddenButton') hiddenButton!: ElementRef;
+  @Input() stepperReference!: MatStepper;
 
+  isSaveNeeded = false
 
-  constructor(private applicationService: ApplicationService, private ocrService: OcrService, private snackBarService: SnackBarService){
+  isChangesConfirmed = true
+  isExtracted = false;
+  fixedValue = 0
+  
+
+  constructor(private applicationService: ApplicationService, private ocrService: OcrService, private snackBarService: SnackBarService, private financialValueService: FinancialValueService){
     this.getDataFromUploaded()
+    this.getFinancial()
 
-  }
+  
+  } 
 
   supportLabels = new SupportLabels();
   financialSupportFiles: FinancialDocument[] = [];
   insuranceFile: File | null = null;
 
-  isNextDisabled = true;
+  
   isDataLoading = false;
-
-  isOverWritten = false;
-  isNextAllowed = false;
-  nextAccepted = false;
-
-
-  isOverwriteSlideOn = false;
 
   insuranceExtractedData: healthinsuranceResponse | undefined;
   financialExtractedData: financialdocumentResponse | undefined;
@@ -87,6 +90,9 @@ export class FinancialSupportDataComponent {
   tempFinancialSupportName = '';
 
 
+  async getFinancial(){
+    this.fixedValue = await this.financialValueService.get();
+  }
 
   openInsuranceInput(){ 
     // your can use ElementRef for this later
@@ -154,7 +160,6 @@ export class FinancialSupportDataComponent {
         this.financialExtractedData = financialData
       }   
       this.financialExtractedData.date = String(this.meansOfSupportData.noOfMonths)
-      console.log(this.financialExtractedData);
  
        //this.meansOfSupportData.n = this.get_date(financialData.date)
     }
@@ -163,15 +168,9 @@ export class FinancialSupportDataComponent {
 
   overWriteChanged(event: any){
     if(event.checked){
-      this.isOverwriteSlideOn = true
-      this.isOverWritten = true
-      this.isNextAllowed = true
-      this.fifthStepperValidityChange.emit(true);
-
+      this.isChangesConfirmed = false;
     }else{
-      this.isOverwriteSlideOn = false;
-      this.isOverWritten = false
-      this.isNextAllowed = false
+      this.isChangesConfirmed = true;
     }
   }
 
@@ -196,47 +195,11 @@ private async extractInsuranceData(){
     }  }
 
   saveData(){
-
-    this.isOverWritten= false
-    this.nextAccepted = false
     this.applicationService.setFinancialDocumentsData(this.meansOfSupportData.meansOfSupport, this.meansOfSupportData.isSecondOrTwelfth, this.meansOfSupportData.supportTyeIfYes, this.meansOfSupportData.isInsuranceAvailable, this.meansOfSupportData.insuranceCompany, this.meansOfSupportData.date_of_expiry, this.meansOfSupportData.finalValueOfFinancialSupport, this.financialSupportFiles, this.meansOfSupportData.noOfMonths, this.insuranceFile)
-    this.checkIfNext();
     this.snackBarService.openFor(WarningTypes.dataSaved)
-    this.isNextDisabled = false
   }
 
 
-    checkIfNext(){
-      if(this.isNextAllowed){
-  
-        this.fifthStepperValidityChange.emit(true);
-        return
-      }
-  
-      this.isOverWritten = this.checkIfDataOverwritten();
-     console.log(this.isOverWritten)
-      if(this.isOverWritten == false){
-        this.nextAccepted = true;
-      }else{
-        if(this.isNextAllowed){
-        this.nextAccepted = true
-        }
-      } 
-    if(!this.nextAccepted){
-      console.log(1)
-  
-      console.log(this.nextAccepted)
-      this.fifthStepperValidityChange.emit(this.nextAccepted);
-  
-    }else{
-      console.log(2)
-  
-      console.log(this.nextAccepted)
-  
-      this.fifthStepperValidityChange.emit(this.nextAccepted);
-    }
-     
-  }
 
   checkIfDataOverwritten(){
     if(this.insuranceExtractedData != undefined || this.financialExtractedData != undefined){
@@ -246,8 +209,11 @@ private async extractInsuranceData(){
         if( this.meansOfSupportData.noOfMonths == Number(this.financialExtractedData?.date)){
           if(this.meansOfSupportData.finalValueOfFinancialSupport == Number(this.financialExtractedData?.sum)){
             console.log("isDataOverwrite value is" + false)
+            if(this.fixedValue != 0 && this.fixedValue > this.meansOfSupportData.finalValueOfFinancialSupport){
+              return true
+            }
 
-              return false;
+            return false;
 
             
           }
@@ -255,15 +221,14 @@ private async extractInsuranceData(){
       }
     }
     }
-    console.log("isDataOverwrite value is" + true)
     return true;
   }
 
 
   extractedDataChanged(){
-    this.fifthStepperValidityChange.emit(false);
-    this.isNextDisabled = true
+   if(this.isSaveNeeded){
     this.snackBarService.openNotSavedYetReminder();
+   }
 
    }
 
@@ -294,14 +259,34 @@ private async extractInsuranceData(){
   }
 
   nextSupportClicked(){
-    if(!this.nextAccepted){
-      if(!this.isNextAllowed){
+    if(this.checkIfDataOverwritten()){
+      if(this.isChangesConfirmed == true){
+        this.nextAccepted()
+      }else{
+        this.snackBarService.openFor(WarningTypes.confirmNeeded)
+      }
+  }else{
+    this.nextAccepted()
+  }
+  }
 
-        this.snackBarService.openFor(WarningTypes.confirmNeeded);
+  nextAccepted(){
+    if (this.stepperReference && this.stepperReference.selected) {
+      const currentStep = this.stepperReference.selected;
+      
+      if (currentStep.completed !== undefined) {
+        currentStep.completed = true;
+        this.isSaveNeeded = true
       }
     }
-    // this.nextAccepted = false;
-    this.isNextDisabled = true;
+    this.saveData()
+    this.gotoNext()
+  }
+
+
+  gotoNext(){
+    const buttonElement: HTMLButtonElement = this.hiddenButton.nativeElement;
+    buttonElement.click();
   }
 
   getDataFromUploaded(){

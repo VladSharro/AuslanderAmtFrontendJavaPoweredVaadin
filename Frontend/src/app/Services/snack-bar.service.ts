@@ -15,7 +15,7 @@ export class SnackBarService {
 
 
   openNotSavedYetReminder(){
-    this._snackBar.open("Your Data is not saved!", "Ok",{
+    this._snackBar.open("Your Data is not saved, please click next to save it.", "Ok",{
     horizontalPosition: "end",
     verticalPosition: "top"
   })
@@ -44,7 +44,7 @@ export class SnackBarService {
         break;
 
       case WarningTypes.wrongEnrollmentDate:
-        this._snackBar.open("Your Enrollment Certificate is expired", "Ok", {
+        this._snackBar.open("Your Enrollment Certificate is expired, please confirm the changes to continue", "Ok", {
           duration: 5 * 1000,
       
         });

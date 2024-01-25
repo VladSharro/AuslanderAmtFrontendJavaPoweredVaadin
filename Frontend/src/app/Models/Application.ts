@@ -152,6 +152,10 @@ export class Application{
     finalValueOfFinancialSupport = 0
     @Expose()
     noOfMonths = 0
+    @Expose()
+    noOfYears = 0
+    @Expose()
+    noOfDays = 0
 
 
     financialSupportFiles: FinancialDocument[] = [];

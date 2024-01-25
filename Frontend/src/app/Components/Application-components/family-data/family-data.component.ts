@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { familyLabels } from '../../../Labels/Family_section_labels';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -35,13 +35,16 @@ import { WarningTypes } from '../../../Models/enums/warningEnum';
 })
 export class FamilyDataComponent {
 
+  @ViewChild('hiddenButton') hiddenButton!: ElementRef;
+  @Input() stepperReference!: MatStepper;
+
   isDataLoading = false;
-  isNextDisabled = true;
+  isSaveNeeded = false;
 
   constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){
     this.getDataFromUploaded()
-
   }
+
   fmailyLabels = new familyLabels();
   sexOptions = [this.fmailyLabels.sex_options_m , this.fmailyLabels.sex_options_f, this.fmailyLabels.sex_options_d]
   yesNoOptions = [this.fmailyLabels.yes_option, this.fmailyLabels.no_option];
@@ -106,9 +109,9 @@ export class FamilyDataComponent {
   }
 
   extractedDataChanged(){
-    this.isNextDisabled = true
-    this.snackBarService.openNotSavedYetReminder();
-
+    if(this.isSaveNeeded){
+      this.snackBarService.openNotSavedYetReminder();
+    }
    }
 
 
@@ -117,12 +120,29 @@ export class FamilyDataComponent {
       this.familyData.childern.push(new Child(this.childData))
     this.childData = new Child()
     }
-    console.log(this.familyData)
     this.applicationService.setFamilyData(this.familyData.partnerLastName, this.familyData.partnerFirstName, this.familyData.partnerDateOfBirth, this.familyData.partnerPlaceOfBirth, this.familyData.partnerNationality, this.familyData.partnerSex, this.familyData.partnerCurrentResidenceInGermany, this.familyData.isChildrenAvailable, this.familyData.childern, this.familyData.isFatherApplicable, this.familyData.fatherLastName, this.familyData.fatherFisrtName, this.familyData.fatherNationality, this.familyData.fatherPlaceOfBirthForMinors, this.familyData.fatherDateOfBirthForMinors, this.familyData.fatherCurrentResidenceForMinors, this.familyData.isMotherApplicable, this.familyData.motherLastName, this.familyData.motherFisrtName, this.familyData.motherNationality, this.familyData.motherPlaceOfBirthForMinors, this.familyData.motherDateOfBirthForMinors, this.familyData.motherCurrentResidenceForMinors)
     this.snackBarService.openFor(WarningTypes.dataSaved)
-    this.isNextDisabled = false;
  
   }
+
+  familtNextClicked(){
+    if (this.stepperReference && this.stepperReference.selected) {
+      const currentStep = this.stepperReference.selected;
+      
+      if (currentStep.completed !== undefined) {
+        currentStep.completed = true;
+        this.isSaveNeeded = true
+      }
+    }
+    this.saveData()
+    this.gotoNext()
+  }
+
+  gotoNext(){
+    const buttonElement: HTMLButtonElement = this.hiddenButton.nativeElement;
+    buttonElement.click();
+  }
+
 
   getDataFromUploaded(){
     if(this.applicationService.getApplicationData().isContinue){

@@ -5,36 +5,36 @@
         
         <mat-stepper [linear]="true"  #stepper>
     
-            <mat-step [completed]="checkFirstStepperChange()" label="{{stepperLabels.basic_data_label}}">
-              <app-basic-data (firstStepperValidityChange)="onCheckFirstStepperChange($event)"></app-basic-data>
+            <mat-step  label="{{stepperLabels.basic_data_label}}" completed="false">
+              <app-basic-data [stepperReference]="stepper"></app-basic-data>
             </mat-step>
     
-            <mat-step label={{stepperLabels.family_label}}>
-              <app-family-data></app-family-data>
+            <mat-step label={{stepperLabels.family_label}} completed="false">
+              <app-family-data [stepperReference]="stepper"></app-family-data>
             </mat-step> 
     
-            <mat-step [completed]="checkThirdStepperChange()" label={{stepperLabels.residence_Label}}>
-              <app-residence-data (thirdStepperValidityChange)="onCheckThirdStepperChange($event)" ></app-residence-data>
+            <mat-step completed="false" label={{stepperLabels.residence_Label}}>
+              <app-residence-data [stepperReference]="stepper" ></app-residence-data>
             </mat-step>
     
-            <mat-step label={{stepperLabels.stay_renewal_label}}>
-              <app-stay-renewal-data></app-stay-renewal-data> 
+            <mat-step label={{stepperLabels.stay_renewal_label}} completed="false">
+              <app-stay-renewal-data [stepperReference]="stepper"></app-stay-renewal-data> 
             </mat-step>
     
-            <mat-step [completed]="checkFifthStepperChange()" label={{stepperLabels.support_label}}>
-              <app-financial-support-data (fifthStepperValidityChange)="onCheckFifthStepperChange($event)" ></app-financial-support-data>
+            <mat-step completed="false" label={{stepperLabels.support_label}}>
+              <app-financial-support-data [stepperReference]="stepper" ></app-financial-support-data>
             </mat-step>
     
-            <mat-step label={{stepperLabels.offence_label}}>
-              <app-offence-data></app-offence-data>
+            <mat-step label={{stepperLabels.offence_label}} completed="false">
+              <app-offence-data [stepperReference]="stepper"></app-offence-data>
             </mat-step>
     
-            <mat-step label={{stepperLabels.photo_label}}>
-              <app-photo-data></app-photo-data>  
+            <mat-step label={{stepperLabels.photo_label}} completed="false">
+              <app-photo-data [stepperReference]="stepper"></app-photo-data>  
             </mat-step>
     
-            <mat-step label={{stepperLabels.additional_documents_label}}>
-              <app-adiitional-documents></app-adiitional-documents>
+            <mat-step label={{stepperLabels.additional_documents_label}} completed="false">
+              <app-adiitional-documents [stepperReference]="stepper"></app-adiitional-documents>
             </mat-step>    
     
             <mat-step label="{{stepperLabels.done_label}}">

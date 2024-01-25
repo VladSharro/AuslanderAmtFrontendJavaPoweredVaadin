@@ -172,8 +172,9 @@
  
       <div style="display: flex; justify-content: center; margin-top: 1%;">
         <button mat-stroked-button matStepperPrevious style="width: 15%;  margin: 1%;  background-color: rgb(212, 212, 212); color: #b42e29;">{{fmailyLabels.back_button_label}}</button>
-        <button mat-stroked-button style="background-color: #a47371; color: white; width: 15%;  margin: 1%;"  (click)="saveData()" >Save</button>
-        <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" [disabled]="isNextDisabled" matStepperNext >{{fmailyLabels.next_button_label}}</button>        
+        <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;"  (click)="familtNextClicked()" >{{fmailyLabels.next_button_label}}</button>        
+        <button #hiddenButton hidden matStepperNext>Hidden Button</button>
+
       </div>
   </form>
 
