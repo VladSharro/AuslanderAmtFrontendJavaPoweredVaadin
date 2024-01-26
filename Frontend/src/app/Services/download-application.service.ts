@@ -68,7 +68,7 @@ export class DownloadApplicationService {
       await Promise.all(extractPromises);
   
       this.parseFiles();
-      this.applicationService.setAdditionalDocuments(this.tempAdditionDocument)
+      this.applicationService.setAdditionalDocumentsFromDownload(this.tempAdditionDocument)
       this.applicationService.setApplicationFinancial(this.tempFinancialDocuments)
   
       return true;

@@ -16,6 +16,7 @@ import { MaillingComponent } from './Components/mailling/mailling.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
+    {path: "Home", component: HomeComponent},
     {path: "new-application", component: StartApplicationComponent},
     {path: "continue-application", component: ContinueApplicationComponent},
     {path: "Guide", component: GuideComponent},

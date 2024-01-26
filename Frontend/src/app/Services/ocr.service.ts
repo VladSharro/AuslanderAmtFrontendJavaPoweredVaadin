@@ -118,7 +118,7 @@ export class OcrService {
       }
     }catch(e){
         console.log(e)
-        return []
+        return null
       } 
   }
 

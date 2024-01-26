@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StayDataLabels } from '../../../Labels/stay_data_labels';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -32,8 +32,12 @@ import { WarningTypes } from '../../../Models/enums/warningEnum';
 })
 export class StayDataComponent {
 
-  isNextDisabled = true;
+  @ViewChild('hiddenButton') hiddenButton!: ElementRef;
+  @Input() stepperReference!: MatStepper;
 
+  isSaveNeeded = false;
+
+  
   constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService){
     this.getDataFromUploaded()
   }
@@ -73,12 +77,12 @@ export class StayDataComponent {
 
     this.applicationService.setStayData(this.stayData.lastEntryDate,this.stayData.lastEntryVisaType, this.stayData.visaIssueBy, this.stayData.visaIssueOn ,this.stayData.visaNumber, this.stayData.visaValidFrom, this.stayData.visaValidTo, this.stayData.lengthOfStay, this.stayData.purposeOfStay, this.visaFile)
     this.snackBarService.openFor(WarningTypes.dataSaved)
-    this.isNextDisabled = false;
   }
 
   extractedDataChanged(){
-    this.isNextDisabled = true
-    this.snackBarService.openNotSavedYetReminder();
+    if(this.isSaveNeeded){
+      this.snackBarService.openNotSavedYetReminder();
+    }
 
    }
   
@@ -94,7 +98,23 @@ export class StayDataComponent {
 
 
 
-  staySectionButtonClicked(){}
+  staySectionButtonClicked(){
+    if (this.stepperReference && this.stepperReference.selected) {
+      const currentStep = this.stepperReference.selected;
+      
+      if (currentStep.completed !== undefined) {
+        currentStep.completed = true;
+        this.isSaveNeeded = true
+      }
+    }
+    this.saveData()
+    this.gotoNext()
+  }
+
+  gotoNext(){
+    const buttonElement: HTMLButtonElement = this.hiddenButton.nativeElement;
+    buttonElement.click();
+  }
 
   getDataFromUploaded(){
     if(this.applicationService.getApplicationData().isContinue){

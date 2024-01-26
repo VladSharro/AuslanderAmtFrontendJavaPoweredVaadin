@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlaceOfResidenceSectionLabels } from '../../../Labels/place_of_residence_section_labels';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -41,14 +41,16 @@ import { OcrService } from '../../../Services/ocr.service';
 })
 export class ResidenceDataComponent {
 
-  @Output() thirdStepperValidityChange = new EventEmitter<boolean>();
+  @ViewChild('hiddenButton') hiddenButton!: ElementRef;
+  @Input() stepperReference!: MatStepper;
 
 
   isDataLoading = false;
-  isNextDisabled = true;
-  isNextAllowed = false;
+  isSaveNeeded = false
 
-  isOverwriteSlideOn = false;
+  isChangesConfirmed = true
+  isExtracted = false;
+  
 
   constructor(private applicationService: ApplicationService, private snackBarService: SnackBarService, private ocrService: OcrService){
     this.getDataFromUploaded()
@@ -143,71 +145,89 @@ export class ResidenceDataComponent {
   private async extractData(){
     this.isDataLoading = true
     try{
-      const extractedData = await this.ocrService.extractEnrollmentCertificatetData(this.enrollmentCertificateFile!);
-      if(extractedData != null){
-        this.checkData(extractedData)
+      const comingExtractedData = await this.ocrService.extractEnrollmentCertificatetData(this.enrollmentCertificateFile!);
+      if(comingExtractedData != null){
+        this.isExtracted = true
+        this.extractedData = comingExtractedData as enrollmentcertificateResponse
+        this.isDataLoading = false;
       }else{
-        this.snackBarService.openFor(WarningTypes.ExtractFailed)
+        this.snackBarService.openFor(WarningTypes.fileError)
+        this.isDataLoading = false;
+
       }     }catch(error){
       console.error(error)
       this.isDataLoading = false;
       this.snackBarService.openFor(WarningTypes.fileError)
 
-    }
-    console.log("I am back")
-    
+    }    
   }
 
   checkData(extractedData: enrollmentcertificateResponse | never[]){
-    this.isDataLoading = false
 
-    if (extractedData instanceof Array && extractedData.length === 0) {
-      // Handle the case where it's an empty array (never[])
-      this.snackBarService.openFor(WarningTypes.fileError)
-      return;
-    }else{
-      const enrollmentData = extractedData as enrollmentcertificateResponse
-      if(new Date (enrollmentData.semester_ends_date) <= new Date()){
-        this.snackBarService.openFor(WarningTypes.wrongEnrollmentDate)
-        this.isNextAllowed = false;
-        this.thirdStepperValidityChange.emit(false);
-
-      }else{
-        this.isNextAllowed = true;
-      }
-
-    }
+    
   }
   residenceNextButtonClicked(){
-    console.log("Here1")
-    if(!this.isNextAllowed){
-      this.snackBarService.openFor(WarningTypes.confirmNeeded)
-      console.log("Here2")
-
-    }
-
+    if(this.checkIfDataOverwritten()){
+      if(this.isChangesConfirmed == true){
+        this.nextAccepted()
+      }else{
+        this.snackBarService.openFor(WarningTypes.confirmNeeded)
+      }
+  }else{
+    this.nextAccepted()
   }
+  }
+
+  nextAccepted(){
+    if (this.stepperReference && this.stepperReference.selected) {
+      const currentStep = this.stepperReference.selected;
+      
+      if (currentStep.completed !== undefined) {
+        currentStep.completed = true;
+        this.isSaveNeeded = true
+      }
+    }
+    this.saveData()
+    this.gotoNext()
+  }
+
+
+  checkIfDataOverwritten(){
+    if(this.isExtracted){
+      if(this.extractedData != undefined){
+        if(new Date (this.extractedData!.semester_ends_date) <= new Date()){
+          return true
+
+        }else{
+          return false
+        }
+      }
+      return true
+      }
+      return false
+  }
+  
+
 
   saveData(){
     
     this.applicationService.setResidenceData(this.residenceData.placeOfResidence, this.residenceData.isPreviousStays, this.residenceData.previousStayAddress, this.residenceData.dateFrom, this.residenceData.dateTo, this.residenceData.residenceAbroadIfRetained, this.residenceData.isResidenceAbroadRetained, this.registrationFile, this.enrollmentCertificateFile);
     this.snackBarService.openFor(WarningTypes.dataSaved)
-    this.isNextDisabled = false
-    if(this.isNextAllowed){
-    this.thirdStepperValidityChange.emit(true);
-    }else{
-      this.thirdStepperValidityChange.emit(false);
+   
 
-    }
+  }
 
+  gotoNext(){
+    const buttonElement: HTMLButtonElement = this.hiddenButton.nativeElement;
+    buttonElement.click();
   }
 
 
   
   extractedDataChanged(){
-    this.thirdStepperValidityChange.emit(false);
-    this.isNextDisabled = true
-    this.snackBarService.openNotSavedYetReminder();
+    if(this.isSaveNeeded){
+      this.snackBarService.openNotSavedYetReminder();
+    }
 
    }
 
@@ -215,17 +235,11 @@ export class ResidenceDataComponent {
 
   overWriteChanged(event: any){
     if(event.checked){
-      this.isOverwriteSlideOn = true
-
-      // this.isOverWritten = true
-      this.isNextAllowed = true
-      this.thirdStepperValidityChange.emit(true);
+      this.isChangesConfirmed = false;
 
     }else{
-      this.isOverwriteSlideOn = false;
+      this.isChangesConfirmed = true;
 
-      // this.isOverWritten = false
-      this.isNextAllowed = false
     }
   }
 

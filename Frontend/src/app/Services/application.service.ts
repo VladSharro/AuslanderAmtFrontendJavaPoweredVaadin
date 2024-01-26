@@ -283,9 +283,20 @@ export class ApplicationService {
     this.applicationData.signatureFile = signatureFile;
   }
 
-  setAdditionalDocuments(additionalDocuments: Map<string, File>){
+  setAdditionalDocuments(additionalDocuments: Map<string, File>, noOFYears: number, noOfMonths: number, noOfDays: number){
     this.applicationData.additionalDocs = additionalDocuments
     this.tempAdditional = additionalDocuments
+    this.applicationData.noOfYears = noOFYears
+    this.applicationData.noOfMonths = noOfMonths
+    this.applicationData.noOfDays = noOfDays
+
+  }
+
+  setAdditionalDocumentsFromDownload(additionalDocuments: Map<string, File>){
+    this.applicationData.additionalDocs = additionalDocuments
+    this.tempAdditional = additionalDocuments
+    
+
   }
 
   generateDocumentsFrom(){
@@ -390,7 +401,7 @@ export class ApplicationService {
       convictedType = this.applicationData.convictionTypeAndamount.split(" ")[0]
     }
     const offencesInfo = new OffencesInfo(this.applicationData.isConvicted == "Yes" ? true : false , this.getLocationEnum(this.applicationData.convictionReason).toString(), convictedType, convicedAmount, this.applicationData.isUnderInvestigation == "Yes" ? true : false, this.getLocationEnum(this.applicationData.investigationPlace).toString(), this.applicationData.investigationAuthority, this.applicationData.isExpelledOrDeported == "Yes" ? true : false, this.applicationData.expelledFrom, this.applicationData.expelledOn, this.applicationData.isEntryApplicationRejected == "Yes" ? true: false, this.applicationData.entryRejectedFrom, this.applicationData.entyRejectedOn, this.applicationData.isResidenceApplicationRejected == "Yes"? true : false, this.applicationData.residenceRejectedFrom, this.applicationData.residenceRejectedOn)
-    const residencePermitValidity = new ResidencePermitValidity(0,0,0);
+    const residencePermitValidity = new ResidencePermitValidity(this.applicationData.noOfDays,this.applicationData.noOfMonths, this.applicationData.noOfYears);
     const applicationPlace = "Passau"
 
     return new FinalForm(userPersonalData,martialStatus, martialStatusSince, eyesColor, height, mobileNumber, email,passportType, customPassportType, passportNumber, passportValidFrom, passpoerValidTo, issuedBy, issuedOn, isPreviousStaysInGermany, previousStayInGermany, isPlaceOfResidenceAbroadRetains, placeOfResidenceAbroad, partnerPersonalData, childrenPersonalData, motherPersonalData, fatherPersonalData, purposeOfStayInGermany, trainingTypes, jobSeekingType, employer, gainfulEmploymentType, reasonsDefinedUnderInternationalLaw, applicationForExhibitionType, applicationForExhibitionsReason, familyReasonType, specialResidenceRightsType, meansOfSupport, needsBenefitsUnderSocialLaw, benefitsUnderSocialLaw, healthInsuranceInfo, offencesInfo, residencePermitValidity, applicationPlace )

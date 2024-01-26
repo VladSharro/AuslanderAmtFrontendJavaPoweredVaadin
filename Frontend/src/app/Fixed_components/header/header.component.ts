@@ -27,6 +27,7 @@ export class HeaderComponent {
     var destinationLink = ""
     switch (linkName){
       case this.labels.home_page_button_label:
+        destinationLink = "Home"
         break;
       case this.labels.newbie_guide_page_button_label:
         destinationLink = "Guide"
@@ -40,11 +41,9 @@ export class HeaderComponent {
       case this.labels.contact_page_button_label:
         destinationLink = "Contact"
         break;
-
       case this.labels.admin_login_button_label:
         destinationLink = "adminLogIn"
         break;
-
       default:
         break;
 

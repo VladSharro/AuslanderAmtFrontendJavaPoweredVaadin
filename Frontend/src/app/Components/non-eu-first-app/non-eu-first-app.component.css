@@ -132,4 +132,7 @@ label {
   right: 1%; /* Adjust the distance from the right as needed */
   /* Add other styling for your button as needed */
 }
-          
+
+::ng-deep .mat-stepper-header{
+  pointer-events: none !important;
+}

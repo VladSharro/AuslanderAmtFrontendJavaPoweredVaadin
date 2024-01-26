@@ -14,7 +14,7 @@
 
 <div style="display: flex; justify-content: center; margin-top: 1%;" *ngIf="isLoading == false">
     <button mat-stroked-button matStepperPrevious style=" margin: 1%;  background-color: rgb(212, 212, 212); color: #b42e29;">{{doneLabels.backButtonText}}</button>
-    <button mat-stroked-button style="background-color: #a47371; color: white;   margin: 1%;"  [disabled]="isPreviewDisabled" (click)="preview()" >{{doneLabels.previewButtonText}}</button>
+    <button mat-stroked-button style="background-color: #a47371; color: white;   margin: 1%;"  [hidden]="isPreviewDisabled" (click)="preview()" >{{doneLabels.previewButtonText}}</button>
     <button mat-stroked-button style="background-color: #b42e29; color: white;   margin: 1%;" (click)="doneApplication()" >{{ isPreviewDisabled ? doneLabels.generateButtonText : doneLabels.submitButtonText }}</button>        
   </div>
   

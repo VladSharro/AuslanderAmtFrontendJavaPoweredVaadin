@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Inject, Output, AfterViewChecked, Input, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Output, AfterViewChecked, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatStepper, MatStepperModule} from '@angular/material/stepper';
+import {MatStep, MatStepper, MatStepperModule} from '@angular/material/stepper';
 import { BasicDataLabels } from '../../../Labels/basic_data_labels';
 import { ApplicationService } from '../../../Services/application.service';
 import { passportResponse } from '../../../Models/apiResponseModels/Passport';
@@ -19,33 +19,34 @@ import { OcrService } from '../../../Services/ocr.service';
 @Component({
   selector: 'app-basic-data',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule , FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatStepperModule, MatSlideToggleModule],
+  imports: [CommonModule, MatProgressSpinnerModule , MatStepperModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatStepperModule, MatSlideToggleModule],
   templateUrl: './basic-data.component.html',
   styleUrl: './basic-data.component.css'
 })
 export class BasicDataComponent {
 
-  @Output() firstStepperValidityChange = new EventEmitter<boolean>();
+  // @Output() firstStepperValidityChange = new EventEmitter<boolean>();
+  @ViewChild('hiddenButton') hiddenButton!: ElementRef;
+  @Input() stepperReference!: MatStepper;
+
+
 
 
   constructor(private _formBuilder: FormBuilder,private snackBarService: SnackBarService ,private applicationService: ApplicationService, private ocrService: OcrService, private _snackBar: MatSnackBar) {
     this.getDataFromUploaded()
-
   }
   
  
   passportFile: File | null = null
   isDataLoading = false;
 
+  isSaveNeeded = false
 
-  isNextDiabled = true
-
-  isOverWritten = false;
-  isNextAllowed = false;
-  nextAccepted = false;
+  isChangesConfirmed = true
+  isExtracted = false;
+  
 
 
-  isOverwriteSlideOn = false;
 
   passportExtractedData: passportResponse | undefined;
 
@@ -103,11 +104,13 @@ export class BasicDataComponent {
   private async extractData(){
     this.isDataLoading = true
     const extractedData = await this.ocrService.extractPassportData(this.passportFile!);
+    this.isExtracted = true;
+
     this.isDataLoading = false
     if(extractedData != null){
       this.updateData(extractedData)
     }else{
-      this.snackBarService.openFor(WarningTypes.ExtractFailed)
+      this.snackBarService.openFor(WarningTypes.fileError)
     }
   }
 
@@ -128,11 +131,7 @@ export class BasicDataComponent {
 
       this.passportExtractedData =passportData
       this.passportExtractedData.date_of_birth = this.get_date(passportData.date_of_birth)
-      console.log(this.passportExtractedData)
-      this.snackBarService.openNotSavedYetReminder();
-
-
-      
+      console.log(this.passportExtractedData)     
     }
     
   }
@@ -142,15 +141,30 @@ export class BasicDataComponent {
     return new Date(datebirth).toISOString().slice(0, 10)
   }
 
-  basicDataNextButtonClicked(stepper?: MatStepperModule){
-    if(!this.nextAccepted){
-      if(!this.isNextAllowed){
-        this.snackBarService.openFor(WarningTypes.confirmNeeded);
+  basicDataNextButtonClicked(){
+    if(this.checkIfDataOverwritten()){
+      if(this.isChangesConfirmed == true){
+        this.nextAccepted()
+      }else{
+        this.snackBarService.openFor(WarningTypes.confirmNeeded)
+      }
+  }else{
+    this.nextAccepted()
+  }
+
+  }
+
+  nextAccepted(){
+    if (this.stepperReference && this.stepperReference.selected) {
+      const currentStep = this.stepperReference.selected;
+      
+      if (currentStep.completed !== undefined) {
+        currentStep.completed = true;
+        this.isSaveNeeded = true
       }
     }
-    this.isNextDiabled = true;
-
-
+    this.saveData()
+    this.gotoNext()
   }
 
   isPartnerDataNeeded(): boolean{
@@ -172,72 +186,45 @@ export class BasicDataComponent {
 
   overWriteChanged(event: any){
     if(event.checked){
-      this.isOverwriteSlideOn = true
-      this.isOverWritten = true
-      this.isNextAllowed = true
-      this.firstStepperValidityChange.emit(true);
+      this.isChangesConfirmed = false;
 
     }else{
-      this.isOverwriteSlideOn = false;
-      this.isOverWritten = false
-      this.isNextAllowed = false
+      this.isChangesConfirmed = true;
+
     }
   }
+
+  
   
   checkIfDataOverwritten(){
-    if(this.passportExtractedData != undefined){
-    if(this.basicData.last_name == this.passportExtractedData?.family_name){
-      if(this.basicData.first_name == this.passportExtractedData?.first_name){
-        if(this.basicData.nationality == this.passportExtractedData?.nationality){
-          if(this.basicData.sex_type == this.passportExtractedData?.sex){
-            if(this.basicData.birth_date == this.passportExtractedData.date_of_birth){
-              return false;
+    if(this.isExtracted){
+      if(this.passportExtractedData != undefined){
+        if(this.basicData.last_name == this.passportExtractedData?.family_name){
+          if(this.basicData.first_name == this.passportExtractedData?.first_name){
+            if(this.basicData.nationality == this.passportExtractedData?.nationality){
+              if(this.basicData.sex_type == this.passportExtractedData?.sex){
+                if(this.basicData.birth_date == this.passportExtractedData.date_of_birth){
+                  return false;
+              }
             }
           }
         }
       }
     }
-    }
     return true;
+  }
+  return true
+    
   }
 
 
-   checkIfNext(){
-    if(this.isNextAllowed){
-
-      this.firstStepperValidityChange.emit(true);
-      return
-    }
-
-    this.isOverWritten = this.checkIfDataOverwritten();
-    console.log(this.isOverWritten)
-      if(this.isOverWritten == false){
-        this.nextAccepted = true;
-      }else{
-        if(this.isNextAllowed){
-        this.nextAccepted = true
-        }
-      } 
-    if(!this.nextAccepted){
-      console.log(1)
-
-      console.log(this.nextAccepted)
-      this.firstStepperValidityChange.emit(this.nextAccepted);
-
-    }else{
-      console.log(2)
-
-      console.log(this.nextAccepted)
-
-      this.firstStepperValidityChange.emit(this.nextAccepted);
-    }
-   }
+  
 
 
    extractedDataChanged(){
-    this.firstStepperValidityChange.emit(false);
-    this.isNextDiabled = true
-    this.snackBarService.openNotSavedYetReminder();
+    if(this.isSaveNeeded){
+      this.snackBarService.openNotSavedYetReminder();
+    }
 
    }
  
@@ -246,16 +233,13 @@ export class BasicDataComponent {
    
 
   saveData(){
-    console.log(this.basicData)
-    this.isOverWritten= false
-    this.nextAccepted = false
+   
     // this.isNextAllowed = false
 
     this.applicationService.setBasicdata(this.basicData.first_name, this.basicData.last_name, this.basicData.birth_date, this.basicData.sex_type, this.basicData.place_country, this.basicData.nationality, this.basicData.martial_type, this.basicData.since, this.basicData.eyes_color, this.basicData.height, this.basicData.mobile, this.basicData.email)
     this.applicationService.setPassportData(this.passportData.passportNr, this.passportData.valid_from, this.passportData.valid_to, this.passportData.issued_by, this.passportData.issued_on, this.passportFile)
-    this.checkIfNext();
+    // this.checkIfNext();
     this.snackBarService.openFor(WarningTypes.dataSaved)
-    this.isNextDiabled = false
   }
 
 
@@ -306,5 +290,10 @@ export class BasicDataComponent {
     }
 
 
+  }
+
+  gotoNext(){
+    const buttonElement: HTMLButtonElement = this.hiddenButton.nativeElement;
+    buttonElement.click();
   }
 }

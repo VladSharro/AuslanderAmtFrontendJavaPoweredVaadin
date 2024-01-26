@@ -1,40 +1,46 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocumentModel } from '../../../Models/DocumentModel';
 import { AdditionalDocumentsService } from '../../../Services/additional-documents.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { AdditionalDocumentsLabels } from '../../../Labels/additional-documents-labels';
 import { ApplicationService } from '../../../Services/application.service';
 import { SnackBarService } from '../../../Services/snack-bar.service';
 import { WarningTypes } from '../../../Models/enums/warningEnum';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-adiitional-documents',
   standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule, MatButtonModule, MatStepperModule],
+  imports: [CommonModule, MatProgressSpinnerModule, MatButtonModule, MatStepperModule, FormsModule, ReactiveFormsModule,],
   templateUrl: './adiitional-documents.component.html',
   styleUrl: './adiitional-documents.component.css'
 })
-export class AdiitionalDocumentsComponent implements AfterViewInit{
+export class AdiitionalDocumentsComponent {
+
+  @ViewChild('hiddenButton') hiddenButton!: ElementRef;
+  @Input() stepperReference!: MatStepper;
 
   isDataLoading = false;
-  isNextDisabled = true;
+  isSaveNeeded = false;
 
-  additionalDocumentsLabels = new AdditionalDocumentsLabels
+  noOfYears = 0
+  noOfMonths = 0
+  noOfDays = 0
+
+  additionalDocumentsLabels = new AdditionalDocumentsLabels()
   constructor(private additionalDocumentsService: AdditionalDocumentsService, private applicationService: ApplicationService, private snackBarService: SnackBarService){     
     this.isDataLoading = true;  
     this.getAdditionalDocumentsData();
   }
-  ngAfterViewInit(): void {
-
-  }
+  
 
   extractedDataChanged(){
-    this.isNextDisabled = true
-    this.snackBarService.openNotSavedYetReminder();
-  
+    if(this.isSaveNeeded){   
+      this.snackBarService.openNotSavedYetReminder();
+    }
    }
   
   
@@ -68,14 +74,27 @@ export class AdiitionalDocumentsComponent implements AfterViewInit{
   }
 
   adiitionaDocumentsNextClicked(){
-    this.applicationService.setAdditionalDocuments(this.additionalDocsMap)
+    if (this.stepperReference && this.stepperReference.selected) {
+      const currentStep = this.stepperReference.selected;
+      
+      if (currentStep.completed !== undefined) {
+        currentStep.completed = true;
+        this.isSaveNeeded = true
+      }
+    }
+    this.saveData()
+    this.gotoNext()  
+  }
+
+  gotoNext(){
+    const buttonElement: HTMLButtonElement = this.hiddenButton.nativeElement;
+    buttonElement.click();
   }
 
   saveData(){
 
-    this.applicationService.setAdditionalDocuments(this.additionalDocsMap)
+    this.applicationService.setAdditionalDocuments(this.additionalDocsMap, this.noOfYears, this.noOfMonths, this.noOfDays)
     this.snackBarService.openFor(WarningTypes.dataSaved)
-    this.isNextDisabled = false;
   }
 
   getDataFromUploaded(){

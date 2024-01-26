@@ -99,19 +99,18 @@
     <div class="rounded-input-container" [class.filled]="passportData.issued_on" >
       <input class="rounded-input" (change)="extractedDataChanged()" type="text" name="passport_issued_on_field" id="passport_issued_on_field" [(ngModel)]="passportData.issued_on" placeholder="{{basicDataLabels.issued_on}}">
     </div>
-    <div  style="display: flex; justify-content: center; margin-top: 2%">
+    <div *ngIf="checkIfDataOverwritten()" style="display: flex; justify-content: center; margin-top: 2%">
       <mat-slide-toggle
         class="example-margin"
         color="warn"
-        [checked]="isOverwriteSlideOn == true ? true : false"
         (change)="overWriteChanged( $event )"
       >
-        Override
+        I confirm that extracted data is different from the provided one from me, or the data couldn't be extracted from the system
       </mat-slide-toggle>
     </div>
     <div style="display: flex; justify-content: center; margin-top: 1%;">
-      <button mat-stroked-button style="background-color: #a47371; color: white; width: 15%;  margin: 1%;"  (click)="saveData()" >Save</button>
-      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" [disabled]="isNextDiabled" matStepperNext (click)="basicDataNextButtonClicked()" >{{basicDataLabels.next_button_label}}</button>        
+      <button mat-stroked-button style="background-color: #b42e29; color: white; width: 15%;   margin: 1%;" (click)="basicDataNextButtonClicked()" >{{basicDataLabels.next_button_label}}</button>        
+      <button #hiddenButton hidden matStepperNext>Hidden Button</button>
     </div>
 
   </form>
