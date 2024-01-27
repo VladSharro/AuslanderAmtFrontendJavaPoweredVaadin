@@ -5,7 +5,6 @@ import com.example.appforauslenderamt.config.OCRConfig;
 import com.example.appforauslenderamt.controller.dto.*;
 import com.example.appforauslenderamt.entity.*;
 import com.example.appforauslenderamt.exceptions.InvalidDataException;
-import com.google.common.collect.Sets;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import lombok.extern.log4j.Log4j;
@@ -40,6 +39,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -663,7 +663,7 @@ public class GenerateReportService {
 
     private ByteArrayOutputStream addImageToEndOfPDF(ByteArrayOutputStream outputStream, MultipartFile[] documents)
             throws IOException {
-        Set<PDDocument> openDocuments = Sets.newHashSet();
+        Set<PDDocument> openDocuments = new HashSet<>();
         try (PDDocument document = PDDocument.load(outputStream.toByteArray())) {
             for (MultipartFile d : documents) {
                 // Check the file type
