@@ -11,6 +11,7 @@ from datetime import datetime
 from passporteye import read_mrz, mrz
 import sys
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
 
 def find_index_of_phrase(lines, phrase):
     for i, line in enumerate(lines):

@@ -11,6 +11,9 @@ from datetime import datetime
 from passporteye import read_mrz, mrz
 import sys
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
+
+
 def extract_health(encoded_pdf_path):
     # Read the encoded PDF file
     with open(encoded_pdf_path, 'rb') as pdf_file:

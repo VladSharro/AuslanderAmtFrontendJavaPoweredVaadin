@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PassportClass extends VerticalLayout {
@@ -36,9 +38,27 @@ public class PassportClass extends VerticalLayout {
     private final DatePicker validFrom = new DatePicker("Valid from");
     private final DatePicker issuedOn = new DatePicker("Issued on");
 
+    private ApplicationView applicationView;
 
-    public PassportClass(OCRService ocrService) throws IOException {
+    public Map<String, Object> getData() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("firstName", firstName.getValue());
+        data.put("lastName", lastName.getValue());
+        data.put("nationality", nationality.getValue());
+        data.put("dateOfBirth", dateOfBirth.getValue() != null ? dateOfBirth.getValue().toString() : null);
+        data.put("gender", gender.getValue());
+        data.put("validFrom", validFrom.getValue() != null ? validFrom.getValue().toString() : null);
+        data.put("issuedOn", issuedOn.getValue() != null ? issuedOn.getValue().toString() : null);
+        // ... добавление остальных данных формы ...
+        return data;
+    }
+
+
+    public PassportClass(OCRService ocrService, ApplicationView applicationView) throws IOException {
         this.ocrService = ocrService;
+        this.applicationView = applicationView;
+
+        //this.ocrService = ocrService;
 
         setAlignItems(Alignment.CENTER); // Center all components horizontally in this layout
 
@@ -58,15 +78,38 @@ public class PassportClass extends VerticalLayout {
             passportImage.setSrc(streamResource);
             passportImage.setVisible(true);
             extractDataFromPassport();
+
+            //firstName.addValueChangeListener(e -> saveData());
+            //lastName.addValueChangeListener(e -> saveData());
+
+            //firstName.addValueChangeListener(e -> saveData());
+            //lastName.addValueChangeListener(e -> saveData());
         });
+
+        firstName.addValueChangeListener(e -> saveData());
+        lastName.addValueChangeListener(e -> saveData());
+        nationality.addValueChangeListener(e -> saveData());
+        dateOfBirth.addValueChangeListener(e -> saveData());
+        gender.addValueChangeListener(e -> saveData());
+        validFrom.addValueChangeListener(e -> saveData());
+        issuedOn.addValueChangeListener(e -> saveData());
 
         createPassportLayout();
     }
 
+    private void saveData() {
+        if (applicationView != null) {
+            applicationView.saveCurrentTabData("Passport");
+        }
+    }
+
+
+
+
+
     private void extractDataFromPassport() {
         try {
-            PassportDataResponseDto passportDataResponseDto =
-                    ocrService.getDataFromPassport(buffer.getInputStream().readAllBytes());
+            PassportDataResponseDto passportDataResponseDto = ocrService.getDataFromPassport(buffer.getInputStream().readAllBytes());
             firstName.setValue(passportDataResponseDto.getFirstName());
             lastName.setValue(passportDataResponseDto.getFamilyName());
             nationality.setValue(passportDataResponseDto.getNationality());
@@ -118,6 +161,11 @@ public class PassportClass extends VerticalLayout {
                 validFrom, validTill, issuedBy, issuedOn, gender
         );
 
+
+
+
         add(layout);
     }
+
+
 }

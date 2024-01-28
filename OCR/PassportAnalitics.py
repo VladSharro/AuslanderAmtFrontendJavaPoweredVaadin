@@ -11,6 +11,9 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pycountry
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
+
+
 def process_string(input_string):
     parts = input_string.split(' ', 0)
 

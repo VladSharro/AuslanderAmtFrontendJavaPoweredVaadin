@@ -10,6 +10,7 @@ import re
 import sys
 
 from datetime import datetime
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
 
 
 

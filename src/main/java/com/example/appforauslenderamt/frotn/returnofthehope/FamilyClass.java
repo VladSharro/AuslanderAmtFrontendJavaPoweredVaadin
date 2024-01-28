@@ -16,6 +16,8 @@ public class FamilyClass extends VerticalLayout {
     private VerticalLayout motherFieldsLayout = new VerticalLayout();
 
 
+
+
     public FamilyClass() {
         setAlignItems(Alignment.CENTER);
 
