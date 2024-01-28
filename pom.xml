@@ -94,6 +94,11 @@
             <version>2.13.0</version>
         </dependency>
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
+        <dependency>
             <groupId>net.sf.cssbox</groupId>
             <artifactId>pdf2dom</artifactId>
             <version>${pdf2dom.version}</version>
@@ -103,6 +108,12 @@
                     <groupId>commons-logging</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>6.0.13</version>
+            <scope>compile</scope> <!-- Change this to "compile" if you want to use it outside of tests -->
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>

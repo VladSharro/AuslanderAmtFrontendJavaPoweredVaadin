@@ -9,6 +9,7 @@ import com.example.appforauslenderamt.exceptions.InvalidDataException;
 import lombok.extern.log4j.Log4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,24 +35,19 @@ public class OCRService {
 
     public PassportDataResponseDto getDataFromPassport(MultipartFile passportImage)
             throws IOException, InterruptedException {
-        return getDataFromPassport(passportImage.getBytes());
-    }
-
-    public PassportDataResponseDto getDataFromPassport(byte[] passportImageBytes)
-            throws IOException, InterruptedException {
-        logger.info("Attempt to process passport image with OCR");
-        String line = processWithOCR(passportImageBytes, ocrConfig.getPassportAnalysisFilePath());
+        logger.info("Attempt to process passport image {} with OCR", passportImage);
+        String line = processWithOCR(passportImage, ocrConfig.getPassportAnalysisFilePath());
         // Process line of the output here
-        String[] userData = line.split(",");
+        JSONObject userData = new JSONObject(line);
 
         return PassportDataResponseDto.builder()
-                .familyName(userData[0])
-                .firstName(userData[1])
-                .nationality(userData[2])
-                .dateOfBirth(userData[3])
-                .sex(userData[4])
-                .startDate(userData[5])
-                .issueDate(userData[6])
+                .familyName(userData.getString("name"))
+                .firstName(userData.getString("surname"))
+                .nationality(userData.getString("nationality"))
+                .dateOfBirth(userData.getString("date_of_birth"))
+                .sex(userData.getString("sex"))
+                .startDate(userData.getString("start_date"))
+                .issueDate(userData.getString("issue_date"))
                 .build();
 
     }
@@ -59,24 +55,18 @@ public class OCRService {
     public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(
             MultipartFile certificateOfEnrollment)
             throws IOException, InterruptedException {
-        return getDataFromCertificateOfEnrollment(certificateOfEnrollment.getBytes());
-    }
-
-    public CertificateOfEnrollmentDataResponseDto getDataFromCertificateOfEnrollment(
-            byte[] certificateOfEnrollmentBytes)
-            throws IOException, InterruptedException {
-        logger.info("Attempt to process certificate of enrollment with OCR");
-        String line = processWithOCR(certificateOfEnrollmentBytes, ocrConfig.getCertificateOfEnrollmentAnalysisFilePath());
+        logger.info("Attempt to process certificate of enrollment {} with OCR", certificateOfEnrollment);
+        String line = processWithOCR(certificateOfEnrollment, ocrConfig.getCertificateOfEnrollmentAnalysisFilePath());
         // Process line of the output here
-        String[] userData = line.split(",");
+        JSONObject userData = new JSONObject(line);
 
         CertificateOfEnrollmentDataResponseDto responseDto = CertificateOfEnrollmentDataResponseDto.builder()
-                .firstName(userData[0])
-                .familyName(userData[1])
-                .dateOfBirth(userData[2])
-                .placeOfBirth(userData[3])
-                .address(userData[4])
-                .semesterEndsDate(userData[5])
+                .firstName(userData.getString("name"))
+                .familyName(userData.getString("surname"))
+                .dateOfBirth(userData.getString("date_birth"))
+                .placeOfBirth(userData.getString("city"))
+                .address(userData.getString("address"))
+                .semesterEndsDate(userData.getString("semester_ends"))
                 .build();
 
         if (LocalDate.parse(responseDto.getSemesterEndsDate(),
@@ -91,68 +81,50 @@ public class OCRService {
     public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(
             MultipartFile healthInsuranceCertificateImage)
             throws IOException, InterruptedException {
-        return getDataFromHealthInsuranceCertificate(healthInsuranceCertificateImage.getBytes());
-    }
-
-    public HealthInsuranceCertificateDataResponseDto getDataFromHealthInsuranceCertificate(
-            byte[] healthInsuranceCertificateImageBytes)
-            throws IOException, InterruptedException {
-        logger.info("Attempt to process health insurance image with OCR");
-        String line = processWithOCR(healthInsuranceCertificateImageBytes,
+        logger.info("Attempt to process health insurance image {} with OCR", healthInsuranceCertificateImage);
+        String line = processWithOCR(healthInsuranceCertificateImage,
                 ocrConfig.getHealthInsuranceCertificateAnalysisFilePath());
         // Process line of the output here
-        String[] userData = line.split(",");
+        JSONObject userData = new JSONObject(line);
 
         return HealthInsuranceCertificateDataResponseDto.builder()
-                .firstName(userData[0])
-                .familyName(userData[1])
-                .insurer(userData[2])
-                .dateOfStart(userData[3])
+                .firstName(userData.getString("name"))
+                .familyName(userData.getString("surname"))
+                .insurer(userData.getString("krankenkasse"))
+                .dateOfStart(userData.getString("date"))
                 .build();
 
     }
 
     public FinancialDocumentResponseDto getDataFromWorkingContract(MultipartFile workingContract)
             throws IOException, InterruptedException {
-        return getDataFromWorkingContract(workingContract.getBytes());
-    }
-
-    public FinancialDocumentResponseDto getDataFromWorkingContract(byte[] workingContractBytes)
-            throws IOException, InterruptedException {
-        logger.info("Attempt to process working contract with OCR");
-        String line = processWithOCR(workingContractBytes, ocrConfig.getWorkingContractAnalysisFilePath());
+        logger.info("Attempt to process working contract {} with OCR", workingContract);
+        String line = processWithOCR(workingContract, ocrConfig.getWorkingContractAnalysisFilePath());
         // Process line of the output here
-        String[] userData = line.split(",");
+        JSONObject userData = new JSONObject(line);
 
         return FinancialDocumentResponseDto.builder()
-                .sum(userData[0])
-                .date(userData[1])
+                .sum(userData.getDouble("money"))
+                .date(String.valueOf(userData.getString("date")))  // Convert the double to String
                 .build();
-
     }
 
-    public FinancialDocumentResponseDto getDataFromBlockedAccount(MultipartFile blockedAccountImage)
+    public FinancialDocumentResponseDto getDataFromBlockedAccount(MultipartFile blockedAccount)
             throws IOException, InterruptedException {
-        return getDataFromBlockedAccount(blockedAccountImage.getBytes());
-
-    }
-
-    public FinancialDocumentResponseDto getDataFromBlockedAccount(byte[] blockedAccountImageBytes)
-            throws IOException, InterruptedException {
-        logger.info("Attempt to process blocked account with OCR");
-        String line = processWithOCR(blockedAccountImageBytes, ocrConfig.getBlockedAccountAnalysisFilePath());
+        logger.info("Attempt to process blocked account {} with OCR", blockedAccount);
+        String line = processWithOCR(blockedAccount, ocrConfig.getBlockedAccountAnalysisFilePath());
         // Process line of the output here
-        String[] userData = line.split(",");
+        JSONObject userData = new JSONObject(line);
 
         return FinancialDocumentResponseDto.builder()
-                .sum(userData[0])
-                .date(userData[1])
+                .sum(userData.getDouble("money"))
+                .date(String.valueOf(userData.getString("date")))  // Convert the double to String
                 .build();
-
     }
 
-    private String processWithOCR(byte[] imageBytes, String pathToFile) throws IOException, InterruptedException {
-//        byte[] imageBytes = file.readAllBytes();
+
+    private String processWithOCR(MultipartFile file, String pathToFile) throws IOException, InterruptedException {
+        byte[] imageBytes = file.getBytes();
 
         // Encode the image data in Base64
         String encodedImage = Base64.getEncoder().encodeToString(imageBytes);
@@ -183,9 +155,8 @@ public class OCRService {
         // Delete the temporary file
         tempFile.delete();
 
-        logger.info("Receive user data {}", line);
-
         return line;
     }
 
 }
+

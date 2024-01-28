@@ -13,7 +13,7 @@ import lombok.Value;
 public class FinancialDocumentResponseDto {
 
     @JsonProperty("sum")
-    String sum;
+    Double sum;
     @JsonProperty("date")
     String date;
 

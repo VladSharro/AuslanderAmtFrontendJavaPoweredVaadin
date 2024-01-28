@@ -8,10 +8,11 @@ from PIL import Image
 import numpy as np
 import re
 import sys
+import json
 
 from datetime import datetime
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
 
 
 def convert_pdf_to_images(encoded_pdf):
@@ -140,5 +141,11 @@ if __name__ == "__main__":
 
     # Call the function and print the result
     moneys, date = convert_pdf_to_images(encoded_pdf_path)
-    print(','.join([str(moneys), date]))
 
+    data = {
+        "money": moneys,
+        "date": date
+    }
+
+    json_data = json.dumps(data, ensure_ascii=False)
+    print(json_data)

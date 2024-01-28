@@ -10,9 +10,10 @@ from passporteye import read_mrz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pycountry
+import json
+
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
-
 
 def process_string(input_string):
     parts = input_string.split(' ', 0)
@@ -130,4 +131,16 @@ if __name__ == "__main__":
         image_data = file.read()
 
     name, surname, nationality, birth, sex, start_date, issue = extract_name_and_surname(image_data)
-    print(','.join([name, surname, nationality, birth, sex, start_date, issue]))
+
+    data = {
+        "name": name,
+        "surname": surname,
+        "nationality": nationality,
+        "date_of_birth": birth,
+        "sex": sex,
+        "start_date": start_date,
+        "issue_date": issue
+    }
+
+    json_data = json.dumps(data, ensure_ascii=False)
+    print(json_data)

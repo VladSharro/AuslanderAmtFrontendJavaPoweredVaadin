@@ -42,6 +42,12 @@ public class FirstPage extends VerticalLayout {
             masterPageButton.getUI().ifPresent(ui -> ui.navigate("FAQRead"));
         });
 
+
+        Button DocPageButton = new Button("Documents which needed");
+        DocPageButton.addClickListener(e -> {
+            masterPageButton.getUI().ifPresent(ui -> ui.navigate("documents"));
+        });
+
         // Information paragraph
         Paragraph info = new Paragraph("You can apply for a student residence permit, both first-time and extension, through this service. We'll take you through the application step by step.");
 
@@ -52,6 +58,6 @@ public class FirstPage extends VerticalLayout {
         });
 
         // Add components to the layout
-        add(topBarLayout, title, info, startApplication, continueApplication, FAQ, FAQPageButton);
+        add(topBarLayout, title, info, startApplication, continueApplication, FAQ, FAQPageButton, DocPageButton);
     }
 }

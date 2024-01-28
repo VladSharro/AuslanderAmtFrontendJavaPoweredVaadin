@@ -11,15 +11,16 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.server.StreamResource;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PassportClass extends VerticalLayout {
@@ -38,27 +39,9 @@ public class PassportClass extends VerticalLayout {
     private final DatePicker validFrom = new DatePicker("Valid from");
     private final DatePicker issuedOn = new DatePicker("Issued on");
 
-    private ApplicationView applicationView;
 
-    public Map<String, Object> getData() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("firstName", firstName.getValue());
-        data.put("lastName", lastName.getValue());
-        data.put("nationality", nationality.getValue());
-        data.put("dateOfBirth", dateOfBirth.getValue() != null ? dateOfBirth.getValue().toString() : null);
-        data.put("gender", gender.getValue());
-        data.put("validFrom", validFrom.getValue() != null ? validFrom.getValue().toString() : null);
-        data.put("issuedOn", issuedOn.getValue() != null ? issuedOn.getValue().toString() : null);
-        // ... добавление остальных данных формы ...
-        return data;
-    }
-
-
-    public PassportClass(OCRService ocrService, ApplicationView applicationView) throws IOException {
+    public PassportClass(OCRService ocrService) throws IOException {
         this.ocrService = ocrService;
-        this.applicationView = applicationView;
-
-        //this.ocrService = ocrService;
 
         setAlignItems(Alignment.CENTER); // Center all components horizontally in this layout
 
@@ -77,39 +60,35 @@ public class PassportClass extends VerticalLayout {
             });
             passportImage.setSrc(streamResource);
             passportImage.setVisible(true);
-            extractDataFromPassport();
-
-            //firstName.addValueChangeListener(e -> saveData());
-            //lastName.addValueChangeListener(e -> saveData());
-
-            //firstName.addValueChangeListener(e -> saveData());
-            //lastName.addValueChangeListener(e -> saveData());
+            try {
+                extractDataFromPassport();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
-
-        firstName.addValueChangeListener(e -> saveData());
-        lastName.addValueChangeListener(e -> saveData());
-        nationality.addValueChangeListener(e -> saveData());
-        dateOfBirth.addValueChangeListener(e -> saveData());
-        gender.addValueChangeListener(e -> saveData());
-        validFrom.addValueChangeListener(e -> saveData());
-        issuedOn.addValueChangeListener(e -> saveData());
 
         createPassportLayout();
     }
 
-    private void saveData() {
-        if (applicationView != null) {
-            applicationView.saveCurrentTabData("Passport");
-        }
-    }
+    private void extractDataFromPassport() throws IOException {
+        byte[] passportBytes = buffer.getInputStream().readAllBytes();
 
+        // Create a MultipartFile from the byte array
+        MultipartFile passportMultipartFile = new MockMultipartFile(
+                "passportImage", // name of the parameter
+                "passport.jpg", // filename, you can set this to the actual file name
+                "image/jpeg", // content type of the file, adjust if necessary
+                passportBytes
+        );
 
-
-
-
-    private void extractDataFromPassport() {
         try {
-            PassportDataResponseDto passportDataResponseDto = ocrService.getDataFromPassport(buffer.getInputStream().readAllBytes());
+            PassportDataResponseDto passportDataResponseDto =
+                    ocrService.getDataFromPassport(passportMultipartFile);
+
+            // Log the raw response for debugging
+            System.out.println("OCR Service Response: " + passportDataResponseDto);
+
+            // Set field values from the DTO
             firstName.setValue(passportDataResponseDto.getFirstName());
             lastName.setValue(passportDataResponseDto.getFamilyName());
             nationality.setValue(passportDataResponseDto.getNationality());
@@ -117,12 +96,21 @@ public class PassportClass extends VerticalLayout {
             gender.setValue(passportDataResponseDto.getSex());
             validFrom.setValue(LocalDate.parse(passportDataResponseDto.getStartDate(), DateTimeFormatter.ofPattern("dd/MM/yy")));
             issuedOn.setValue(LocalDate.parse(passportDataResponseDto.getIssueDate(), DateTimeFormatter.ofPattern("dd/MM/yy")));
+
+            // Redraw the layout
             removeAll();
             createPassportLayout();
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Thread was interrupted", e);
+        } catch (IOException e) {
+            throw new IOException("IO exception occurred", e);
+        } catch (Exception e) {
             e.printStackTrace();
+            // Handle other exceptions or rethrow
         }
     }
+
 
     private void createPassportLayout() {
         VerticalLayout layout = new VerticalLayout();
@@ -161,11 +149,7 @@ public class PassportClass extends VerticalLayout {
                 validFrom, validTill, issuedBy, issuedOn, gender
         );
 
-
-
-
         add(layout);
     }
-
-
 }
+

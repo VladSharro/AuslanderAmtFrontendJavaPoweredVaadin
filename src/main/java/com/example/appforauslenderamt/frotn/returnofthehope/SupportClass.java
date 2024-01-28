@@ -1,7 +1,6 @@
 package com.example.appforauslenderamt.frotn.returnofthehope;
 
 import com.example.appforauslenderamt.controller.dto.FinancialDocumentResponseDto;
-import com.example.appforauslenderamt.controller.dto.PassportDataResponseDto;
 import com.example.appforauslenderamt.service.OCRService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -13,6 +12,8 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.server.StreamResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,10 +36,15 @@ public class SupportClass extends VerticalLayout {
     public SupportClass(OCRService ocrService) {
         this.ocrService = ocrService;
 
-        setAlignItems(FlexComponent.Alignment.CENTER);
+        setAlignItems(FlexComponent.Alignment.CENTER); // Center all components horizontally in this layout
 
-        workingContractUpload.addSucceededListener(e -> extractDataFromWorkingContract());
-        blockedAccountUpload.addSucceededListener(e -> extractDataFromBlockAccount());
+        workingContractUpload.setAcceptedFileTypes("application/pdf"); // Accept only PDF files
+        workingContractUpload.setMaxFiles(1); // Allow uploading only one file
+        workingContractUpload.addSucceededListener(event -> extractDataFromWorkingContract());
+
+        blockedAccountUpload.setAcceptedFileTypes("application/pdf"); // Accept only PDF files
+        blockedAccountUpload.setMaxFiles(1); // Allow uploading only one file
+        blockedAccountUpload.addSucceededListener(event -> extractDataFromBlockAccount());
 
         createLayout();
     }
@@ -62,7 +68,6 @@ public class SupportClass extends VerticalLayout {
         IntegerField textField = new IntegerField("Some Text Field");
         IntegerField datePicker = new IntegerField("Some Date Picker");
 
-
         // Create a button to submit the form
         Button submitButton = new Button("Submit");
 
@@ -80,36 +85,59 @@ public class SupportClass extends VerticalLayout {
                 bookLayouts,
                 workingContractUpload,
                 blockedAccountUpload,
-//                otherIssuedUpload,
                 workingContractSalary,
-                blockAccountMoney,
-                submitButton
+                blockAccountMoney
+                //submitButton
         );
     }
 
     private void extractDataFromWorkingContract() {
         try {
-            FinancialDocumentResponseDto workingContractResponseDto =
-                    ocrService.getDataFromWorkingContract(workingContractBuffer.getInputStream().readAllBytes());
-            workingContractSalary.setValue(workingContractResponseDto.getSum());
-            removeAll();
-            createLayout();
+            byte[] workingContractBytes = workingContractBuffer.getInputStream().readAllBytes();
+            MultipartFile workingContractMultipartFile = new MockMultipartFile(
+                    "workingContract", // name of the parameter
+                    "working-contract.pdf", // filename, you can set this to the actual file name
+                    "application/pdf", // content type of the file
+                    workingContractBytes
+            );
+
+            FinancialDocumentResponseDto financialDocumentResponseDto =
+                    ocrService.getDataFromWorkingContract(workingContractMultipartFile);
+
+            if (financialDocumentResponseDto != null) {
+                workingContractSalary.setValue(String.valueOf(financialDocumentResponseDto.getSum()));
+                removeAll();
+                createLayout();
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+
     private void extractDataFromBlockAccount() {
         try {
-            FinancialDocumentResponseDto blockAccountResponseDto =
-                    ocrService.getDataFromBlockedAccount(blockedAccountBuffer.getInputStream().readAllBytes());
-            blockAccountMoney.setValue(blockAccountResponseDto.getSum());
-            removeAll();
-            createLayout();
+            byte[] blockedAccountBytes = blockedAccountBuffer.getInputStream().readAllBytes();
+            MultipartFile blockedAccountMultipartFile = new MockMultipartFile(
+                    "blockedAccount", // name of the parameter
+                    "blocked-account.pdf", // filename, you can set this to the actual file name
+                    "application/pdf", // content type of the file
+                    blockedAccountBytes
+            );
+
+
+
+            FinancialDocumentResponseDto financialDocumentResponseDto =
+                    ocrService.getDataFromBlockedAccount(blockedAccountMultipartFile);
+
+            if (financialDocumentResponseDto != null) {
+                blockAccountMoney.setValue(String.valueOf(financialDocumentResponseDto.getSum()));
+                removeAll();
+                createLayout();
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
 }
-

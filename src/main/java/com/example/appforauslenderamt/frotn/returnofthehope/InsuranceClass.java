@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -15,6 +16,8 @@ public class InsuranceClass extends VerticalLayout {
     private final OCRService ocrService;
 
     private final MemoryBuffer buffer = new MemoryBuffer();
+
+    private final MemoryBuffer healthInsuranceCertificateBuffer = new MemoryBuffer();
     private final Image insuranceImage = new Image();
     private final Upload upload = new PdfUpload("health-insurance-image", buffer);
 
@@ -33,14 +36,19 @@ public class InsuranceClass extends VerticalLayout {
     private void extractDataFromInsuranceDocument() {
         try {
             HealthInsuranceCertificateDataResponseDto healthInsuranceCertificateDataResponseDto =
-                    ocrService.getDataFromHealthInsuranceCertificate(buffer.getInputStream().readAllBytes());
-            insurerCompanyName.setValue(healthInsuranceCertificateDataResponseDto.getInsurer());
-            removeAll();
-            createInsuranceLayout();
+                    ocrService.getDataFromHealthInsuranceCertificate((MultipartFile) healthInsuranceCertificateBuffer.getFileData());
+
+            if (healthInsuranceCertificateDataResponseDto != null) {
+                // Use the extracted data as needed
+                // Example: insurerCompanyName.setValue(healthInsuranceCertificateDataResponseDto.getInsurer());
+                removeAll();
+                createInsuranceLayout();
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 
     private void createInsuranceLayout() {
         VerticalLayout layout = new VerticalLayout();

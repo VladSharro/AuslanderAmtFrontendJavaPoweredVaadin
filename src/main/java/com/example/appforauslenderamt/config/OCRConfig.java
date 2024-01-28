@@ -11,6 +11,14 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "ocr")
 public class OCRConfig {
 
+
+    //private String passportAnalysisFilePath = "OCR/PassportAnalitics.py";
+    //private String certificateOfEnrollmentAnalysisFilePath = "OCR/ImmatriculationAnalitics.py";
+    //private String healthInsuranceCertificateAnalysisFilePath = "OCR/Health_Analitics.py";
+    //private String workingContractAnalysisFilePath = "OCR/WorkContract.py";
+    //private String blockedAccountAnalysisFilePath = "OCR/Geld.py";
+
+
     private String passportAnalysisFilePath;
     private String certificateOfEnrollmentAnalysisFilePath;
     private String healthInsuranceCertificateAnalysisFilePath;

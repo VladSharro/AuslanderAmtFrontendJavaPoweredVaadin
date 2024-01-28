@@ -19,8 +19,8 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 def geld(encoded_pdf_path):
     # Read the encoded PDF file
     with open(encoded_pdf_path, 'rb') as pdf_file:
-       # Decode the base64-encoded PDF
-       decoded_pdf = base64.b64decode(pdf_file.read())
+        # Decode the base64-encoded PDF
+        decoded_pdf = base64.b64decode(pdf_file.read())
 
     # Create a BytesIO object to simulate a file-like object from the decoded PDF
     pdf_stream = io.BytesIO(decoded_pdf)
@@ -82,12 +82,11 @@ if __name__ == "__main__":
     encoded_pdf_path = sys.argv[1]
 
     max_eur_number, date = geld(encoded_pdf_path)
-    print(','.join([str(max_eur_number), date]))
 
+    data = {
+        "money": max_eur_number,
+        "date": date
+    }
 
-# Access the image data from the environment variable
-#image_data = os.environ.get("IMAGE_DATA")
-
-# Call the function and print the result
-#gold, date = geld(image_data)
-#print(','.join([str(geld), date]))
+    json_data = json.dumps(data, ensure_ascii=False)
+    print(json_data)
