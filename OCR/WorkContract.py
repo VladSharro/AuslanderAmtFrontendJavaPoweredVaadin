@@ -14,6 +14,19 @@ from datetime import datetime
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
 
+def get_default_date():
+    today = datetime.today()
+    current_year = today.year
+    april_first = datetime(current_year, 4, 1)
+    october_first = datetime(current_year, 10, 1)
+
+    if today < april_first:
+        return april_first
+    elif april_first <= today < october_first:
+        return october_first
+    else:
+        # If the current date is past October 1st, set the default date to April 1st of the next year
+        return datetime(current_year + 1, 4, 1)
 
 def convert_pdf_to_images(encoded_pdf):
     # Read the encoded PDF file
@@ -97,8 +110,9 @@ def convert_pdf_to_images(encoded_pdf):
                             max_number = local_max
                             hours = max_number
 
-            if "Stunder pro woche" in line:
+            if "Die monatiche Arbeit" in line:
                 week = 1
+                hours = 30
 
             if "Mindestlohn" in line:
                 money = 12
@@ -115,20 +129,30 @@ def convert_pdf_to_images(encoded_pdf):
     else:
         money = float(money.replace(',', '.'))
 
+    if money == 0:
+        money = 12
+
+    if not dates:
+        date = get_default_date()
+    else:
+        date = min(dates)
+
     #print(money)
     #print(hours)
     #print(min(dates))
 
-    date = min(dates)
+    date = str(date)
+
+    #date = min(dates)
     # print(date)
+
 
     final_count = money * hours * week
 
-    # print(final_count)
+    if final_count == 0:
+        final_count = money * 30
 
-    # extracted_text = page.get_text()
 
-    # print(extracted_text)
 
     return final_count, date
 

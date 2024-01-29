@@ -1,4 +1,0 @@
-
-export enum BenefitsUnderSocialLaw {
-    SOCIAL_WELFARE_BENEFIT, BASIC_SUPPORT_FOR_EMPLOYMENT_SEEKERS, NONE
-}

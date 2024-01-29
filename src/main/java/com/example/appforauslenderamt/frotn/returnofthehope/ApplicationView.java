@@ -2,6 +2,7 @@ package com.example.appforauslenderamt.frotn.returnofthehope;
 
 import com.example.appforauslenderamt.service.OCRService;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -16,6 +17,9 @@ import java.util.Map;
 public class ApplicationView extends VerticalLayout {
 
     private Map<Tab, VerticalLayout> tabsToPages = new HashMap<>();
+
+    private final Button exportToFinalButton = new Button("Next");
+
 
     public ApplicationView(OCRService ocrService) throws IOException {
         setAlignItems(Alignment.CENTER);
@@ -69,26 +73,31 @@ public class ApplicationView extends VerticalLayout {
         });
 
         tabs.setSelectedTab(passportTab);
-        familyContent.setVisible(false); // Скрываем содержимое вкладки "Family"
+        familyContent.setVisible(false);
 
         tabs.addSelectedChangeListener(event -> {
             tabsToPages.values().forEach(page -> page.setVisible(false));
             VerticalLayout selectedPage = tabsToPages.get(tabs.getSelectedTab());
             selectedPage.setVisible(true);
 
-            // Устанавливаем информацию о выбранной вкладке в сессии
+
             UI.getCurrent().getSession().setAttribute("selectedTab", tabs.getSelectedTab().getLabel());
         });
 
         tabs.setSelectedTab(passportTab);
-        familyContent.setVisible(false); // Скрываем содержимое вкладки "Family"
+        familyContent.setVisible(false);
 
 
         HorizontalLayout tabsLayout = new HorizontalLayout(tabs);
-        tabsLayout.setWidthFull(); // Устанавливаем полную ширину для растягивания макета
-        tabsLayout.setJustifyContentMode(JustifyContentMode.CENTER); // Центрируем вкладки в макете
+        tabsLayout.setWidthFull();
+        tabsLayout.setJustifyContentMode(JustifyContentMode.CENTER);
 
-        add(tabsLayout);
+        Button GotoFinal = new Button("Go to Final");
+        GotoFinal.addClickListener(e -> {
+            boolean isExtension = false;
+            getUI().ifPresent(ui -> ui.navigate("finale"));
+        });
+        add(tabsLayout, GotoFinal);
         tabsToPages.values().forEach(this::add);
     }
 }

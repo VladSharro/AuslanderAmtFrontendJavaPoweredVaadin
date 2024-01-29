@@ -6,7 +6,6 @@ import fitz  # PyMuPDF
 import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
-import json
 import sys
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -47,16 +46,7 @@ def extract_immatrikulation(encoded_pdf_path):
 
     for i, line in enumerate(lines):
         if lines[i] == "Herr" or lines[i] == "Frau":
-            #name, surname = lines[i + 1].split()
-            name_parts = lines[i + 1].split()
-            if len(name_parts) >= 2:
-            # Assuming the first part is the first name and the last part is the last name
-                name = name_parts[0]
-                surname = name_parts[-1]
-            else:
-            # Fallback in case there's only one part
-                name = name_parts[0]
-                surname = ''
+            name, surname = lines[i + 1].split()
 
         if lines[i] == "geboren am":
             date_birth = lines[i + 1]

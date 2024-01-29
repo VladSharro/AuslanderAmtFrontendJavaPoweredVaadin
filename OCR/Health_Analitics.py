@@ -10,9 +10,7 @@ import numpy as np
 from datetime import datetime
 from passporteye import read_mrz, mrz
 import sys
-
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\vlads\Tesseract2\tesseract.exe'
-
+import json
 
 def extract_health(encoded_pdf_path):
     # Read the encoded PDF file
@@ -58,7 +56,7 @@ def extract_health(encoded_pdf_path):
             krankenkasse = "Techniker Krankenkasse"
 
         #if "gern bestätigen wir Ihnen" in lines[i]:
-            #match = re.search(r'dem(.*?)bei', lines[i])
+        #match = re.search(r'dem(.*?)bei', lines[i])
 
         if "gern bestätigen wir" in lines[i]:
             #print("Here")
@@ -76,4 +74,12 @@ if __name__ == "__main__":
 
     # Call the function and print the result
     name, surname, krankenkasse, date = extract_health(encoded_pdf_path)
-    print(','.join([name, surname, krankenkasse, date]))
+    data = {
+        "name": name,
+        "surname": surname,
+        "krankenkasse": krankenkasse,
+        "date": date
+    }
+
+    json_data = json.dumps(data, ensure_ascii=False)
+    print(json_data)

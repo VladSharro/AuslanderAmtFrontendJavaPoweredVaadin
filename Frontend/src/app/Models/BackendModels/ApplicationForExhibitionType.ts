@@ -1,4 +1,0 @@
-
-export enum ApplicationForExhibitionType {
-    TRAVEL_ID_FOR_REFUGEES, TRAVEL_ID_FOR_FOREIGNERS, ID_CARD_REPLACEMENT, NONE
-}

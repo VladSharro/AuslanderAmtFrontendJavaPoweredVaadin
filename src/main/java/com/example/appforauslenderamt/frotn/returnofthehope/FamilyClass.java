@@ -15,6 +15,8 @@ public class FamilyClass extends VerticalLayout {
     private VerticalLayout fatherFieldsLayout = new VerticalLayout();
     private VerticalLayout motherFieldsLayout = new VerticalLayout();
 
+    private final Button exportToJsonButton = new Button("Next");
+
 
 
 
@@ -91,4 +93,6 @@ public class FamilyClass extends VerticalLayout {
             layout.setVisible(false);
         }
     }
+
+
 }
